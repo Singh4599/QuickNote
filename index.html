@@ -3,51 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Note App</title>
+    <title>QuickNote - Modern Note Taking</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Theme Toggle -->
-    <button class="theme-toggle" id="themeToggle">
-        <i class="fas fa-moon"></i>
-    </button>
-
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-book"></i> My Notes</h1>
-            <button id="newNoteBtn">
-                <i class="fas fa-plus"></i> New Note
-            </button>
-        </header>
-
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search notes...">
-            <i class="fas fa-search search-icon"></i>
-        </div>
-
-        <div class="notes-grid" id="notesGrid">
-            <!-- Notes will be added here by JavaScript -->
-        </div>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
     </div>
 
-    <!-- Note Editor Modal -->
-    <div class="modal" id="noteModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">New Note</h2>
-                <button class="close-btn">&times;</button>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-brand">
+            <i class="fas fa-feather-alt"></i>
+            <span>QuickNote</span>
+        </div>
+        <div class="nav-controls">
+            <button class="view-toggle" id="viewToggle" title="Toggle View">
+                <i class="fas fa-th-large"></i>
+            </button>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>My Notes</h2>
+                <span class="note-count" id="noteCount">0 notes</span>
             </div>
-            <div class="modal-body">
-                <input type="text" id="noteTitle" placeholder="Note Title">
-                <textarea id="noteContent" placeholder="Start writing your note here..."></textarea>
-                <div class="modal-actions">
-                    <button id="saveNote">Save</button>
-                    <button id="cancelNote" class="cancel-btn">Cancel</button>
+            
+            <div class="quick-actions">
+                <button class="action-btn primary" id="newNoteBtn">
+                    <i class="fas fa-plus"></i>
+                    <span>New Note</span>
+                </button>
+                <button class="action-btn secondary" id="exportBtn">
+                    <i class="fas fa-download"></i>
+                    <span>Export</span>
+                </button>
+            </div>
+
+            <div class="search-section">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Search your notes...">
+                    <button class="clear-search" id="clearSearch">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             </div>
+
+            <div class="filter-section">
+                <h3>Filter by</h3>
+                <div class="filter-options">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-list"></i> All Notes
+                    </button>
+                    <button class="filter-btn" data-filter="recent">
+                        <i class="fas fa-clock"></i> Recent
+                    </button>
+                    <button class="filter-btn" data-filter="favorites">
+                        <i class="fas fa-star"></i> Favorites
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <div class="content-header">
+                <div class="view-options">
+                    <button class="view-btn active" data-view="grid">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-btn" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                    <button class="view-btn" data-view="masonry">
+                        <i class="fas fa-columns"></i>
+                    </button>
+                </div>
+                <div class="sort-options">
+                    <select id="sortSelect">
+                        <option value="date">Sort by Date</option>
+                        <option value="title">Sort by Title</option>
+                        <option value="content">Sort by Content</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="notes-container" id="notesContainer">
+                <!-- Notes will be added here by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+
+    <!-- Note Editor Modal -->
+    <div class="modal-overlay" id="noteModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-edit"></i>
+                    <h2 id="modalTitle">Create New Note</h2>
+                </div>
+                <button class="modal-close" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="noteTitle">Title</label>
+                    <input type="text" id="noteTitle" placeholder="Enter note title..." maxlength="100">
+                    <div class="char-counter"><span id="titleCounter">0</span>/100</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="noteContent">Content</label>
+                    <textarea id="noteContent" placeholder="Start writing your note here..." rows="12"></textarea>
+                    <div class="char-counter"><span id="contentCounter">0</span> characters</div>
+                </div>
+                
+                <div class="note-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span id="noteDate">Today</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span id="noteTime">Now</span>
+                    </div>
+                    <button class="favorite-btn" id="favoriteBtn">
+                        <i class="far fa-star"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelNote">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+                <button class="btn btn-primary" id="saveNote">
+                    <i class="fas fa-save"></i>
+                    Save Note
+                </button>
+            </div>
         </div>
     </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
 
     <script src="app.js"></script>
 </body>
