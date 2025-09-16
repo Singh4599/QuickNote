@@ -3,12 +3,31 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>MediSync – Patient Dashboard</title>
+  <title>MediVerse AI – Patient Dashboard</title>
 
   <!-- Icons + Font -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb',
+            secondary: '#10b981',
+            accent: '#f59e0b',
+            dark: '#0f172a',
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
 
   <style>
     :root{
@@ -167,16 +186,19 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <a href="#" class="brand">
-        <div class="brand-badge">MA</div>
-        <span>MediSync</span>
+        <div class="brand-badge"><i class="fas fa-brain"></i></div>
+        <span>MediVerse AI</span>
       </a>
       <ul class="menu">
         <li><a href="#" class="nav-link active" onclick="showDashboard();closeMobileMenu();return false;"><i class="fa-solid fa-house"></i>Dashboard</a></li>
+        <li><a href="#" class="nav-link" onclick="showAIDiagnostics();closeMobileMenu();return false;"><i class="fa-solid fa-brain"></i>AI Diagnostics</a></li>
         <li class="spacer"></li>
-        <li><a href="#" class="nav-link" onclick="showHospitals();closeMobileMenu();return false;"><i class="fa-solid fa-hospital"></i>Hospitals</a></li>
-        <li><a href="#" class="nav-link" onclick="showDoctors();closeMobileMenu();return false;"><i class="fa-solid fa-user-doctor"></i>Doctors</a></li>
-        <li><a href="#" class="nav-link" onclick="showAppointments();closeMobileMenu();return false;"><i class="fa-regular fa-calendar-check"></i>Appointments</a></li>
-        <li><a href="#" class="nav-link" onclick="showEmergency();closeMobileMenu();return false;"><i class="fa-solid fa-truck-medical"></i>Emergency</a></li>
+        <li><a href="#" class="nav-link" onclick="showAppointments();closeMobileMenu();return false;"><i class="fa-regular fa-calendar-check"></i>My Appointments</a></li>
+        <li><a href="#" class="nav-link" onclick="showReports();closeMobileMenu();return false;"><i class="fa-solid fa-file-medical"></i>Medical Reports</a></li>
+        <li><a href="#" class="nav-link" onclick="showDoctors();closeMobileMenu();return false;"><i class="fa-solid fa-user-doctor"></i>Find Doctors</a></li>
+        <li><a href="#" class="nav-link" onclick="showHospitals();closeMobileMenu();return false;"><i class="fa-solid fa-hospital"></i>Find Hospitals</a></li>
+        <li class="spacer"></li>
+        <li><a href="#" class="nav-link" onclick="showProfile();closeMobileMenu();return false;"><i class="fa-solid fa-user"></i>Profile</a></li>
         <li><a href="#" class="nav-link" onclick="showSettings();closeMobileMenu();return false;"><i class="fa-solid fa-gear"></i>Settings</a></li>
       </ul>
     </aside>
@@ -212,54 +234,194 @@
 
       <!-- Dashboard wrapper -->
       <div class="wrap">
-        <h1 class="page-title">Dashboard Overview</h1>
-        <p class="page-sub">Welcome back. Here's what's happening today.</p>
+        <div id="dashboardContent">
+          <h1 class="page-title">Welcome to MediVerse AI</h1>
+          <p class="page-sub">Your intelligent healthcare companion. Manage your health with AI-powered insights.</p>
 
-        <!-- Stat cards -->
-        <div class="stats">
-          <div class="stat">
-            <div>
-              <div class="meta">Total Hospitals</div>
-              <div class="val">24</div>
-              <div class="trend up">↑ 12% from last month</div>
+          <!-- Quick Actions -->
+          <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-6 mb-8 text-white">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-2xl font-bold">AI Health Assistant</h2>
+              <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-brain text-2xl"></i>
+              </div>
             </div>
-            <div class="ico ico-blue"><i class="fa fa-hospital"></i></div>
+            <p class="mb-4 opacity-90">Upload medical images, reports, or describe symptoms for instant AI analysis</p>
+            <button onclick="showAIDiagnostics()" class="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <i class="fas fa-upload mr-2"></i>Start AI Analysis
+            </button>
           </div>
-          <div class="stat">
-            <div>
-              <div class="meta">Available Beds</div>
-              <div class="val">156</div>
-              <div class="trend up">↑ 8% from yesterday</div>
+
+          <!-- Stats -->
+          <div class="stats">
+            <div class="stat">
+              <div>
+                <div class="meta">AI Reports Generated</div>
+                <div class="val" id="reportsCount">0</div>
+                <div class="trend up">Ready for analysis</div>
+              </div>
+              <div class="ico ico-blue"><i class="fa fa-brain"></i></div>
             </div>
-            <div class="ico ico-green"><i class="fa fa-bed"></i></div>
+            <div class="stat">
+              <div>
+                <div class="meta">Upcoming Appointments</div>
+                <div class="val" id="appointmentsCount">0</div>
+                <div class="trend up">This week</div>
+              </div>
+              <div class="ico ico-green"><i class="fa fa-calendar"></i></div>
+            </div>
+            <div class="stat">
+              <div>
+                <div class="meta">Health Score</div>
+                <div class="val">85</div>
+                <div class="trend up">↑ 5% this month</div>
+              </div>
+              <div class="ico ico-amber"><i class="fa fa-heart"></i></div>
+            </div>
+            <div class="stat">
+              <div>
+                <div class="meta">Risk Level</div>
+                <div class="val">Low</div>
+                <div class="trend up">Stable condition</div>
+              </div>
+              <div class="ico ico-green"><i class="fa fa-shield"></i></div>
+            </div>
           </div>
-          <div class="stat">
-            <div>
-              <div class="meta">Active Doctors</div>
-              <div class="val">48</div>
-              <div class="trend down">↓ 2% from last week</div>
+
+          <!-- Recent Activity -->
+          <div class="grid lg:grid-cols-2 gap-6 mt-8">
+            <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+              <h3 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-clock text-blue-500 mr-3"></i>
+                Recent Reports
+              </h3>
+              <div id="recentReports" class="space-y-3">
+                <div class="text-gray-500 text-center py-8">
+                  <i class="fas fa-file-medical text-4xl mb-3 opacity-50"></i>
+                  <p>No reports yet. Upload your first medical document!</p>
+                </div>
+              </div>
             </div>
-            <div class="ico ico-amber"><i class="fa fa-user-doctor"></i></div>
-          </div>
-          <div class="stat">
-            <div>
-              <div class="meta">Emergency Cases</div>
-              <div class="val">12</div>
-              <div class="trend down">↑ 20% from yesterday</div>
+            
+            <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+              <h3 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-calendar-check text-green-500 mr-3"></i>
+                Upcoming Appointments
+              </h3>
+              <div id="upcomingAppointments" class="space-y-3">
+                <div class="text-gray-500 text-center py-8">
+                  <i class="fas fa-calendar-plus text-4xl mb-3 opacity-50"></i>
+                  <p>No appointments scheduled. Book your first appointment!</p>
+                </div>
+              </div>
             </div>
-            <div class="ico ico-red"><i class="fa fa-truck-medical"></i></div>
           </div>
         </div>
 
-        <!-- Tabs -->
-        <div class="tabs">
-          <div class="tab active"><i class="fa fa-hospital"></i> Hospitals</div>
-          <div class="tab"><i class="fa fa-user-doctor"></i> Doctors</div>
-          <div class="tab"><i class="fa fa-briefcase-medical"></i> Equipments</div>
+        <!-- AI Diagnostics Content (Hidden by default) -->
+        <div id="aiDiagnosticsContent" style="display: none;">
+          <h1 class="page-title">AI Diagnostics</h1>
+          <p class="page-sub">Upload medical images, reports, or describe symptoms for AI-powered analysis</p>
+          
+          <!-- Upload Section -->
+          <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm mb-8">
+            <div class="text-center">
+              <div class="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-cloud-upload-alt text-white text-3xl"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-4">Upload Medical Files</h3>
+              <p class="text-gray-600 mb-6">Supported formats: X-rays, MRIs, CT scans, lab reports (JPG, PNG, PDF)</p>
+              
+              <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 mb-6" id="dropZone">
+                <input type="file" id="fileInput" class="hidden" accept=".jpg,.jpeg,.png,.pdf" multiple>
+                <div class="text-center">
+                  <i class="fas fa-file-upload text-4xl text-gray-400 mb-4"></i>
+                  <p class="text-lg font-semibold text-gray-700 mb-2">Drag & drop files here</p>
+                  <p class="text-gray-500 mb-4">or</p>
+                  <button onclick="document.getElementById('fileInput').click()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                    Choose Files
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Text Input Option -->
+              <div class="text-left">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Or describe your symptoms/medical data:</label>
+                <textarea id="textInput" class="w-full p-4 border border-gray-300 rounded-xl resize-none" rows="4" placeholder="Describe your symptoms, medical history, or paste lab results here..."></textarea>
+                <button onclick="analyzeText()" class="mt-4 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors">
+                  <i class="fas fa-brain mr-2"></i>Analyze Text
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Processing Status -->
+          <div id="processingStatus" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+            <div class="flex items-center">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-4"></div>
+              <div>
+                <h4 class="font-semibold text-blue-800">Processing with AI...</h4>
+                <p class="text-blue-600">Analyzing your medical data using advanced AI models</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Reports List -->
+          <div id="reportsList">
+            <h3 class="text-xl font-bold mb-4">Your AI Reports</h3>
+            <div id="reportsContainer" class="space-y-4">
+              <!-- Reports will be loaded here -->
+            </div>
+          </div>
         </div>
 
-        <!-- Dynamic Content -->
-        <section id="contentArea"></section>
+        <!-- Other content sections (hidden by default) -->
+        <div id="appointmentsContent" style="display: none;">
+          <h1 class="page-title">My Appointments</h1>
+          <p class="page-sub">Manage your upcoming and past appointments</p>
+          <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm">
+            <div class="text-center text-gray-500 py-8">
+              <i class="fas fa-calendar-plus text-6xl mb-4 opacity-50"></i>
+              <h3 class="text-xl font-semibold mb-2">No Appointments Yet</h3>
+              <p class="mb-4">Book your first appointment with our network of doctors</p>
+              <button onclick="showDoctors()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                Find Doctors
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="reportsContent" style="display: none;">
+          <h1 class="page-title">Medical Reports</h1>
+          <p class="page-sub">View and manage all your medical reports and AI analyses</p>
+          <div id="allReportsContainer" class="space-y-4">
+            <!-- All reports will be loaded here -->
+          </div>
+        </div>
+
+        <div id="doctorsContent" style="display: none;">
+          <h1 class="page-title">Find Doctors</h1>
+          <p class="page-sub">Connect with qualified healthcare professionals</p>
+          <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm">
+            <div class="text-center text-gray-500 py-8">
+              <i class="fas fa-user-doctor text-6xl mb-4 opacity-50"></i>
+              <h3 class="text-xl font-semibold mb-2">Doctor Network</h3>
+              <p>Find and book appointments with specialists in your area</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="hospitalsContent" style="display: none;">
+          <h1 class="page-title">Find Hospitals</h1>
+          <p class="page-sub">Locate hospitals with available beds and facilities</p>
+          <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm">
+            <div class="text-center text-gray-500 py-8">
+              <i class="fas fa-hospital text-6xl mb-4 opacity-50"></i>
+              <h3 class="text-xl font-semibold mb-2">Hospital Network</h3>
+              <p>Real-time bed availability and hospital information</p>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   </div>
@@ -290,5 +452,6 @@
     });
   </script>
   <script src="js/patient-dashboard.js"></script>
+  <script src="js/ai-diagnostics.js"></script>
 </body>
 </html>

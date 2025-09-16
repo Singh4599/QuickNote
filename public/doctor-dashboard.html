@@ -3,71 +3,176 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Doctor Dashboard - MediAssist</title>
+  <title>MediVerse AI - Doctor Dashboard</title>
 
-  <!-- Fonts & Iconsdsd -->
+  <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb',
+            secondary: '#10b981',
+            accent: '#f59e0b',
+            dark: '#0f172a',
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
 
   <style>
     body {
       font-family: 'Inter', system-ui, sans-serif;
-      background-color: #f8fafc;
     }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes glow {
+      from { box-shadow: 0 0 20px rgba(37, 99, 235, 0.3); }
+      to { box-shadow: 0 0 30px rgba(37, 99, 235, 0.6); }
+    }
+    
+    .card-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease;
+    }
+    
+    .card-3d:hover {
+      transform: rotateY(2deg) rotateX(2deg) translateZ(10px);
+    }
+    
     .nav-link.active {
-      background-color: #eff6ff;
-      color: #2563eb;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
     }
+    
     .nav-link:hover {
       background-color: #f1f5f9;
       color: #2563eb;
     }
-    .dashboard-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
   </style>
 </head>
-<body class="text-slate-800">
+<body class="bg-gray-50 min-h-screen">
+  <!-- Mobile Menu Button -->
+  <button id="mobileMenuBtn" class="md:hidden fixed top-4 left-4 z-50 bg-white p-3 rounded-xl shadow-lg">
+    <i class="fas fa-bars text-gray-600"></i>
+  </button>
+  
   <div class="flex min-h-screen">
-
     <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-md p-5 hidden md:block">
-      <a href="#" class="flex items-center gap-2 text-blue-600 font-extrabold text-xl">
-        <div class="h-10 w-10 flex items-center justify-center bg-blue-600 text-white rounded-lg">MA</div>
-        MediAssist
-      </a>
-      <p class="text-slate-500 text-sm mt-2">Doctor Dashboard</p>
+    <aside id="sidebar" class="w-72 bg-white shadow-xl border-r border-gray-200 fixed md:relative h-full z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+      <div class="p-6">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center animate-glow">
+            <i class="fas fa-brain text-white text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              MediVerse AI
+            </h1>
+            <p class="text-sm text-gray-500">Doctor Portal</p>
+          </div>
+        </div>
 
-      <nav class="mt-6">
-        <ul class="space-y-1">
-          <li><a href="#" class="nav-link active flex items-center gap-2 rounded-lg px-3 py-2" onclick="showToday();return false;"><i class="fa-regular fa-calendar"></i> Today</a></li>
-          <li><a href="#" class="nav-link flex items-center gap-2 rounded-lg px-3 py-2" onclick="showAppointments();return false;"><i class="fa-solid fa-list-check"></i> Appointments</a></li>
-          <li><a href="#" class="nav-link flex items-center gap-2 rounded-lg px-3 py-2" onclick="showPatients();return false;"><i class="fa-solid fa-user-group"></i> Patients</a></li>
-          <li><a href="#" class="nav-link flex items-center gap-2 rounded-lg px-3 py-2" onclick="showProfile();return false;"><i class="fa-regular fa-user"></i> Profile</a></li>
-          <li><a href="#" class="nav-link flex items-center gap-2 rounded-lg px-3 py-2" onclick="showSettings();return false;"><i class="fa-solid fa-gear"></i> Settings</a></li>
-        </ul>
-      </nav>
+        <nav class="space-y-2">
+          <a href="#" class="nav-link active flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all" onclick="showDashboard();return false;">
+            <i class="fas fa-home w-5"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-link flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all" onclick="showTodaySchedule();return false;">
+            <i class="fas fa-calendar-day w-5"></i>
+            <span>Today's Schedule</span>
+          </a>
+          <a href="#" class="nav-link flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all" onclick="showAppointments();return false;">
+            <i class="fas fa-calendar-check w-5"></i>
+            <span>All Appointments</span>
+          </a>
+          <a href="#" class="nav-link flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all" onclick="showPatients();return false;">
+            <i class="fas fa-users w-5"></i>
+            <span>Patient Cards</span>
+          </a>
+          <a href="#" class="nav-link flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all" onclick="showSchedule();return false;">
+            <i class="fas fa-clock w-5"></i>
+            <span>My Schedule</span>
+          </a>
+          
+          <div class="border-t border-gray-200 my-4"></div>
+          
+          <a href="#" class="nav-link flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all" onclick="showProfile();return false;">
+            <i class="fas fa-user w-5"></i>
+            <span>Profile</span>
+          </a>
+          <a href="#" class="nav-link flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all" onclick="showSettings();return false;">
+            <i class="fas fa-cog w-5"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+      </div>
     </aside>
+    
+    <!-- Mobile Overlay -->
+    <div id="mobileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"></div>
 
     <!-- Main content -->
-    <main class="flex-1 flex flex-col">
+    <main class="flex-1 flex flex-col md:ml-0">
       <!-- Topbar -->
-      <header class="bg-white shadow-sm px-5 py-3 flex justify-between items-center sticky top-0 z-20">
-        <div class="flex-1 max-w-lg">
-          <input id="docSearch" class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm" placeholder="Search patient or appointment..." />
-        </div>
-        <div class="flex items-center gap-3 ml-4">
-          <button class="px-3 py-2 rounded-lg border border-slate-200 text-sm hover:bg-slate-50" onclick="location.href='patient-dashboard.html'">Patient View</button>
-          <button class="px-3 py-2 rounded-lg border border-slate-200 text-sm hover:bg-slate-50" onclick="location.href='hospital-dashboard.html'">Hospital View</button>
-          <button class="px-3 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700" onclick="Auth.signOut()">Logout</button>
+      <header class="bg-white/90 backdrop-blur-md shadow-lg border-b border-gray-200 px-6 py-4 sticky top-0 z-20">
+        <div class="flex items-center justify-between">
+          <div class="flex-1 max-w-2xl">
+            <div class="relative">
+              <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input id="docSearch" class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Search patients, appointments, or medical records..." />
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-3 ml-6">
+            <div class="hidden md:flex items-center gap-2">
+              <div class="w-10 h-10 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+                <i class="fas fa-user-md text-white"></i>
+              </div>
+              <div class="text-right">
+                <p id="doctorName" class="font-semibold text-gray-900">Dr. Smith</p>
+                <p id="doctorSpecialty" class="text-sm text-gray-500">Cardiologist</p>
+              </div>
+            </div>
+            
+            <div class="relative">
+              <button id="userMenuBtn" class="p-2 rounded-xl hover:bg-gray-100 transition-colors">
+                <i class="fas fa-chevron-down text-gray-600"></i>
+              </button>
+              <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 hidden">
+                <a href="patient-dashboard.html" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl">
+                  <i class="fas fa-user mr-2"></i>Patient View
+                </a>
+                <a href="hospital-dashboard.html" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50">
+                  <i class="fas fa-hospital mr-2"></i>Hospital View
+                </a>
+                <div class="border-t border-gray-200"></div>
+                <button onclick="Auth.signOut()" class="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-b-xl">
+                  <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 
       <!-- Content -->
-      <section id="docContent" class="p-6 overflow-y-auto"></section>
+      <section id="docContent" class="flex-1 p-6 overflow-y-auto">
+        <!-- Content will be loaded here -->
+      </section>
     </main>
   </div>
 
@@ -75,6 +180,44 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
+  <script>
+    // Mobile menu functionality
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('mobileOverlay');
+      sidebar.classList.toggle('-translate-x-full');
+      overlay.classList.toggle('hidden');
+    });
+    
+    document.getElementById('mobileOverlay').addEventListener('click', () => {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('mobileOverlay');
+      sidebar.classList.add('-translate-x-full');
+      overlay.classList.add('hidden');
+    });
+    
+    // User dropdown functionality
+    document.getElementById('userMenuBtn').addEventListener('click', () => {
+      document.getElementById('userDropdown').classList.toggle('hidden');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#userMenuBtn') && !e.target.closest('#userDropdown')) {
+        document.getElementById('userDropdown').classList.add('hidden');
+      }
+    });
+    
+    // Initialize auth and load user data
+    document.addEventListener('DOMContentLoaded', async () => {
+      await Auth.init();
+      const user = Auth.getCurrentUser();
+      if (user) {
+        document.getElementById('doctorName').textContent = user.name || 'Dr. User';
+        document.getElementById('doctorSpecialty').textContent = user.specialization || 'Specialist';
+      }
+    });
+  </script>
   <script src="js/doctor-dashboard.js"></script>
 </body>
 </html>

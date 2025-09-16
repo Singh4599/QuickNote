@@ -197,37 +197,110 @@ function toggleUserMenu(){
 function showNotifications(){ alert("No new notifications"); }
 function logout(){ alert("Logged out!"); }
 
-// --------- Dashboard View ---------
+// --------- Navigation Functions ---------
 function showDashboard() {
   setActiveNav("Dashboard");
-  const container = document.getElementById("contentArea");
+  hideAllContent();
+  document.getElementById("dashboardContent").style.display = "block";
+}
+
+function showAIDiagnostics() {
+  setActiveNav("AI Diagnostics");
+  hideAllContent();
+  document.getElementById("aiDiagnosticsContent").style.display = "block";
+  if (window.aiDiagnostics) {
+    window.aiDiagnostics.loadReports();
+  }
+}
+
+function showAppointments() {
+  setActiveNav("My Appointments");
+  hideAllContent();
+  document.getElementById("appointmentsContent").style.display = "block";
+}
+
+function showReports() {
+  setActiveNav("Medical Reports");
+  hideAllContent();
+  document.getElementById("reportsContent").style.display = "block";
+  if (window.aiDiagnostics) {
+    window.aiDiagnostics.loadReports();
+  }
+}
+
+function showDoctors() {
+  setActiveNav("Find Doctors");
+  hideAllContent();
+  document.getElementById("doctorsContent").style.display = "block";
+}
+
+function showHospitals() {
+  setActiveNav("Find Hospitals");
+  hideAllContent();
+  document.getElementById("hospitalsContent").style.display = "block";
+}
+
+function showProfile() {
+  setActiveNav("Profile");
+  hideAllContent();
+  // Create profile content dynamically
+  const container = document.createElement('div');
+  container.id = 'profileContent';
   container.innerHTML = `
-    <h2 style="font-weight:700;margin:18px 0">Dashboard Overview</h2>
-    <p>Welcome to your dashboard. Select an option from the menu to get started.</p>
-    <div class="data-grid" style="margin-top: 20px;">
-      <div class="data-card" style="cursor:pointer" onclick="showHospitals()">
-        <div class="data-card-body" style="text-align:center">
-          <i class="fa-solid fa-hospital" style="font-size:2rem;color:var(--brand);margin-bottom:10px"></i>
-          <h3>Hospitals</h3>
-          <p>Find and book hospitals near you</p>
-        </div>
-      </div>
-      <div class="data-card" style="cursor:pointer" onclick="showDoctors()">
-        <div class="data-card-body" style="text-align:center">
-          <i class="fa-solid fa-user-doctor" style="font-size:2rem;color:var(--brand);margin-bottom:10px"></i>
-          <h3>Doctors</h3>
-          <p>Book appointments with specialists</p>
-        </div>
-      </div>
-      <div class="data-card" style="cursor:pointer" onclick="showAppointments()">
-        <div class="data-card-body" style="text-align:center">
-          <i class="fa-regular fa-calendar-check" style="font-size:2rem;color:var(--brand);margin-bottom:10px"></i>
-          <h3>Appointments</h3>
-          <p>View and manage your bookings</p>
-        </div>
+    <h1 class="page-title">My Profile</h1>
+    <p class="page-sub">Manage your personal information and preferences</p>
+    <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm">
+      <div class="text-center text-gray-500 py-8">
+        <i class="fas fa-user text-6xl mb-4 opacity-50"></i>
+        <h3 class="text-xl font-semibold mb-2">Profile Management</h3>
+        <p>Update your personal information and medical history</p>
       </div>
     </div>
   `;
+  document.querySelector('.wrap').appendChild(container);
+}
+
+function showSettings() {
+  setActiveNav("Settings");
+  hideAllContent();
+  // Create settings content dynamically
+  const container = document.createElement('div');
+  container.id = 'settingsContent';
+  container.innerHTML = `
+    <h1 class="page-title">Settings</h1>
+    <p class="page-sub">Customize your MediVerse AI experience</p>
+    <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm">
+      <div class="text-center text-gray-500 py-8">
+        <i class="fas fa-cog text-6xl mb-4 opacity-50"></i>
+        <h3 class="text-xl font-semibold mb-2">Application Settings</h3>
+        <p>Notifications, privacy, and account preferences</p>
+      </div>
+    </div>
+  `;
+  document.querySelector('.wrap').appendChild(container);
+}
+
+function hideAllContent() {
+  // Hide all main content sections
+  const contentSections = [
+    'dashboardContent',
+    'aiDiagnosticsContent', 
+    'appointmentsContent',
+    'reportsContent',
+    'doctorsContent',
+    'hospitalsContent'
+  ];
+  
+  contentSections.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.style.display = 'none';
+    }
+  });
+  
+  // Remove dynamically created content
+  const dynamicContent = document.querySelectorAll('#profileContent, #settingsContent');
+  dynamicContent.forEach(el => el.remove());
 }
 
 // --------- Mobile Navigation ---------

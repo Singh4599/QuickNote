@@ -46,8 +46,9 @@
       window.applyFilter = applyFilter;
       window.showOverview = showOverview;
       window.showBeds = showBeds;
-      window.showEquipment = showEquipment;
-      window.showStaff = showStaff;
+      window.showDepartments = showDepartments;
+      window.showDoctors = showDoctors;
+      window.showProfile = showProfile;
       window.showSettings = showSettings;
       window.toggleUserMenu = toggleUserMenu;
       window.logout = logout;
@@ -81,13 +82,27 @@
       { type:'CT Scanner', total:1, available:1 },
       { type:'Ultrasound', total:4, available:3 },
       { type:'ECG Machine', total:6, available:5 }
+    ],
+    departments: [
+      { name: 'Cardiology', head: 'Dr. Sarah Johnson', doctors: 5, patients: 23, status: 'active' },
+      { name: 'Neurology', head: 'Dr. Michael Chen', doctors: 4, patients: 18, status: 'active' },
+      { name: 'Orthopedics', head: 'Dr. Emily Davis', doctors: 6, patients: 31, status: 'active' },
+      { name: 'Pediatrics', head: 'Dr. James Wilson', doctors: 4, patients: 15, status: 'active' },
+      { name: 'Emergency', head: 'Dr. Lisa Brown', doctors: 6, patients: 42, status: 'active' }
+    ],
+    doctorRoster: [
+      { id: 1, name: 'Dr. Sarah Johnson', department: 'Cardiology', specialization: 'Cardiologist', status: 'on-duty', shift: '8:00 AM - 6:00 PM', contact: '+91 98765 43210' },
+      { id: 2, name: 'Dr. Michael Chen', department: 'Neurology', specialization: 'Neurologist', status: 'on-duty', shift: '9:00 AM - 7:00 PM', contact: '+91 98765 43211' },
+      { id: 3, name: 'Dr. Emily Davis', department: 'Orthopedics', specialization: 'Orthopedic Surgeon', status: 'off-duty', shift: '2:00 PM - 10:00 PM', contact: '+91 98765 43212' },
+      { id: 4, name: 'Dr. James Wilson', department: 'Pediatrics', specialization: 'Pediatrician', status: 'on-duty', shift: '6:00 AM - 2:00 PM', contact: '+91 98765 43213' },
+      { id: 5, name: 'Dr. Lisa Brown', department: 'Emergency', specialization: 'Emergency Medicine', status: 'on-duty', shift: '24/7 Rotation', contact: '+91 98765 43214' }
     ]
   };
   
   /* ---------------- UI Helpers ---------------- */
   function setActiveNav(key) {
     document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-    const map = { overview:'Overview', beds:'Beds', equipment:'Equipment', staff:'Staff', settings:'Settings' };
+    const map = { overview:'Overview', beds:'Beds', departments:'Departments', doctors:'Doctor', profile:'Profile', settings:'Settings' };
     document.querySelectorAll('.nav-link').forEach(link => {
       if (link.textContent.trim().startsWith(map[key] || '')) link.classList.add('active');
     });
@@ -150,7 +165,7 @@
           <div style="color:var(--muted);font-size:.9rem">On duty now</div>
           <div style="margin-top:.5rem;font-size:1.4rem;font-weight:800">${state.doctors.available} / ${state.doctors.total}</div>
           <div style="margin-top:.6rem;display:flex;gap:.5rem">
-            <button class="btn-outline" onclick="showStaff()">Manage Staff</button>
+            <button class="btn-outline" onclick="showDoctors()">Manage Doctors</button>
           </div>
         </div>
       </div>
@@ -313,40 +328,195 @@
     };
   }
   
-  function showStaff() {
-    setActiveNav('staff');
+  function showDepartments() {
+    setActiveNav('departments');
     const container = document.getElementById('contentArea');
+  
+    const departmentCards = state.departments.map(dept => `
+      <div class="data-card">
+        <div class="data-card-header">
+          <div>
+            <h3 style="font-weight:700;margin:0">${dept.name}</h3>
+            <div style="color:var(--muted);font-size:.9rem">Head: ${dept.head}</div>
+          </div>
+          <span class="status-badge status-available">${dept.status}</span>
+        </div>
+        <div class="data-card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+            <div><strong>Doctors:</strong> ${dept.doctors}</div>
+            <div><strong>Patients:</strong> ${dept.patients}</div>
+          </div>
+          <div style="display:flex;gap:.5rem">
+            <button class="btn-outline" onclick="alert('Edit ${dept.name} department')">Edit</button>
+            <button class="btn-outline" onclick="alert('View ${dept.name} details')">Details</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
   
     container.innerHTML = `
       <div class="dashboard-header">
-        <h2 class="dashboard-title">Staff</h2>
-        <p class="dashboard-subtitle">Manage doctor availability</p>
+        <h2 class="dashboard-title">Departments</h2>
+        <p class="dashboard-subtitle">Manage hospital departments and their operations</p>
+      </div>
+  
+      <div style="margin-bottom:1rem">
+        <button class="btn" onclick="alert('Add new department')">+ Add Department</button>
+      </div>
+  
+      <div class="data-grid">
+        ${departmentCards}
+      </div>
+    `;
+  }
+  
+  function showDoctors() {
+    setActiveNav('doctors');
+    const container = document.getElementById('contentArea');
+  
+    const statusBadge = (status) => {
+      const classes = {
+        'on-duty': 'status-available',
+        'off-duty': 'status-full'
+      };
+      return `<span class="status-badge ${classes[status] || 'status-available'}">${status}</span>`;
+    };
+  
+    const doctorRows = state.doctorRoster.map(doctor => `
+      <tr>
+        <td style="padding:.75rem 0">
+          <div style="font-weight:600">${doctor.name}</div>
+          <div style="font-size:.85rem;color:var(--muted)">${doctor.specialization}</div>
+        </td>
+        <td>${doctor.department}</td>
+        <td>${doctor.shift}</td>
+        <td>${statusBadge(doctor.status)}</td>
+        <td>${doctor.contact}</td>
+        <td style="text-align:right">
+          <button class="btn-outline" onclick="toggleDoctorStatus(${doctor.id})" style="margin-right:.5rem">
+            ${doctor.status === 'on-duty' ? 'Mark Off' : 'Mark On'}
+          </button>
+          <button class="btn-outline" onclick="alert('Edit ${doctor.name}')">Edit</button>
+        </td>
+      </tr>
+    `).join('');
+  
+    container.innerHTML = `
+      <div class="dashboard-header">
+        <h2 class="dashboard-title">Doctor Roster</h2>
+        <p class="dashboard-subtitle">Manage doctor schedules and availability</p>
+      </div>
+  
+      <div style="margin-bottom:1rem">
+        <button class="btn" onclick="alert('Add new doctor')">+ Add Doctor</button>
       </div>
   
       <div class="data-card">
         <div class="data-card-body">
-          <div class="stats-grid" style="margin-bottom:0">
-            <div class="stat-card">
-              <div style="font-weight:700">Doctors On Duty</div>
-              <div style="font-size:1.4rem;font-weight:800;margin-top:.4rem">${state.doctors.available} / ${state.doctors.total}</div>
-              <div style="display:flex;gap:.5rem;margin-top:.6rem">
-                <button class="btn" onclick="changeDocAvail(1)">+1 On Duty</button>
-                <button class="btn-outline" onclick="changeDocAvail(-1)">-1 On Duty</button>
-              </div>
-            </div>
-          </div>
-          <div style="margin-top:1rem">
-            <button class="btn-outline" onclick="showOverview()">Back to Overview</button>
+          <div style="overflow:auto">
+            <table style="width:100%;border-collapse:collapse;min-width:800px">
+              <thead>
+                <tr style="border-bottom:2px solid #e5e7eb">
+                  <th style="text-align:left;padding:.75rem 0;font-weight:700">Doctor</th>
+                  <th style="text-align:left;font-weight:700">Department</th>
+                  <th style="text-align:left;font-weight:700">Shift</th>
+                  <th style="text-align:left;font-weight:700">Status</th>
+                  <th style="text-align:left;font-weight:700">Contact</th>
+                  <th style="text-align:right;font-weight:700">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${doctorRows}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     `;
   
-    window.changeDocAvail = (delta) => {
-      const next = Math.min(Math.max(0, state.doctors.available + delta), state.doctors.total);
-      state.doctors.available = next;
-      showStaff();
+    window.toggleDoctorStatus = (doctorId) => {
+      const doctor = state.doctorRoster.find(d => d.id === doctorId);
+      if (doctor) {
+        doctor.status = doctor.status === 'on-duty' ? 'off-duty' : 'on-duty';
+        // Update available count
+        const onDutyCount = state.doctorRoster.filter(d => d.status === 'on-duty').length;
+        state.doctors.available = onDutyCount;
+        showDoctors();
+      }
     };
+  }
+  
+  function showProfile() {
+    setActiveNav('profile');
+    const container = document.getElementById('contentArea');
+  
+    container.innerHTML = `
+      <div class="dashboard-header">
+        <h2 class="dashboard-title">Hospital Profile</h2>
+        <p class="dashboard-subtitle">Manage hospital information and settings</p>
+      </div>
+  
+      <div class="data-grid">
+        <div class="data-card">
+          <div class="data-card-header">
+            <h3 style="font-weight:700;margin:0">Basic Information</h3>
+          </div>
+          <div class="data-card-body">
+            <div style="display:grid;gap:1rem">
+              <div>
+                <label style="display:block;font-weight:600;margin-bottom:.5rem">Hospital Name</label>
+                <input type="text" class="search-input" value="MediVerse General Hospital" style="width:100%">
+              </div>
+              <div>
+                <label style="display:block;font-weight:600;margin-bottom:.5rem">Address</label>
+                <textarea class="search-input" style="width:100%;min-height:80px;resize:vertical">123 Healthcare Ave, Medical District, City 12345</textarea>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                <div>
+                  <label style="display:block;font-weight:600;margin-bottom:.5rem">Phone</label>
+                  <input type="tel" class="search-input" value="+91 11 2345 6789" style="width:100%">
+                </div>
+                <div>
+                  <label style="display:block;font-weight:600;margin-bottom:.5rem">Email</label>
+                  <input type="email" class="search-input" value="info@mediversehospital.com" style="width:100%">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="data-card">
+          <div class="data-card-header">
+            <h3 style="font-weight:700;margin:0">Hospital Statistics</h3>
+          </div>
+          <div class="data-card-body">
+            <div style="display:grid;gap:1rem">
+              <div style="display:flex;justify-content:space-between">
+                <span>Total Beds:</span>
+                <strong>${state.beds.reduce((s,b)=>s+b.total,0)}</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between">
+                <span>Total Doctors:</span>
+                <strong>${state.doctors.total}</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between">
+                <span>Departments:</span>
+                <strong>${state.departments.length}</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between">
+                <span>Equipment Items:</span>
+                <strong>${state.equipment.reduce((s,e)=>s+e.total,0)}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div style="margin-top:1rem">
+        <button class="btn" onclick="alert('Profile updated successfully!')">Save Changes</button>
+        <button class="btn-outline" onclick="showOverview()" style="margin-left:.5rem">Back to Overview</button>
+      </div>
+    `;
   }
   
   function showSettings() {
@@ -388,7 +558,7 @@
     if (activeText.includes('Overview')) {
       // Simple filter: if query contains bed or equipment types, jump to sections
       if (BED_TYPES.some(b => b.toLowerCase().includes(q)) && q) return showBeds();
-      if (EQUIP_TYPES.some(e => e.toLowerCase().includes(q)) && q) return showEquipment();
+      if (EQUIP_TYPES.some(e => e.toLowerCase().includes(q)) && q) return showDepartments();
     } else if (activeText.includes('Beds')) {
       // Filter rows by type text
       document.querySelectorAll('[data-bed]').forEach(inp=>{
@@ -396,14 +566,18 @@
         const type = row?.children?.[0]?.textContent?.toLowerCase() || '';
         row.style.display = type.includes(q) ? '' : 'none';
       });
-    } else if (activeText.includes('Equipment')) {
-      document.querySelectorAll('[data-eq]').forEach(inp=>{
-        const row = inp.closest('tr');
-        const type = row?.children?.[0]?.textContent?.toLowerCase() || '';
-        row.style.display = type.includes(q) ? '' : 'none';
+    } else if (activeText.includes('Departments')) {
+      // Filter department cards
+      document.querySelectorAll('.data-card').forEach(card=>{
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(q) ? '' : 'none';
       });
-    } else if (activeText.includes('Staff')) {
-      // nothing fancy; keeping it simple for demo
+    } else if (activeText.includes('Doctor')) {
+      // Filter doctor rows
+      document.querySelectorAll('tbody tr').forEach(row=>{
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(q) ? '' : 'none';
+      });
     } else {
       showOverview();
     }
