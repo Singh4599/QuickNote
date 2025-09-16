@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Doctor Dashboard - MediAssist</title>
+
+  <!-- Fonts & Iconsdsd -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: #f8fafc;
+    }
+    .nav-link.active {
+      background-color: #eff6ff;
+      color: #2563eb;
+    }
+    .nav-link:hover {
+      background-color: #f1f5f9;
+      color: #2563eb;
+    }
+    .dashboard-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+  </style>
+</head>
+<body class="text-slate-800">
+  <div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-md p-5 hidden md:block">
+      <a href="#" class="flex items-center gap-2 text-blue-600 font-extrabold text-xl">
+        <div class="h-10 w-10 flex items-center justify-center bg-blue-600 text-white rounded-lg">MA</div>
+        MediAssist
+      </a>
+      <p class="text-slate-500 text-sm mt-2">Doctor Dashboard</p>
+
+      <nav class="mt-6">
+        <ul class="space-y-1">
+          <li><a href="#" class="nav-link active flex items-center gap-2 rounded-lg px-3 py-2" onclick="showToday();return false;"><i class="fa-regular fa-calendar"></i> Today</a></li>
+          <li><a href="#" class="nav-link flex items-center gap-2 rounded-lg px-3 py-2" onclick="showAppointments();return false;"><i class="fa-solid fa-list-check"></i> Appointments</a></li>
+          <li><a href="#" class="nav-link flex items-center gap-2 rounded-lg px-3 py-2" onclick="showPatients();return false;"><i class="fa-solid fa-user-group"></i> Patients</a></li>
+          <li><a href="#" class="nav-link flex items-center gap-2 rounded-lg px-3 py-2" onclick="showProfile();return false;"><i class="fa-regular fa-user"></i> Profile</a></li>
+          <li><a href="#" class="nav-link flex items-center gap-2 rounded-lg px-3 py-2" onclick="showSettings();return false;"><i class="fa-solid fa-gear"></i> Settings</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 flex flex-col">
+      <!-- Topbar -->
+      <header class="bg-white shadow-sm px-5 py-3 flex justify-between items-center sticky top-0 z-20">
+        <div class="flex-1 max-w-lg">
+          <input id="docSearch" class="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm" placeholder="Search patient or appointment..." />
+        </div>
+        <div class="flex items-center gap-3 ml-4">
+          <button class="px-3 py-2 rounded-lg border border-slate-200 text-sm hover:bg-slate-50" onclick="location.href='patient-dashboard.html'">Patient View</button>
+          <button class="px-3 py-2 rounded-lg border border-slate-200 text-sm hover:bg-slate-50" onclick="location.href='hospital-dashboard.html'">Hospital View</button>
+          <button class="px-3 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700" onclick="Auth.signOut()">Logout</button>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <section id="docContent" class="p-6 overflow-y-auto"></section>
+    </main>
+  </div>
+
+  <!-- Supabase & JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/doctor-dashboard.js"></script>
+</body>
+</html>
