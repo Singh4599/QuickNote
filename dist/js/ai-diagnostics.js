@@ -98,45 +98,22 @@ class AIDiagnostics {
       const fileName = `${report.id}.${fileExt}`;
       const filePath = `diagnostic-files/${Auth.getCurrentUser().id}/${fileName}`;
 
-      // Try to upload to storage bucket, but handle gracefully if bucket doesn't exist
-      let fileUrl = null;
-      try {
-        const { data: uploadData, error: uploadError } = await supabaseClient.storage
-          .from('medical-files')
-          .upload(filePath, file);
+      const { data: uploadData, error: uploadError } = await supabaseClient.storage
+        .from('medical-files')
+        .upload(filePath, file);
 
-        if (uploadError) {
-          console.warn('Storage upload failed, proceeding without file storage:', uploadError.message);
-          // Continue without file storage - use base64 data instead
-          const reader = new FileReader();
-          reader.onload = () => {
-            fileUrl = reader.result; // base64 data URL
-          };
-          reader.readAsDataURL(file);
-        } else {
-          // Get public URL if upload succeeded
-          const { data: urlData } = supabaseClient.storage
-            .from('medical-files')
-            .getPublicUrl(filePath);
-          fileUrl = urlData.publicUrl;
-        }
-      } catch (storageError) {
-        console.warn('Storage not available, using base64 encoding:', storageError.message);
-        // Fallback to base64 encoding
-        const reader = new FileReader();
-        reader.onload = () => {
-          fileUrl = reader.result;
-        };
-        reader.readAsDataURL(file);
-      }
+      if (uploadError) throw uploadError;
 
-      // Update report with file URL (if we have one)
-      if (fileUrl) {
-        await supabaseClient
-          .from('diagnostic_reports')
-          .update({ file_url: fileUrl })
-          .eq('id', report.id);
-      }
+      // Get public URL
+      const { data: urlData } = supabaseClient.storage
+        .from('medical-files')
+        .getPublicUrl(filePath);
+
+      // Update report with file URL
+      await supabaseClient
+        .from('diagnostic_reports')
+        .update({ file_url: urlData.publicUrl })
+        .eq('id', report.id);
 
       // Call AI analysis
       await this.callAIAnalysis(report.id, file);

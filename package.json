@@ -1,29 +1,32 @@
 {
-  "name": "medisync",
+  "name": "mediverse-ai",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:sandbox": "wrangler pages dev dist --ip 0.0.0.0 --port 3000",
     "build": "vite build",
-    "preview": "wrangler pages dev dist",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name medisync",
-    "clean-port": "fuser -k 3000/tcp 2>/dev/null || true",
-    "test": "curl http://localhost:3000",
-    "start:vscode": "wrangler pages dev dist --port 3000",
-    "build:start": "npm run build && npm run start:vscode",
-    "pm2:start": "pm2 start ecosystem.config.cjs",
-    "pm2:stop": "pm2 stop medisync",
-    "pm2:restart": "pm2 restart medisync",
-    "pm2:logs": "pm2 logs medisync --nostream",
-    "setup": "npm install && npm run build"
+    "preview": "vite preview",
+    "start": "vite --host 0.0.0.0 --port 8080"
   },
   "dependencies": {
-    "hono": "^4.9.5"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "framer-motion": "^10.16.4",
+    "@react-three/fiber": "^8.15.11",
+    "@react-three/drei": "^9.88.13",
+    "three": "^0.157.0",
+    "react-router-dom": "^6.17.0",
+    "@supabase/supabase-js": "^2.38.4",
+    "lucide-react": "^0.292.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.0.0"
   },
   "devDependencies": {
-    "@hono/vite-build": "^1.2.0",
-    "@hono/vite-dev-server": "^0.18.2",
-    "vite": "^6.3.5",
-    "wrangler": "^4.4.0"
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@vitejs/plugin-react": "^4.1.1",
+    "vite": "^5.0.0",
+    "tailwindcss": "^3.3.5",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31"
   }
 }

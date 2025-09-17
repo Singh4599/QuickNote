@@ -177,17 +177,20 @@
       
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- AI Diagnostics -->
-        <div class="group p-8 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl hover:shadow-xl transition-all card-3d">
+        <div class="group p-8 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl hover:shadow-xl transition-all card-3d cursor-pointer" onclick="redirectToAIDiagnostics()">
           <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
             <i class="fas fa-brain text-white text-2xl"></i>
           </div>
           <h3 class="text-2xl font-bold text-gray-900 mb-4">AI Diagnostics</h3>
           <p class="text-gray-600 mb-4">Upload X-rays, MRIs, or medical reports and get instant AI-powered analysis with detailed insights and recommendations.</p>
-          <ul class="text-sm text-gray-500 space-y-2">
+          <ul class="text-sm text-gray-500 space-y-2 mb-6">
             <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Image Analysis</li>
             <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Risk Assessment</li>
             <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Treatment Suggestions</li>
           </ul>
+          <button class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all">
+            Try AI Diagnostics
+          </button>
         </div>
         
         <!-- Smart Appointments -->
@@ -272,6 +275,34 @@
     // Prevent automatic auth initialization on landing page
     // Only initialize auth when user explicitly tries to login/signup
     console.log('Landing page loaded - Auth available but not auto-initialized');
+
+    // AI Diagnostics redirect function
+    function redirectToAIDiagnostics() {
+      // Check if user is logged in
+      const currentUser = supabaseClient?.auth?.getUser ? supabaseClient.auth.getUser() : null;
+      
+      if (currentUser) {
+        // If logged in, redirect to patient dashboard with AI diagnostics focus
+        window.location.href = 'patient-dashboard.html#ai-diagnostics';
+      } else {
+        // If not logged in, redirect to login page with return URL
+        window.location.href = 'login.html?redirect=ai-diagnostics';
+      }
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
   </script>
 </body>
 </html>
