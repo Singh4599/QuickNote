@@ -57,12 +57,13 @@ CREATE TABLE IF NOT EXISTS diagnostic_reports (
   file_url TEXT,
   file_type TEXT,
   mime TEXT,
+  original_text TEXT,
   processing_status TEXT CHECK (processing_status IN ('pending', 'processing', 'completed', 'failed')) DEFAULT 'pending',
-  summary TEXT,
-  key_findings TEXT,
-  followups TEXT,
-  patient_friendly_explainer TEXT,
-  risk_level TEXT CHECK (risk_level IN ('low', 'medium', 'high')),
+  ai_summary TEXT,
+  key_findings JSONB DEFAULT '[]'::jsonb,
+  follow_ups JSONB DEFAULT '[]'::jsonb,
+  explanation TEXT,
+  risk_level TEXT CHECK (risk_level IN ('low', 'medium', 'high', 'critical')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );

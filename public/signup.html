@@ -14,258 +14,395 @@
   <script src="js/loader.js"></script>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
     
-    * { font-family: 'Inter', system-ui, sans-serif; }
-    
-    /* Modern 3D animations */
-    .float-3d { animation: float3d 6s ease-in-out infinite; }
-    .float-3d-delayed { animation: float3d 6s ease-in-out infinite 2s; }
-    @keyframes float3d {
-      0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
-      33% { transform: translateY(-10px) rotateX(5deg) rotateY(2deg); }
-      66% { transform: translateY(-5px) rotateX(-2deg) rotateY(-3deg); }
-    }
-    
-    /* Glass morphism */
-    .glass {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    /* 3D card effects */
-    .card-3d {
-      transform-style: preserve-3d;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .card-3d:hover {
-      transform: translateY(-8px) rotateX(5deg) rotateY(5deg);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* Gradient animations */
-    body {
-      background: linear-gradient(-45deg, #0ea5e9, #06b6d4, #10b981, #3b82f6);
-      background-size: 400% 400%;
-      animation: gradientShift 8s ease infinite;
-      min-height: 100vh;
-      font-family: 'Inter', system-ui, sans-serif;
+    * { 
+      font-family: 'Poppins', system-ui, sans-serif;
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    /* Modern gradient background */
+    body {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 25%, #4facfe 50%, #00f2fe 75%, #43e97b 100%);
+      background-size: 300% 300%;
+      animation: gradientAnimation 10s ease infinite;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 1rem;
+      overflow-x: hidden;
     }
-    .gradient-shift {
-      background-size: 400% 400%;
-      animation: gradientShift 8s ease infinite;
-    }
-    @keyframes gradientShift {
+    
+    @keyframes gradientAnimation {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
     
-    /* Neon glow effects */
-    .neon-glow {
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 0 40px rgba(59, 130, 246, 0.3), 0 0 60px rgba(59, 130, 246, 0.1);
+    /* Floating shapes */
+    .floating-shape {
+      position: absolute;
+      opacity: 0.1;
+      animation: float 8s ease-in-out infinite;
     }
     
-    /* Input focus effects */
-    .input-futuristic {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .floating-shape:nth-child(1) {
+      top: 15%;
+      left: 15%;
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(45deg, #ff9a8b, #a8e6cf);
+      border-radius: 50%;
+      animation-delay: 0s;
+    }
+    
+    .floating-shape:nth-child(2) {
+      top: 60%;
+      right: 15%;
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(45deg, #ffeaa7, #fab1a0);
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      animation-delay: 3s;
+    }
+    
+    .floating-shape:nth-child(3) {
+      bottom: 15%;
+      left: 25%;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(45deg, #74b9ff, #0984e3);
+      border-radius: 0 50% 50% 50%;
+      animation-delay: 6s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-25px) rotate(180deg); }
+    }
+    
+    /* Modern glass card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
     }
-    .input-futuristic:focus {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 0 20px rgba(59, 130, 246, 0.2);
-      transform: translateY(-2px);
+    
+    .glass-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 35px 65px rgba(0, 0, 0, 0.15);
     }
     
-    /* Button animations */
-    .btn-futuristic {
+    /* Modern input styling */
+    .modern-input {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 16px 20px;
+      color: white;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      font-weight: 400;
+    }
+    
+    .modern-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .modern-input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    /* Modern button */
+    .modern-btn {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      border: none;
+      border-radius: 16px;
+      padding: 16px 32px;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
-      transition: all 0.3s ease;
     }
-    .btn-futuristic::before {
+    
+    .modern-btn::before {
       content: '';
       position: absolute;
       top: 0;
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
       transition: left 0.5s;
     }
-    .btn-futuristic:hover::before {
+    
+    .modern-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(240, 147, 251, 0.4);
+    }
+    
+    .modern-btn:hover::before {
       left: 100%;
     }
     
-    /* Role card animations */
-    .role-card {
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      transform-style: preserve-3d;
-    }
-    .role-card:hover {
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    }
-    .role-card.active {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+    /* Role selection cards */
+    .role-selector {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
     }
     
-    /* Particle background */
-    .particles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
+    .role-selector:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
-    .particle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: rgba(59, 130, 246, 0.6);
-      border-radius: 50%;
-      animation: particleFloat 10s infinite linear;
+    
+    .role-selector.active {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
-    @keyframes particleFloat {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    
+    /* Brand section */
+    .brand-section {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Feature cards */
+    .feature-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    /* Error message styling */
+    .error-message {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #ff6b6b;
+      margin-bottom: 16px;
+    }
+    
+    /* Success message styling */
+    .success-message {
+      background: rgba(46, 204, 113, 0.1);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #2ecc71;
+      margin-bottom: 16px;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .glass-card {
+        margin: 1rem;
+      }
+      
+      .brand-section {
+        display: none;
+      }
     }
   </style>
 </head>
-<body class="min-h-screen gradient-shift flex items-center justify-center overflow-hidden relative">
-  <!-- Animated particles background -->
-  <div class="particles">
-    <div class="particle" style="left: 15%; animation-delay: 0s;"></div>
-    <div class="particle" style="left: 25%; animation-delay: 2s;"></div>
-    <div class="particle" style="left: 35%; animation-delay: 4s;"></div>
-    <div class="particle" style="left: 45%; animation-delay: 1s;"></div>
-    <div class="particle" style="left: 55%; animation-delay: 3s;"></div>
-    <div class="particle" style="left: 65%; animation-delay: 5s;"></div>
-    <div class="particle" style="left: 75%; animation-delay: 1.5s;"></div>
-    <div class="particle" style="left: 85%; animation-delay: 3.5s;"></div>
-  </div>
+<body>
+  <!-- Floating shapes background -->
+  <div class="floating-shape"></div>
+  <div class="floating-shape"></div>
+  <div class="floating-shape"></div>
 
-  <!-- 3D floating elements -->
-  <div class="fixed top-20 left-20 w-32 h-32 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 float-3d z-0"></div>
-  <div class="fixed bottom-20 right-20 w-24 h-24 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full opacity-20 float-3d-delayed z-0"></div>
-  <div class="fixed top-1/2 right-10 w-16 h-16 bg-gradient-to-r from-sky-400 to-blue-500 rounded-full opacity-20 float-3d z-0"></div>
+  <div class="w-full max-w-6xl glass-card overflow-hidden">
+    <div class="grid md:grid-cols-2 min-h-[700px]">
 
-  <div class="w-full max-w-6xl glass rounded-3xl overflow-hidden neon-glow relative card-3d backdrop-blur-xl">
-    <div class="grid md:grid-cols-2">
+      <!-- LEFT: Brand Section -->
+      <div class="brand-section p-8 md:p-12 flex flex-col justify-center">
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-white/20 to-white/10 rounded-2xl mb-6">
+            <span class="text-2xl font-bold text-white">🌟</span>
+          </div>
+          <h1 class="text-4xl font-bold text-white mb-2">MediVerse AI</h1>
+          <p class="text-white/80 text-lg">Join the Future of Healthcare</p>
+        </div>
 
-      <!-- LEFT brand panel -->
-      <div id="brandPanel" class="relative p-10 md:p-12 bg-gradient-to-br from-emerald-900/20 via-teal-900/10 to-cyan-900/20 backdrop-blur-sm">
-        <div id="brandParallax" class="relative">
-          <div class="flex items-center gap-3 mb-6">
-            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 grid place-items-center text-white font-black shadow-lg neon-glow">MV</div>
-            <div>
-              <h1 class="text-2xl md:text-3xl font-black text-white drop-shadow-lg">MediVerse AI</h1>
-              <p class="text-emerald-200 -mt-1">Join the future of care.</p>
+        <div class="space-y-4">
+          <div class="feature-card">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">✨</span>
+              <div>
+                <h3 class="text-white font-semibold">Smart Registration</h3>
+                <p class="text-white/70 text-sm">Role-based signup process</p>
+              </div>
             </div>
           </div>
-
-          <img id="roleImg" class="w-36 h-36 md:w-40 md:h-40 mx-auto mb-4 drop-shadow-lg transition-all duration-300"
-               src="https://img.icons8.com/color/128/add-user-group-man-man.png" alt="role" />
-
-          <h2 id="roleTitle" class="text-2xl md:text-3xl font-extrabold text-white text-center drop-shadow-lg">
-            Create Your Account
-          </h2>
-          <p id="roleTagline" class="text-emerald-200 text-center mt-2">
-            Choose your role and get started
-          </p>
-
-          <!-- Feature / Badge Section -->
-          <div id="roleExtra" class="hidden mt-4 text-center"></div>
-
-          <div class="mt-8 grid grid-cols-2 gap-3 text-sm">
-            <div class="card-3d p-3 rounded-xl glass border border-white/20">
-              <div class="font-semibold text-white">✅ Verified Access</div>
-              <div class="text-emerald-200 text-sm">All roles verified & secure</div>
+          
+          <div class="feature-card">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">🔒</span>
+              <div>
+                <h3 class="text-white font-semibold">Secure Platform</h3>
+                <p class="text-white/70 text-sm">Enterprise-grade security</p>
+              </div>
             </div>
-            <div class="card-3d p-3 rounded-xl glass border border-white/20">
-              <div class="font-semibold text-white">🎯 Smart Onboarding</div>
-              <div class="text-emerald-200 text-sm">Role-specific setup</div>
+          </div>
+          
+          <div class="feature-card">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">🚀</span>
+              <div>
+                <h3 class="text-white font-semibold">Quick Setup</h3>
+                <p class="text-white/70 text-sm">Get started in minutes</p>
+              </div>
             </div>
-            <div class="card-3d p-3 rounded-xl glass border border-white/20">
-              <div class="font-semibold text-white">⚡ Supabase</div>
-              <div class="text-emerald-200 text-sm">Auth + Database linked</div>
-            </div>
-            <div class="card-3d p-3 rounded-xl glass border border-white/20">
-              <div class="font-semibold text-white">🚀 Fast & Easy</div>
-              <div class="text-emerald-200 text-sm">Join within minutes</div>
+          </div>
+          
+          <div class="feature-card">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">🌍</span>
+              <div>
+                <h3 class="text-white font-semibold">Global Access</h3>
+                <p class="text-white/70 text-sm">Connect worldwide</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- RIGHT signup form -->
-      <div class="p-8 md:p-12 bg-white/5 backdrop-blur-sm">
-        <h2 class="text-3xl font-extrabold text-white text-center mb-8 drop-shadow-lg">Sign Up</h2>
+      <!-- RIGHT: Signup Form -->
+      <div class="p-8 md:p-12 flex flex-col justify-center">
+        <div class="text-center mb-6">
+          <h2 class="text-3xl font-bold text-white mb-2">Create Account</h2>
+          <p class="text-white/70">Choose your role and get started</p>
+        </div>
 
-        <!-- role selector -->
-        <div class="grid grid-cols-3 gap-3 mb-8">
-          <button id="card-patient" class="role-card glass border-2 border-blue-400/30 rounded-2xl py-4 font-semibold text-blue-300 hover:text-white hover:border-blue-400">
-            👤 Patient
+        <!-- Role Selector -->
+        <div class="grid grid-cols-3 gap-3 mb-6">
+          <button id="card-patient" class="role-selector text-white font-medium">
+            <span class="block text-2xl mb-1">👤</span>
+            <span class="text-sm">Patient</span>
           </button>
-          <button id="card-doctor" class="role-card glass border-2 border-emerald-400/30 rounded-2xl py-4 font-semibold text-emerald-300 hover:text-white hover:border-emerald-400">
-            👨‍⚕️ Doctor
+          <button id="card-doctor" class="role-selector text-white font-medium">
+            <span class="block text-2xl mb-1">👨‍⚕️</span>
+            <span class="text-sm">Doctor</span>
           </button>
-          <button id="card-hospital" class="role-card glass border-2 border-purple-400/30 rounded-2xl py-4 font-semibold text-purple-300 hover:text-white hover:border-purple-400">
-            🏥 Hospital
+          <button id="card-hospital" class="role-selector text-white font-medium">
+            <span class="block text-2xl mb-1">🏥</span>
+            <span class="text-sm">Hospital</span>
           </button>
         </div>
 
+        <!-- Message Container -->
+        <div id="messageContainer" class="hidden mb-4">
+          <!-- Error and success messages will be shown here -->
+        </div>
+        
         <form id="signupForm" class="space-y-4">
-          <!-- patient -->
+          <!-- Patient Form -->
           <div id="patientForm" class="form-section">
-            <label class="block text-sm font-medium mb-1 text-white">Full Name</label>
-            <input id="patientName" type="text" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="Enter your full name">
-            <label class="block text-sm font-medium mb-1 mt-3 text-white">Email</label>
-            <input id="patientEmail" type="email" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="you@email.com">
-            <label class="block text-sm font-medium mb-1 mt-3 text-white">Password</label>
-            <input id="patientPassword" type="password" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="Create a strong password">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-white font-medium mb-2">Full Name</label>
+                <input id="patientName" type="text" class="w-full modern-input" placeholder="Enter your full name">
+              </div>
+              <div>
+                <label class="block text-white font-medium mb-2">Email Address</label>
+                <input id="patientEmail" type="email" class="w-full modern-input" placeholder="you@email.com">
+              </div>
+              <div>
+                <label class="block text-white font-medium mb-2">Password</label>
+                <input id="patientPassword" type="password" class="w-full modern-input" placeholder="Create a strong password">
+              </div>
+            </div>
           </div>
 
-          <!-- doctor -->
+          <!-- Doctor Form -->
           <div id="doctorForm" class="form-section hidden">
-            <label class="block text-sm font-medium mb-1 text-white">Full Name</label>
-            <input id="doctorName" type="text" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="Dr. Your Name">
-            <label class="block text-sm font-medium mb-1 mt-3 text-white">Email</label>
-            <input id="doctorEmail" type="email" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="doctor@hospital.com">
-            <label class="block text-sm font-medium mb-1 mt-3 text-white">License No.</label>
-            <input id="doctorLicense" type="text" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="Medical license number">
-            <label class="block text-sm font-medium mb-1 mt-3 text-white">Password</label>
-            <input id="doctorPassword" type="password" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="Create a strong password">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-white font-medium mb-2">Full Name</label>
+                <input id="doctorName" type="text" class="w-full modern-input" placeholder="Dr. Your Name">
+              </div>
+              <div>
+                <label class="block text-white font-medium mb-2">Email Address</label>
+                <input id="doctorEmail" type="email" class="w-full modern-input" placeholder="doctor@hospital.com">
+              </div>
+              <div>
+                <label class="block text-white font-medium mb-2">Medical License</label>
+                <input id="doctorLicense" type="text" class="w-full modern-input" placeholder="Enter license number">
+              </div>
+              <div>
+                <label class="block text-white font-medium mb-2">Password</label>
+                <input id="doctorPassword" type="password" class="w-full modern-input" placeholder="Create a strong password">
+              </div>
+            </div>
           </div>
 
-          <!-- hospital -->
+          <!-- Hospital Form -->
           <div id="hospitalForm" class="form-section hidden">
-            <label class="block text-sm font-medium mb-1 text-white">Hospital Name</label>
-            <input id="hospitalName" type="text" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="Hospital/Clinic Name">
-            <label class="block text-sm font-medium mb-1 mt-3 text-white">Email</label>
-            <input id="hospitalEmail" type="email" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="admin@hospital.com">
-            <label class="block text-sm font-medium mb-1 mt-3 text-white">Registration ID</label>
-            <input id="hospitalReg" type="text" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="Hospital registration number">
-            <label class="block text-sm font-medium mb-1 mt-3 text-white">Password</label>
-            <input id="hospitalPassword" type="password" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="Create a strong password">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-white font-medium mb-2">Hospital Name</label>
+                <input id="hospitalName" type="text" class="w-full modern-input" placeholder="Hospital/Clinic Name">
+              </div>
+              <div>
+                <label class="block text-white font-medium mb-2">Email Address</label>
+                <input id="hospitalEmail" type="email" class="w-full modern-input" placeholder="admin@hospital.com">
+              </div>
+              <div>
+                <label class="block text-white font-medium mb-2">Registration ID</label>
+                <input id="hospitalReg" type="text" class="w-full modern-input" placeholder="Hospital registration number">
+              </div>
+              <div>
+                <label class="block text-white font-medium mb-2">Password</label>
+                <input id="hospitalPassword" type="password" class="w-full modern-input" placeholder="Create a strong password">
+              </div>
+            </div>
           </div>
 
-          <button type="submit" class="w-full btn-futuristic bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl p-3 font-bold shadow-lg neon-glow transform hover:scale-105">
-            ✨ Create Account
+          <button type="submit" class="w-full modern-btn mt-6">
+            <span class="flex items-center justify-center">
+              <i class="fas fa-user-plus mr-2"></i>
+              Create Account
+            </span>
           </button>
-          <p class="text-center text-sm text-gray-300 mt-4">
-            Already have an account? <a href="login.html" class="text-emerald-400 font-semibold hover:text-emerald-300 transition-colors">Login</a>
-          </p>
         </form>
+        
+        <div class="text-center mt-6">
+          <p class="text-white/70">
+            Already have an account? 
+            <a href="login.html" class="text-white font-semibold hover:underline transition-all duration-300">
+              Sign In
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   </div>

@@ -1,6 +1,6 @@
 [build]
-  publish = "dist"
-  command = "npm run build"
+  publish = "public"
+  command = "echo 'Using static HTML files from public folder'"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -11,6 +11,6 @@
   status = 200
 
 [dev]
-  command = "npm run dev"
-  port = 5173
-  publish = "dist"
+  command = "python -m http.server 8080 --directory public"
+  port = 8080
+  publish = "public"

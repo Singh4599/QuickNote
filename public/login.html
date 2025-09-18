@@ -19,276 +19,393 @@
   <script src="js/loader.js"></script>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
     
-    * { font-family: 'Inter', system-ui, sans-serif; }
-    
-    /* Modern 3D animations */
-    .float-3d { animation: float3d 6s ease-in-out infinite; }
-    .float-3d-delayed { animation: float3d 6s ease-in-out infinite 2s; }
-    @keyframes float3d {
-      0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
-      33% { transform: translateY(-10px) rotateX(5deg) rotateY(2deg); }
-      66% { transform: translateY(-5px) rotateX(-2deg) rotateY(-3deg); }
-    }
-    
-    /* Glass morphism */
-    .glass {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    /* 3D card effects */
-    .card-3d {
-      transform-style: preserve-3d;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .card-3d:hover {
-      transform: translateY(-8px) rotateX(5deg) rotateY(5deg);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* Gradient animations */
-    body {
-      background: linear-gradient(-45deg, #0ea5e9, #06b6d4, #10b981, #3b82f6);
-      background-size: 400% 400%;
-      animation: gradientShift 8s ease infinite;
-      min-height: 100vh;
-      font-family: 'Inter', system-ui, sans-serif;
+    * { 
+      font-family: 'Poppins', system-ui, sans-serif;
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    /* Modern gradient background */
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+      background-size: 300% 300%;
+      animation: gradientAnimation 8s ease infinite;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 1rem;
+      overflow-x: hidden;
     }
-    .gradient-shift {
-      background-size: 400% 400%;
-      animation: gradientShift 8s ease infinite;
-    }
-    @keyframes gradientShift {
+    
+    @keyframes gradientAnimation {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
     
-    /* Neon glow effects */
-    .neon-glow {
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 0 40px rgba(59, 130, 246, 0.3), 0 0 60px rgba(59, 130, 246, 0.1);
+    /* Floating shapes */
+    .floating-shape {
+      position: absolute;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
     }
     
-    /* Input focus effects */
-    .input-futuristic {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .floating-shape:nth-child(1) {
+      top: 10%;
+      left: 10%;
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      border-radius: 50%;
+      animation-delay: 0s;
+    }
+    
+    .floating-shape:nth-child(2) {
+      top: 70%;
+      right: 10%;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(45deg, #a8edea, #fed6e3);
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      animation-delay: 2s;
+    }
+    
+    .floating-shape:nth-child(3) {
+      bottom: 20%;
+      left: 20%;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(45deg, #ffecd2, #fcb69f);
+      border-radius: 0 50% 50% 50%;
+      animation-delay: 4s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    
+    /* Modern glass card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
     }
-    .input-futuristic:focus {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 0 20px rgba(59, 130, 246, 0.2);
-      transform: translateY(-2px);
+    
+    .glass-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 35px 65px rgba(0, 0, 0, 0.15);
     }
     
-    /* Button animations */
-    .btn-futuristic {
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Modern input styling */
+    .modern-input {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 16px 20px;
+      color: white;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      font-weight: 400;
+    }
+    
+    .modern-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .modern-input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    /* Modern button */
+    .modern-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 16px;
+      padding: 16px 32px;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
-      transition: all 0.3s ease;
     }
-    .btn-futuristic::before {
+    
+    .modern-btn::before {
       content: '';
       position: absolute;
       top: 0;
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
       transition: left 0.5s;
     }
-    .btn-futuristic:hover::before {
+    
+    .modern-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+    }
+    
+    .modern-btn:hover::before {
       left: 100%;
     }
     
-    /* Role card animations */
-    .role-card {
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      transform-style: preserve-3d;
-    }
-    .role-card:hover {
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    }
-    .role-card.active {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+    /* Role selection cards */
+    .role-selector {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
     }
     
-    /* Particle background */
-    .particles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
+    .role-selector:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
-    .particle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: rgba(16, 185, 129, 0.6);
-      border-radius: 50%;
-      animation: particleFloat 10s infinite linear;
+    
+    .role-selector.active {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
-    @keyframes particleFloat {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    
+    /* Brand section */
+    .brand-section {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Feature cards */
+    .feature-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    /* Password toggle */
+    .password-toggle {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      padding: 8px;
+      transition: color 0.3s ease;
+    }
+    
+    .password-toggle:hover {
+      color: white;
+    }
+    
+    /* Error message styling */
+    .error-message {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #ff6b6b;
+      margin-bottom: 16px;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .glass-card {
+        margin: 1rem;
+      }
+      
+      .brand-section {
+        display: none;
+      }
     }
   </style>
 </head>
-<body class="min-h-screen gradient-shift flex items-center justify-center overflow-hidden relative">
-  <!-- Animated particles background -->
-  <div class="particles">
-    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
-    <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
-    <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
-    <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
-    <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
-    <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
-    <div class="particle" style="left: 70%; animation-delay: 1.5s;"></div>
-    <div class="particle" style="left: 80%; animation-delay: 3.5s;"></div>
-    <div class="particle" style="left: 90%; animation-delay: 0.5s;"></div>
-  </div>
+<body>
+  <!-- Floating shapes background -->
+  <div class="floating-shape"></div>
+  <div class="floating-shape"></div>
+  <div class="floating-shape"></div>
 
-  <!-- 3D floating elements -->
-  <div class="fixed top-20 left-20 w-32 h-32 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 float-3d z-0"></div>
-  <div class="fixed bottom-20 right-20 w-24 h-24 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full opacity-20 float-3d-delayed z-0"></div>
-  <div class="fixed top-1/2 right-10 w-16 h-16 bg-gradient-to-r from-sky-400 to-blue-500 rounded-full opacity-20 float-3d z-0"></div>
+  <div class="w-full max-w-5xl glass-card overflow-hidden">
+    <div class="grid md:grid-cols-2 min-h-[600px]">
 
-  <div class="w-full max-w-6xl glass rounded-3xl overflow-hidden neon-glow relative card-3d backdrop-blur-xl">
-    <div class="grid md:grid-cols-2">
+      <!-- LEFT: Brand Section -->
+      <div class="brand-section p-8 md:p-12 flex flex-col justify-center">
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-white/20 to-white/10 rounded-2xl mb-6">
+            <span class="text-2xl font-bold text-white">🏥</span>
+          </div>
+          <h1 class="text-4xl font-bold text-white mb-2">MediVerse AI</h1>
+          <p class="text-white/80 text-lg">Your Healthcare Companion</p>
+        </div>
 
-      <!-- LEFT: dynamic brand panel -->
-      <div id="brandPanel" class="relative p-10 md:p-12 bg-gradient-to-br from-blue-900/20 via-purple-900/10 to-pink-900/20 backdrop-blur-sm">
-        <div id="brandParallax" class="relative">
-          <div class="flex items-center gap-3 mb-6">
-            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 grid place-items-center text-white font-black shadow-lg neon-glow">MV</div>
-            <div>
-              <h1 class="text-2xl md:text-3xl font-black text-white drop-shadow-lg">MediVerse AI</h1>
-              <p class="text-blue-200 -mt-1">AI-Powered Healthcare</p>
+        <div class="space-y-4">
+          <div class="feature-card">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">🤖</span>
+              <div>
+                <h3 class="text-white font-semibold">AI Diagnostics</h3>
+                <p class="text-white/70 text-sm">Advanced medical analysis</p>
+              </div>
             </div>
           </div>
-
-          <img id="roleImg" class="w-36 h-36 md:w-40 md:h-40 mx-auto mb-4 drop-shadow-lg transition-all duration-300"
-               src="https://img.icons8.com/color/128/clinic.png" alt="role" />
-
-          <h2 id="roleTitle" class="text-2xl md:text-3xl font-extrabold text-white text-center drop-shadow-lg">
-            Welcome to MediVerse AI
-          </h2>
-          <p id="roleTagline" class="text-blue-200 text-center mt-2">
-            Choose your role to continue
-          </p>
-
-          <div id="roleExtra" class="hidden mt-4 text-center">
-            <span class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-red-50 text-red-600 font-semibold">
-              ⚡ 24×7 Emergency Support
-            </span>
+          
+          <div class="feature-card">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">⚡</span>
+              <div>
+                <h3 class="text-white font-semibold">Instant Access</h3>
+                <p class="text-white/70 text-sm">Connect with doctors 24/7</p>
+              </div>
+            </div>
           </div>
-
-          <div class="mt-8 grid grid-cols-2 gap-3 text-sm">
-            <div class="card-3d p-3 rounded-xl glass border border-white/20">
-              <div class="font-semibold text-white">🤖 AI Diagnostics</div>
-              <div class="text-blue-200 text-sm">Upload X-rays & get analysis</div>
-            </div>
-            <div class="card-3d p-3 rounded-xl glass border border-white/20">
-              <div class="font-semibold text-white">⚡ Smart Booking</div>
-              <div class="text-blue-200 text-sm">Instant appointment slots</div>
-            </div>
-            <div class="card-3d p-3 rounded-xl glass border border-white/20">
-              <div class="font-semibold text-white">🔒 Secure</div>
-              <div class="text-blue-200 text-sm">Supabase Auth protected</div>
-            </div>
-            <div class="card-3d p-3 rounded-xl glass border border-white/20">
-              <div class="font-semibold text-white">📊 Real-time</div>
-              <div class="text-blue-200 text-sm">Live hospital status</div>
+          
+          <div class="feature-card">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">🔒</span>
+              <div>
+                <h3 class="text-white font-semibold">Secure & Private</h3>
+                <p class="text-white/70 text-sm">Your data is protected</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- RIGHT: form -->
-      <div class="p-8 md:p-12 bg-white/5 backdrop-blur-sm">
-        <h2 class="text-3xl font-extrabold text-white text-center mb-8 drop-shadow-lg">Login</h2>
+      <!-- RIGHT: Login Form -->
+      <div class="p-8 md:p-12 flex flex-col justify-center">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-bold text-white mb-2">Welcome Back</h2>
+          <p class="text-white/70">Sign in to your account to continue</p>
+        </div>
 
-        <!-- role selector -->
+        <!-- Role Selector -->
         <div class="grid grid-cols-3 gap-3 mb-8">
-          <button id="card-patient" class="role-card glass border-2 border-blue-400/30 rounded-2xl py-4 font-semibold text-blue-300 hover:text-white hover:border-blue-400">
-            👤 Patient
+          <button id="card-patient" class="role-selector text-white font-medium">
+            <span class="block text-2xl mb-1">👤</span>
+            <span class="text-sm">Patient</span>
           </button>
-          <button id="card-doctor" class="role-card glass border-2 border-emerald-400/30 rounded-2xl py-4 font-semibold text-emerald-300 hover:text-white hover:border-emerald-400">
-            👨‍⚕️ Doctor
+          <button id="card-doctor" class="role-selector text-white font-medium">
+            <span class="block text-2xl mb-1">👨‍⚕️</span>
+            <span class="text-sm">Doctor</span>
           </button>
-          <button id="card-hospital" class="role-card glass border-2 border-purple-400/30 rounded-2xl py-4 font-semibold text-purple-300 hover:text-white hover:border-purple-400">
-            🏥 Hospital
+          <button id="card-hospital" class="role-selector text-white font-medium">
+            <span class="block text-2xl mb-1">🏥</span>
+            <span class="text-sm">Hospital</span>
           </button>
         </div>
 
-        <!-- Error Message Container -->
-        <div id="errorMessage" class="hidden mb-4 p-3 rounded-lg glass border border-red-400/30 text-red-300">
+        <!-- Error Message -->
+        <div id="errorMessage" class="hidden error-message">
           <div class="flex items-center">
             <i class="fas fa-exclamation-circle mr-2"></i>
             <span id="errorText"></span>
           </div>
         </div>
         
-        <form id="loginForm" class="space-y-4">
-          <!-- patient -->
+        <form id="loginForm" class="space-y-6">
+          <!-- Patient Form -->
           <div id="patientForm" class="form-section">
-            <label class="block text-sm font-medium mb-1 text-white">Email</label>
-            <input id="email" type="email" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="you@email.com">
-            <label class="block text-sm font-medium mb-1 mt-3 text-white">Password</label>
-            <div class="relative">
-              <input id="password" type="password" class="w-full input-futuristic rounded-xl p-3 pr-10 text-white placeholder-gray-400 outline-none" placeholder="********">
-              <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors" data-target="password">
-                <i class="far fa-eye"></i>
-              </button>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-white font-medium mb-2">Email Address</label>
+                <input id="email" type="email" class="w-full modern-input" placeholder="Enter your email">
+              </div>
+              <div class="relative">
+                <label class="block text-white font-medium mb-2">Password</label>
+                <input id="password" type="password" class="w-full modern-input pr-12" placeholder="Enter your password">
+                <button type="button" class="password-toggle" data-target="password">
+                  <i class="far fa-eye"></i>
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- doctor -->
+          <!-- Doctor Form -->
           <div id="doctorForm" class="form-section hidden">
-            <label class="block text-sm font-medium mb-1 text-white">Email</label>
-            <input id="doctorEmail" type="email" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="doctor@email.com">
-            <label class="block text-sm font-medium mb-1 mt-3 text-white">Password</label>
-            <div class="relative">
-              <input id="doctorPassword" type="password" class="w-full input-futuristic rounded-xl p-3 pr-10 text-white placeholder-gray-400 outline-none" placeholder="********">
-              <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors" data-target="doctorPassword">
-                <i class="far fa-eye"></i>
-              </button>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-white font-medium mb-2">Doctor Email</label>
+                <input id="doctorEmail" type="email" class="w-full modern-input" placeholder="doctor@hospital.com">
+              </div>
+              <div class="relative">
+                <label class="block text-white font-medium mb-2">Password</label>
+                <input id="doctorPassword" type="password" class="w-full modern-input pr-12" placeholder="Enter your password">
+                <button type="button" class="password-toggle" data-target="doctorPassword">
+                  <i class="far fa-eye"></i>
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- hospital -->
+          <!-- Hospital Form -->
           <div id="hospitalForm" class="form-section hidden">
-            <label class="block text-sm font-medium mb-1 text-white">Email</label>
-            <input id="hospitalEmail" type="email" class="w-full input-futuristic rounded-xl p-3 text-white placeholder-gray-400 outline-none" placeholder="hospital@email.com">
-            <label class="block text-sm font-medium mb-1 mt-3 text-white">Password</label>
-            <div class="relative">
-              <input id="hospitalPassword" type="password" class="w-full input-futuristic rounded-xl p-3 pr-10 text-white placeholder-gray-400 outline-none" placeholder="********">
-              <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors" data-target="hospitalPassword">
-                <i class="far fa-eye"></i>
-              </button>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-white font-medium mb-2">Hospital Email</label>
+                <input id="hospitalEmail" type="email" class="w-full modern-input" placeholder="admin@hospital.com">
+              </div>
+              <div class="relative">
+                <label class="block text-white font-medium mb-2">Password</label>
+                <input id="hospitalPassword" type="password" class="w-full modern-input pr-12" placeholder="Enter your password">
+                <button type="button" class="password-toggle" data-target="hospitalPassword">
+                  <i class="far fa-eye"></i>
+                </button>
+              </div>
             </div>
           </div>
 
-          <button type="submit"
-                  class="w-full btn-futuristic bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl p-3 font-bold shadow-lg neon-glow transform hover:scale-105">
-            🚀 Continue
+          <button type="submit" class="w-full modern-btn">
+            <span class="flex items-center justify-center">
+              <i class="fas fa-sign-in-alt mr-2"></i>
+              Sign In
+            </span>
           </button>
-          <p class="text-center text-sm text-gray-300 mt-4">
-            New here? <a href="signup.html" class="text-blue-400 font-semibold hover:text-blue-300 transition-colors">Create account</a>
-          </p>
         </form>
+        
+        <div class="text-center mt-6">
+          <p class="text-white/70">
+            Don't have an account? 
+            <a href="signup.html" class="text-white font-semibold hover:underline transition-all duration-300">
+              Create Account
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -297,21 +414,23 @@
     // Password toggle functionality
     document.addEventListener('DOMContentLoaded', () => {
       // Add click event to all password toggle buttons
-      document.querySelectorAll('.password-toggle').forEach(button => {
+      document.querySelectorAll('button[data-target]').forEach(button => {
         button.addEventListener('click', function() {
           const targetId = this.getAttribute('data-target');
           const passwordInput = document.getElementById(targetId);
           const icon = this.querySelector('i');
           
-          // Toggle password visibility
-          if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-          } else {
-            passwordInput.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
+          if (passwordInput && icon) {
+            // Toggle password visibility
+            if (passwordInput.type === 'password') {
+              passwordInput.type = 'text';
+              icon.classList.remove('fa-eye');
+              icon.classList.add('fa-eye-slash');
+            } else {
+              passwordInput.type = 'password';
+              icon.classList.remove('fa-eye-slash');
+              icon.classList.add('fa-eye');
+            }
           }
         });
       });

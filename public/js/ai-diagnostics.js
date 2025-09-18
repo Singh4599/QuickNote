@@ -172,6 +172,9 @@ class AIDiagnostics {
 
     try {
       // Create report entry
+      const user = Auth.getCurrentUser();
+      if (!user) throw new Error('User not authenticated');
+      
       const { data: reportData, error: insertError } = await supabaseClient
         .from('diagnostic_reports')
         .insert({
@@ -221,17 +224,15 @@ class AIDiagnostics {
         console.log('✅ AI Analysis Result:', mockAIAnalysis);
 
         // Update the report in database with AI results
+        const user = Auth.getCurrentUser();
         const { data, error } = await supabaseClient
           .from('diagnostic_reports')
           .update({
-            owner_id: user.id,
-            file_url: fileUrl,
-            file_type: file.type,
-            mime: file.type,
-            summary: mockAIAnalysis.summary,
-            key_findings: mockAIAnalysis.key_findings,
-            followups: mockAIAnalysis.followups,
-            patient_friendly_explainer: mockAIAnalysis.patient_friendly_explainer,
+            processing_status: 'completed',
+            ai_summary: mockAIAnalysis.summary,
+            key_findings: Array.isArray(mockAIAnalysis.key_findings) ? mockAIAnalysis.key_findings : [mockAIAnalysis.key_findings],
+            follow_ups: Array.isArray(mockAIAnalysis.followups) ? mockAIAnalysis.followups : [mockAIAnalysis.followups],
+            explanation: mockAIAnalysis.patient_friendly_explainer,
             risk_level: mockAIAnalysis.risk_level,
             updated_at: new Date().toISOString()
           })
@@ -641,8 +642,8 @@ async function simulateAIAnalysis(fileContent, fileType, originalText = '') {
 
   return {
     summary: `${analysisTypes[fileType] || 'Medical Analysis'}: ${findings.primary}`,
-    key_findings: findings.detailed.join('; '),
-    followups: recommendations.join('; '),
+    key_findings: findings.detailed,
+    followups: recommendations,
     patient_friendly_explainer: patientExplanation,
     risk_level: riskLevel,
     confidence_score: findings.confidence,

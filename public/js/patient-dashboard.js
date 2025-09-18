@@ -355,9 +355,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Load user data if available
   const user = Auth.getCurrentUser();
   if (user) {
-    document.getElementById('userName').textContent = user.name || 'Patient';
+    document.getElementById('userName').textContent = user.full_name || user.name || 'Patient';
     document.getElementById('userEmail').textContent = user.email || 'you@example.com';
-    document.getElementById('userAvatar').textContent = (user.name || 'P').charAt(0).toUpperCase();
+    document.getElementById('userAvatar').textContent = ((user.full_name || user.name || 'P').charAt(0).toUpperCase());
   }
   
   // Add event listener for search with debouncing
