@@ -112,43 +112,26 @@
       }
   
       try {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: pwd });
+        // Use the Auth.signIn method from auth.js for consistency
+        const result = await Auth.signIn(email, pwd);
         
-        if (error) {
+        if (!result.success) {
           // Handle specific error cases
-          if (error.message.includes('Invalid login credentials')) {
-            showError("Invalid email or password. Please try again.");
-          } else if (error.message.includes('Email not confirmed')) {
-            showError("Please verify your email before logging in.");
+          if (result.error.includes('Invalid login credentials')) {
+            showError("Invalid email or password. Please check your credentials.");
+          } else if (result.error.includes('Email not confirmed')) {
+            showError("Please check your email and click the confirmation link.");
           } else {
-            throw error;
+            showError(result.error || "Login failed. Please try again.");
           }
           return;
         }
-        
-        if (!data?.user) throw new Error("Login failed. Please try again.");
-  
-        // get role from metadata only
-        let role = data.user.user_metadata?.role || "patient";
-        
-        // Clear any existing error before redirecting
-        clearError();
-        
-        // Redirect based on role
-        switch(role) {
-          case "doctor":
-            window.location.href = "doctor-dashboard.html";
-            break;
-          case "hospital":
-            window.location.href = "hospital-dashboard.html";
-            break;
-          default:
-            window.location.href = "patient-dashboard.html";
-        }
-        
-      } catch (err) {
-        console.error("Login error:", err);
-        showError(err.message || "An unexpected error occurred. Please try again.");
+
+        // Auth.signIn handles the redirect automatically
+        console.log('Login successful, redirecting...');
+      } catch (error) {
+        console.error('Login error:', error);
+        showError("An unexpected error occurred. Please try again.");
       }
     });
   })();
