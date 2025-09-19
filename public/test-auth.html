@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Authentication - MediVerse AI</title>
+    <script src="https://unpkg.com/@supabase/supabase-js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth-simple.js"></script>
+    <script src="js/toast.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        .test-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        button {
+            background: linear-gradient(45deg, #ff6b9d, #4facfe);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        input {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            width: 200px;
+        }
+        .result {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 MediVerse AI Authentication Test</h1>
+    
+    <div class="test-section">
+        <h2>🔧 System Status</h2>
+        <button onclick="testSystemStatus()">Check System Status</button>
+        <div id="systemStatus" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Test Signup</h2>
+        <input type="email" id="testEmail" placeholder="test@example.com" value="test@example.com">
+        <input type="password" id="testPassword" placeholder="password123" value="password123">
+        <select id="testRole">
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+            <option value="hospital">Hospital</option>
+        </select>
+        <br>
+        <button onclick="testSignup()">Test Signup</button>
+        <div id="signupResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔑 Test Login</h2>
+        <input type="email" id="loginEmail" placeholder="test@example.com" value="test@example.com">
+        <input type="password" id="loginPassword" placeholder="password123" value="password123">
+        <br>
+        <button onclick="testLogin()">Test Login</button>
+        <div id="loginResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>👤 Current User</h2>
+        <button onclick="checkCurrentUser()">Check Current User</button>
+        <button onclick="signOut()">Sign Out</button>
+        <div id="userResult" class="result"></div>
+    </div>
+
+    <script>
+        function log(elementId, message) {
+            document.getElementById(elementId).textContent = message;
+            console.log(message);
+        }
+
+        function testSystemStatus() {
+            let status = "🔍 System Status Check:\n\n";
+            
+            // Check if scripts are loaded
+            status += `✅ Supabase: ${typeof supabase !== 'undefined' ? 'Loaded' : '❌ Not Loaded'}\n`;
+            status += `✅ Config: ${typeof CONFIG !== 'undefined' ? 'Loaded' : '❌ Not Loaded'}\n`;
+            status += `✅ SimpleAuth: ${typeof SimpleAuth !== 'undefined' ? 'Loaded' : '❌ Not Loaded'}\n`;
+            status += `✅ Toast: ${typeof Toast !== 'undefined' ? 'Loaded' : '❌ Not Loaded'}\n`;
+            
+            // Check Supabase client
+            if (window.supabaseClient) {
+                status += `✅ Supabase Client: Connected\n`;
+                status += `📍 URL: ${CONFIG.SUPABASE_URL}\n`;
+            } else {
+                status += `❌ Supabase Client: Not Connected\n`;
+            }
+            
+            log('systemStatus', status);
+        }
+
+        async function testSignup() {
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            const role = document.getElementById('testRole').value;
+            
+            log('signupResult', '🔄 Testing signup...');
+            
+            try {
+                const userData = {
+                    role: role,
+                    fullName: 'Test User',
+                    phone: '1234567890'
+                };
+                
+                const result = await SimpleAuth.signUp(email, password, userData);
+                log('signupResult', `📊 Signup Result:\n${JSON.stringify(result, null, 2)}`);
+            } catch (error) {
+                log('signupResult', `❌ Signup Error:\n${error.message}\n\nStack:\n${error.stack}`);
+            }
+        }
+
+        async function testLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            log('loginResult', '🔄 Testing login...');
+            
+            try {
+                const result = await SimpleAuth.signIn(email, password);
+                log('loginResult', `📊 Login Result:\n${JSON.stringify(result, null, 2)}`);
+            } catch (error) {
+                log('loginResult', `❌ Login Error:\n${error.message}\n\nStack:\n${error.stack}`);
+            }
+        }
+
+        async function checkCurrentUser() {
+            try {
+                if (window.supabaseClient) {
+                    const { data: { user } } = await window.supabaseClient.auth.getUser();
+                    log('userResult', `👤 Current User:\n${JSON.stringify(user, null, 2)}`);
+                } else {
+                    log('userResult', '❌ Supabase client not available');
+                }
+            } catch (error) {
+                log('userResult', `❌ Error getting user:\n${error.message}`);
+            }
+        }
+
+        async function signOut() {
+            try {
+                if (window.supabaseClient) {
+                    await window.supabaseClient.auth.signOut();
+                    log('userResult', '✅ Signed out successfully');
+                } else {
+                    log('userResult', '❌ Supabase client not available');
+                }
+            } catch (error) {
+                log('userResult', `❌ Sign out error:\n${error.message}`);
+            }
+        }
+
+        // Auto-run system status check
+        window.addEventListener('load', () => {
+            setTimeout(testSystemStatus, 1000);
+        });
+    </script>
+</body>
+</html>

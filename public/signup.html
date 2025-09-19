@@ -688,67 +688,6 @@
       }
     }
 
-    // Form validation
-    function validateForm() {
-      let firstName, lastName, email, phone, password, confirmPassword;
-      
-      // Get form data based on selected role
-      if (selectedRole === 'patient') {
-        firstName = document.getElementById('patientFirstName').value.trim();
-        lastName = document.getElementById('patientLastName').value.trim();
-        email = document.getElementById('patientEmail').value.trim();
-        phone = document.getElementById('patientPhone').value.trim();
-        password = document.getElementById('patientPassword').value;
-        confirmPassword = document.getElementById('patientConfirmPassword').value;
-      } else if (selectedRole === 'doctor') {
-        firstName = document.getElementById('doctorFirstName').value.trim();
-        lastName = document.getElementById('doctorLastName').value.trim();
-        email = document.getElementById('doctorEmail').value.trim();
-        phone = document.getElementById('doctorPhone').value.trim();
-        password = document.getElementById('doctorPassword').value;
-        confirmPassword = document.getElementById('doctorConfirmPassword').value;
-        
-        const license = document.getElementById('doctorLicense').value.trim();
-        const specialization = document.getElementById('doctorSpecialization').value.trim();
-        
-        // Doctor credentials are optional for demo
-      } else if (selectedRole === 'hospital') {
-        firstName = document.getElementById('hospitalAdminFirstName').value.trim();
-        lastName = document.getElementById('hospitalAdminLastName').value.trim();
-        email = document.getElementById('hospitalEmail').value.trim();
-        phone = document.getElementById('hospitalPhone').value.trim();
-        password = document.getElementById('hospitalPassword').value;
-        confirmPassword = document.getElementById('hospitalConfirmPassword').value;
-        
-        const hospitalName = document.getElementById('hospitalName').value.trim();
-        const hospitalRegId = document.getElementById('hospitalRegId').value.trim();
-        const hospitalAddress = document.getElementById('hospitalAddress').value.trim();
-        
-        // Hospital details are optional for demo
-      }
-
-      if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
-        return { valid: false, message: 'Please fill in all fields' };
-      }
-
-      if (password !== confirmPassword) {
-        return { valid: false, message: 'Passwords do not match' };
-      }
-
-      if (password.length < 6) {
-        return { valid: false, message: 'Password must be at least 6 characters long' };
-      }
-
-      if (!termsAccepted) {
-        return { valid: false, message: 'Please accept the terms and conditions' };
-      }
-
-      if (!isValidEmail(email)) {
-        return { valid: false, message: 'Please enter a valid email address' };
-      }
-
-      return { valid: true };
-    }
 
     // Form submission
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
