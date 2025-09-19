@@ -352,37 +352,215 @@
 
         <!-- AI Analysis Section -->
         <div id="ai-analysis-section" class="section">
-          <h1 class="page-title">AI Medical Analysis</h1>
-          <p class="page-subtitle">Leverage AI to analyze patient data and generate insights</p>
+          <h1 class="page-title">🤖 AI Medical Analysis</h1>
+          <p class="page-subtitle">Advanced AI-powered diagnostic insights and patient analysis</p>
           
-          <div class="content-card">
-            <h2 class="card-title">Upload Patient Data</h2>
-            <div style="text-align: center; padding: 40px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 16px; margin: 20px 0;">
-              <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; margin-bottom: 16px; color: #4facfe;"></i>
-              <p style="margin-bottom: 16px; color: rgba(255,255,255,0.7);">Upload medical images, lab results, or patient records</p>
-              <button class="cyber-btn">Choose Files</button>
+          <!-- AI Analysis Stats -->
+          <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <div class="stat-card">
+              <div class="stat-icon">🧠</div>
+              <div class="stat-value">156</div>
+              <div class="stat-label">AI Reports Generated</div>
             </div>
-            
-            <h3 style="margin: 24px 0 16px 0; color: white;">Or analyze patient symptoms:</h3>
-            <textarea style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Enter patient symptoms, medical history, or clinical observations..."></textarea>
-            <button class="cyber-btn" style="margin-top: 16px;">
-              <i class="fas fa-brain"></i> Generate AI Report
+            <div class="stat-card">
+              <div class="stat-icon">⚡</div>
+              <div class="stat-value">98.5%</div>
+              <div class="stat-label">Accuracy Rate</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📊</div>
+              <div class="stat-value">24</div>
+              <div class="stat-label">Active Analysis</div>
+            </div>
+          </div>
+
+          <!-- Upload Section -->
+          <div class="content-card">
+            <h2 class="card-title">📁 Upload Patient Data</h2>
+            <div style="text-align: center; padding: 40px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 16px; margin: 20px 0; background: rgba(255,255,255,0.02);">
+              <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; margin-bottom: 16px; color: #4facfe;"></i>
+              <p style="margin-bottom: 16px; color: rgba(255,255,255,0.7);">Upload medical images, lab results, X-rays, or patient records</p>
+              <p style="margin-bottom: 20px; color: rgba(255,255,255,0.5); font-size: 0.9rem;">Supported: JPG, PNG, PDF, DICOM • Max 10MB</p>
+              <button class="cyber-btn" onclick="uploadFile()">
+                <i class="fas fa-upload"></i> Choose Files
+              </button>
+            </div>
+          </div>
+
+          <!-- Symptom Analysis -->
+          <div class="content-card">
+            <h2 class="card-title">🩺 Symptom Analysis</h2>
+            <div style="margin-bottom: 20px;">
+              <label style="color: white; margin-bottom: 8px; display: block;">Patient Symptoms & Medical History:</label>
+              <textarea id="symptomInput" style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Enter patient symptoms, medical history, or clinical observations...
+Example: Patient complains of chest pain, shortness of breath, fatigue. History of hypertension. Age: 45, Male."></textarea>
+            </div>
+            <button class="cyber-btn" onclick="analyzeSymptoms()" style="margin-right: 10px;">
+              <i class="fas fa-brain"></i> Generate AI Analysis
             </button>
+            <button class="cyber-btn" onclick="clearAnalysis()" style="background: linear-gradient(45deg, #ff6b9d, #fa709a);">
+              <i class="fas fa-eraser"></i> Clear
+            </button>
+          </div>
+
+          <!-- Analysis Results -->
+          <div class="content-card" id="analysisResults" style="display: none;">
+            <h2 class="card-title">📋 AI Analysis Results</h2>
+            <div id="analysisContent"></div>
+          </div>
+
+          <!-- Recent Analysis -->
+          <div class="content-card">
+            <h2 class="card-title">📈 Recent AI Analysis</h2>
+            <div class="doctor-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <h3 style="color: white; margin-bottom: 8px;">Priya Sharma - Cardiac Assessment</h3>
+                  <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-calendar"></i> Today, 2:30 PM</p>
+                  <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-heartbeat"></i> Risk Level: <span style="color: #fa709a;">Medium</span></p>
+                  <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-brain"></i> AI Confidence: 94.2%</p>
+                </div>
+                <div style="display: flex; gap: 8px; flex-direction: column;">
+                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewAnalysis('Priya Sharma')">View Report</button>
+                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="shareAnalysis('Priya Sharma')">Share</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="doctor-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <h3 style="color: white; margin-bottom: 8px;">Amit Kumar - Diabetes Screening</h3>
+                  <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-calendar"></i> Yesterday, 4:15 PM</p>
+                  <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-heartbeat"></i> Risk Level: <span style="color: #43e97b;">Low</span></p>
+                  <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-brain"></i> AI Confidence: 97.8%</p>
+                </div>
+                <div style="display: flex; gap: 8px; flex-direction: column;">
+                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewAnalysis('Amit Kumar')">View Report</button>
+                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="shareAnalysis('Amit Kumar')">Share</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Reports Section -->
         <div id="reports-section" class="section">
-          <h1 class="page-title">Medical Reports</h1>
-          <p class="page-subtitle">View and manage patient reports and AI analyses</p>
+          <h1 class="page-title">📋 Medical Reports</h1>
+          <p class="page-subtitle">Comprehensive patient reports and AI-generated medical insights</p>
           
+          <!-- Reports Stats -->
+          <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <div class="stat-card">
+              <div class="stat-icon">📄</div>
+              <div class="stat-value">89</div>
+              <div class="stat-label">Total Reports</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🔄</div>
+              <div class="stat-value">12</div>
+              <div class="stat-label">Pending Review</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">✅</div>
+              <div class="stat-value">77</div>
+              <div class="stat-label">Completed</div>
+            </div>
+          </div>
+
+          <!-- Generate New Report -->
           <div class="content-card">
-            <h2 class="card-title">Recent Reports</h2>
-            <div class="empty-state">
-              <div class="empty-icon">📋</div>
-              <h3 style="color: white; margin-bottom: 8px;">No reports generated yet</h3>
-              <p>Start analyzing patient data to generate comprehensive medical reports</p>
-              <button class="cyber-btn" style="margin-top: 16px;" onclick="showSection('ai-analysis')">Generate Report</button>
+            <h2 class="card-title">🆕 Generate New Report</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0;">
+              <button class="cyber-btn" onclick="generateReport('diagnostic')" style="padding: 20px; text-align: center;">
+                <i class="fas fa-stethoscope" style="font-size: 2rem; margin-bottom: 8px; display: block;"></i>
+                Diagnostic Report
+              </button>
+              <button class="cyber-btn" onclick="generateReport('lab')" style="padding: 20px; text-align: center;">
+                <i class="fas fa-flask" style="font-size: 2rem; margin-bottom: 8px; display: block;"></i>
+                Lab Analysis
+              </button>
+              <button class="cyber-btn" onclick="generateReport('prescription')" style="padding: 20px; text-align: center;">
+                <i class="fas fa-prescription-bottle-alt" style="font-size: 2rem; margin-bottom: 8px; display: block;"></i>
+                Prescription
+              </button>
+              <button class="cyber-btn" onclick="generateReport('followup')" style="padding: 20px; text-align: center;">
+                <i class="fas fa-calendar-check" style="font-size: 2rem; margin-bottom: 8px; display: block;"></i>
+                Follow-up
+              </button>
+            </div>
+          </div>
+
+          <!-- Recent Reports -->
+          <div class="content-card">
+            <h2 class="card-title">📈 Recent Reports</h2>
+            
+            <!-- Report 1 -->
+            <div class="doctor-card" style="margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #4facfe, #43e97b); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                      <i class="fas fa-heartbeat" style="color: white;"></i>
+                    </div>
+                    <div>
+                      <h3 style="color: white; margin: 0;">Cardiac Assessment - Priya Sharma</h3>
+                      <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">Patient ID: PS-2025-001</p>
+                    </div>
+                  </div>
+                  <div style="display: flex; gap: 20px; margin-bottom: 8px;">
+                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-calendar"></i> Sep 20, 2025</p>
+                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-clock"></i> 2:30 PM</p>
+                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-user-md"></i> Dr. Smith</p>
+                  </div>
+                  <div style="display: flex; gap: 12px; align-items: center;">
+                    <span style="background: rgba(250, 112, 154, 0.2); color: #fa709a; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">Medium Risk</span>
+                    <span style="background: rgba(67, 233, 123, 0.2); color: #43e97b; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">AI Verified</span>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 8px; flex-direction: column;">
+                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewReport('PS-2025-001')">
+                    <i class="fas fa-eye"></i> View
+                  </button>
+                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="downloadReport('PS-2025-001')">
+                    <i class="fas fa-download"></i> Download
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Report 2 -->
+            <div class="doctor-card" style="margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #ff6b9d, #fa709a); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                      <i class="fas fa-flask" style="color: white;"></i>
+                    </div>
+                    <div>
+                      <h3 style="color: white; margin: 0;">Lab Analysis - Amit Kumar</h3>
+                      <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">Patient ID: AK-2025-002</p>
+                    </div>
+                  </div>
+                  <div style="display: flex; gap: 20px; margin-bottom: 8px;">
+                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-calendar"></i> Sep 19, 2025</p>
+                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-clock"></i> 4:15 PM</p>
+                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-user-md"></i> Dr. Smith</p>
+                  </div>
+                  <div style="display: flex; gap: 12px; align-items: center;">
+                    <span style="background: rgba(67, 233, 123, 0.2); color: #43e97b; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">Low Risk</span>
+                    <span style="background: rgba(79, 172, 254, 0.2); color: #4facfe; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">Complete</span>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 8px; flex-direction: column;">
+                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewReport('AK-2025-002')">
+                    <i class="fas fa-eye"></i> View
+                  </button>
+                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="downloadReport('AK-2025-002')">
+                    <i class="fas fa-download"></i> Download
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -544,6 +722,65 @@
     
     function viewPatient(patientName) {
       alert(`Patient Details: ${patientName}\n\n• Age: 35\n• Gender: Female\n• Contact: +91-98765-43210\n• Last visit: Today\n• Condition: Stable`);
+    }
+
+    // AI Analysis Functions
+    function uploadFile() {
+      alert('📁 File upload initiated!\n\nSupported formats: JPG, PNG, PDF, DICOM\nMax size: 10MB\n\nAI analysis will begin after upload.');
+    }
+
+    function analyzeSymptoms() {
+      const symptoms = document.getElementById('symptomInput').value.trim();
+      if (!symptoms) {
+        alert('Please enter patient symptoms first.');
+        return;
+      }
+      
+      const resultsDiv = document.getElementById('analysisResults');
+      const contentDiv = document.getElementById('analysisContent');
+      
+      resultsDiv.style.display = 'block';
+      contentDiv.innerHTML = `
+        <div style="background: rgba(67, 233, 123, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #43e97b;">
+          <h3 style="color: #43e97b; margin-bottom: 16px;"><i class="fas fa-brain"></i> AI Analysis Complete</h3>
+          <p style="color: white; margin-bottom: 12px;"><strong>Primary Diagnosis:</strong> Hypertensive Heart Disease (87% confidence)</p>
+          <p style="color: white; margin-bottom: 12px;"><strong>Risk Level:</strong> <span style="color: #fa709a;">Medium</span></p>
+          <p style="color: white; margin-bottom: 12px;"><strong>Recommended Tests:</strong> ECG, Echocardiogram, Lipid Profile</p>
+          <p style="color: rgba(255,255,255,0.8);"><strong>AI Confidence:</strong> 94.2%</p>
+        </div>
+      `;
+    }
+
+    function clearAnalysis() {
+      document.getElementById('symptomInput').value = '';
+      document.getElementById('analysisResults').style.display = 'none';
+    }
+
+    function viewAnalysis(patientName) {
+      alert(`📋 AI Analysis Report - ${patientName}\n\n• Diagnosis: Cardiac Assessment\n• Risk Level: Medium\n• AI Confidence: 94.2%\n• Date: Today\n• Status: Completed`);
+    }
+
+    function shareAnalysis(patientName) {
+      alert(`📤 Sharing analysis for ${patientName}\n\nReport shared with:\n• Patient Portal\n• Insurance Provider\n• Referring Physician`);
+    }
+
+    // Reports Functions
+    function generateReport(type) {
+      const reportTypes = {
+        diagnostic: 'Diagnostic Report',
+        lab: 'Lab Analysis Report',
+        prescription: 'Prescription Report',
+        followup: 'Follow-up Report'
+      };
+      alert(`📄 Generating ${reportTypes[type]}...\n\nReport will be ready in 2-3 minutes.\nYou'll receive a notification when complete.`);
+    }
+
+    function viewReport(patientId) {
+      alert(`📋 Viewing Report - ${patientId}\n\nReport Details:\n• Type: Medical Analysis\n• Date: Today\n• Status: Complete\n• Pages: 5`);
+    }
+
+    function downloadReport(patientId) {
+      alert(`📥 Downloading Report - ${patientId}\n\nFile: medical_report_${patientId}.pdf\nSize: 2.3 MB\n\nDownload started...`);
     }
 
     // Logout function
