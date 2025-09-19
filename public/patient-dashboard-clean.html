@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>MediVerse AI – Doctor Dashboard</title>
+  <title>MediVerse AI – Patient Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -56,10 +56,10 @@
     .empty-icon { font-size: 4rem; margin-bottom: 16px; opacity: 0.5; }
     .section { display: none; }
     .section.active { display: block; }
-    .patient-card, .appointment-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 16px; transition: all 0.3s ease; }
-    .patient-card:hover, .appointment-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); border-color: #ff6b9d; }
-    .patient-info h3, .appointment-info h3 { color: white; font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
-    .patient-info p, .appointment-info p { color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+    .doctor-card, .hospital-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 16px; transition: all 0.3s ease; }
+    .doctor-card:hover, .hospital-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); border-color: #ff6b9d; }
+    .doctor-info h3, .hospital-info h3 { color: white; font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+    .doctor-info p, .hospital-info p { color: rgba(255,255,255,0.7); margin-bottom: 4px; }
     @media (max-width: 768px) {
       .sidebar { position: fixed; left: -280px; z-index: 1000; transition: left 0.3s ease; }
       .sidebar.open { left: 0; }
@@ -84,20 +84,20 @@
         <a href="#" class="nav-link active" onclick="showSection('dashboard')">
           <i class="fas fa-home"></i> Dashboard
         </a>
-        <a href="#" class="nav-link" onclick="showSection('patients')">
-          <i class="fas fa-users"></i> My Patients
+        <a href="#" class="nav-link" onclick="showSection('ai-diagnostics')">
+          <i class="fas fa-brain"></i> AI Diagnostics
         </a>
         <a href="#" class="nav-link" onclick="showSection('appointments')">
           <i class="fas fa-calendar-check"></i> Appointments
         </a>
-        <a href="#" class="nav-link" onclick="showSection('ai-analysis')">
-          <i class="fas fa-brain"></i> AI Analysis
-        </a>
         <a href="#" class="nav-link" onclick="showSection('reports')">
-          <i class="fas fa-file-medical"></i> Medical Reports
+          <i class="fas fa-file-medical"></i> Reports
         </a>
-        <a href="#" class="nav-link" onclick="showSection('schedule')">
-          <i class="fas fa-clock"></i> Schedule
+        <a href="#" class="nav-link" onclick="showSection('doctors')">
+          <i class="fas fa-user-doctor"></i> Find Doctors
+        </a>
+        <a href="#" class="nav-link" onclick="showSection('hospitals')">
+          <i class="fas fa-hospital"></i> Find Hospitals
         </a>
         <a href="#" class="nav-link" onclick="logout()">
           <i class="fas fa-sign-out-alt"></i> Logout
@@ -113,83 +113,141 @@
         
         <div class="search">
           <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search patients, appointments, reports...">
+          <input type="text" placeholder="Search doctors, hospitals, services...">
         </div>
         
-        <div class="user-avatar" id="userAvatar">D</div>
+        <div class="user-avatar" id="userAvatar">P</div>
       </header>
 
       <div class="content">
         <!-- Dashboard Section -->
         <div id="dashboard-section" class="section active">
-          <h1 class="page-title">Doctor Dashboard</h1>
-          <p class="page-subtitle">Manage your patients and appointments with AI-powered insights</p>
+          <h1 class="page-title">Welcome to MediVerse AI</h1>
+          <p class="page-subtitle">Your intelligent healthcare companion powered by advanced AI</p>
           
           <div class="stats-grid">
             <div class="stat-card">
-              <div class="stat-value">24</div>
-              <div class="stat-label">Active Patients</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">8</div>
-              <div class="stat-label">Today's Appointments</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">15</div>
+              <div class="stat-value">0</div>
               <div class="stat-label">AI Reports Generated</div>
             </div>
             <div class="stat-card">
-              <div class="stat-value">96%</div>
-              <div class="stat-label">Patient Satisfaction</div>
+              <div class="stat-value">0</div>
+              <div class="stat-label">Appointments</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">85</div>
+              <div class="stat-label">Health Score</div>
             </div>
           </div>
 
           <div class="content-card">
-            <h2 class="card-title">🤖 AI Medical Assistant</h2>
-            <p style="margin-bottom: 20px; color: rgba(255,255,255,0.7);">Analyze patient data, medical images, and generate comprehensive reports with AI</p>
-            <button class="cyber-btn" onclick="showSection('ai-analysis')">
-              <i class="fas fa-brain"></i> Start AI Analysis
+            <h2 class="card-title">🤖 AI Health Assistant</h2>
+            <p style="margin-bottom: 20px; color: rgba(255,255,255,0.7);">Upload medical images, reports, or describe symptoms for instant AI analysis</p>
+            <button class="cyber-btn" onclick="showSection('ai-diagnostics')">
+              <i class="fas fa-rocket"></i> Start AI Analysis
             </button>
           </div>
         </div>
 
-        <!-- Patients Section -->
-        <div id="patients-section" class="section">
-          <h1 class="page-title">My Patients</h1>
-          <p class="page-subtitle">Manage and monitor your patient cases</p>
+        <!-- AI Diagnostics Section -->
+        <div id="ai-diagnostics-section" class="section">
+          <h1 class="page-title">AI Diagnostics</h1>
+          <p class="page-subtitle">Upload medical files or describe symptoms for AI-powered analysis</p>
           
           <div class="content-card">
-            <h2 class="card-title">Active Patients</h2>
-            <div id="patientsList">
-              <div class="patient-card">
-                <div class="patient-info">
-                  <h3>John Smith</h3>
-                  <p><i class="fas fa-user"></i> Age: 45 • Male</p>
-                  <p><i class="fas fa-heart"></i> Condition: Hypertension</p>
-                  <p><i class="fas fa-calendar"></i> Last Visit: 2 days ago</p>
-                  <p><i class="fas fa-exclamation-triangle"></i> Status: Requires Follow-up</p>
+            <h2 class="card-title">Upload Medical Files</h2>
+            <div style="text-align: center; padding: 40px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 16px; margin: 20px 0;">
+              <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; margin-bottom: 16px; color: #4facfe;"></i>
+              <p style="margin-bottom: 16px; color: rgba(255,255,255,0.7);">Drag & drop files here or click to browse</p>
+              <button class="cyber-btn">Choose Files</button>
+            </div>
+            
+            <h3 style="margin: 24px 0 16px 0; color: white;">Or describe your symptoms:</h3>
+            <textarea style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Describe your symptoms, medical history, or paste lab results here..."></textarea>
+            <button class="cyber-btn" style="margin-top: 16px;">
+              <i class="fas fa-brain"></i> Analyze Symptoms
+            </button>
+          </div>
+        </div>
+
+        <!-- Doctors Section -->
+        <div id="doctors-section" class="section">
+          <h1 class="page-title">Find Doctors</h1>
+          <p class="page-subtitle">Connect with qualified healthcare professionals</p>
+          
+          <div class="content-card">
+            <h2 class="card-title">Available Doctors</h2>
+            <div id="doctorsList">
+              <div class="doctor-card">
+                <div class="doctor-info">
+                  <h3>Dr. Sarah Johnson</h3>
+                  <p><i class="fas fa-stethoscope"></i> Cardiologist</p>
+                  <p><i class="fas fa-star"></i> 4.9/5 Rating • 15 years experience</p>
+                  <p><i class="fas fa-map-marker-alt"></i> City General Hospital</p>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">Book Appointment</button>
+                </div>
+              </div>
+              
+              <div class="doctor-card">
+                <div class="doctor-info">
+                  <h3>Dr. Michael Chen</h3>
+                  <p><i class="fas fa-brain"></i> Neurologist</p>
+                  <p><i class="fas fa-star"></i> 4.8/5 Rating • 12 years experience</p>
+                  <p><i class="fas fa-map-marker-alt"></i> Metro Medical Center</p>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">Book Appointment</button>
+                </div>
+              </div>
+              
+              <div class="doctor-card">
+                <div class="doctor-info">
+                  <h3>Dr. Emily Rodriguez</h3>
+                  <p><i class="fas fa-user-md"></i> General Practitioner</p>
+                  <p><i class="fas fa-star"></i> 4.7/5 Rating • 8 years experience</p>
+                  <p><i class="fas fa-map-marker-alt"></i> Community Health Clinic</p>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">Book Appointment</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hospitals Section -->
+        <div id="hospitals-section" class="section">
+          <h1 class="page-title">Find Hospitals</h1>
+          <p class="page-subtitle">Locate hospitals with available beds and facilities</p>
+          
+          <div class="content-card">
+            <h2 class="card-title">Available Hospitals</h2>
+            <div id="hospitalsList">
+              <div class="hospital-card">
+                <div class="hospital-info">
+                  <h3>City General Hospital</h3>
+                  <p><i class="fas fa-bed"></i> 45 beds available • Emergency: 24/7</p>
+                  <p><i class="fas fa-ambulance"></i> Trauma Center Level 1</p>
+                  <p><i class="fas fa-map-marker-alt"></i> 123 Main Street, Downtown</p>
+                  <p><i class="fas fa-phone"></i> (555) 123-4567</p>
                   <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
                 </div>
               </div>
               
-              <div class="patient-card">
-                <div class="patient-info">
-                  <h3>Maria Garcia</h3>
-                  <p><i class="fas fa-user"></i> Age: 32 • Female</p>
-                  <p><i class="fas fa-stethoscope"></i> Condition: Diabetes Type 2</p>
-                  <p><i class="fas fa-calendar"></i> Last Visit: 1 week ago</p>
-                  <p><i class="fas fa-check-circle"></i> Status: Stable</p>
+              <div class="hospital-card">
+                <div class="hospital-info">
+                  <h3>Metro Medical Center</h3>
+                  <p><i class="fas fa-bed"></i> 23 beds available • Emergency: 24/7</p>
+                  <p><i class="fas fa-heart"></i> Specialized in Cardiology</p>
+                  <p><i class="fas fa-map-marker-alt"></i> 456 Oak Avenue, Midtown</p>
+                  <p><i class="fas fa-phone"></i> (555) 987-6543</p>
                   <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
                 </div>
               </div>
               
-              <div class="patient-card">
-                <div class="patient-info">
-                  <h3>Robert Johnson</h3>
-                  <p><i class="fas fa-user"></i> Age: 67 • Male</p>
-                  <p><i class="fas fa-brain"></i> Condition: Post-stroke Recovery</p>
-                  <p><i class="fas fa-calendar"></i> Last Visit: Yesterday</p>
-                  <p><i class="fas fa-arrow-up"></i> Status: Improving</p>
+              <div class="hospital-card">
+                <div class="hospital-info">
+                  <h3>Community Health Clinic</h3>
+                  <p><i class="fas fa-bed"></i> 12 beds available • Walk-ins welcome</p>
+                  <p><i class="fas fa-user-friends"></i> Family Medicine & Pediatrics</p>
+                  <p><i class="fas fa-map-marker-alt"></i> 789 Pine Street, Suburbs</p>
+                  <p><i class="fas fa-phone"></i> (555) 456-7890</p>
                   <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
                 </div>
               </div>
@@ -199,93 +257,32 @@
 
         <!-- Appointments Section -->
         <div id="appointments-section" class="section">
-          <h1 class="page-title">Appointments</h1>
-          <p class="page-subtitle">Manage your daily schedule and patient appointments</p>
+          <h1 class="page-title">My Appointments</h1>
+          <p class="page-subtitle">Manage your upcoming and past appointments</p>
           
           <div class="content-card">
-            <h2 class="card-title">Today's Schedule</h2>
-            <div id="appointmentsList">
-              <div class="appointment-card">
-                <div class="appointment-info">
-                  <h3>9:00 AM - Sarah Wilson</h3>
-                  <p><i class="fas fa-clock"></i> Duration: 30 minutes</p>
-                  <p><i class="fas fa-stethoscope"></i> Type: Regular Checkup</p>
-                  <p><i class="fas fa-notes-medical"></i> Notes: Annual physical examination</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">Start Consultation</button>
-                </div>
-              </div>
-              
-              <div class="appointment-card">
-                <div class="appointment-info">
-                  <h3>10:30 AM - Michael Brown</h3>
-                  <p><i class="fas fa-clock"></i> Duration: 45 minutes</p>
-                  <p><i class="fas fa-heart"></i> Type: Cardiology Follow-up</p>
-                  <p><i class="fas fa-notes-medical"></i> Notes: Blood pressure monitoring</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">Start Consultation</button>
-                </div>
-              </div>
-              
-              <div class="appointment-card">
-                <div class="appointment-info">
-                  <h3>2:00 PM - Lisa Davis</h3>
-                  <p><i class="fas fa-clock"></i> Duration: 60 minutes</p>
-                  <p><i class="fas fa-brain"></i> Type: Neurological Assessment</p>
-                  <p><i class="fas fa-notes-medical"></i> Notes: Headache evaluation</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">Start Consultation</button>
-                </div>
-              </div>
+            <h2 class="card-title">Upcoming Appointments</h2>
+            <div class="empty-state">
+              <div class="empty-icon">📅</div>
+              <h3 style="color: white; margin-bottom: 8px;">No appointments scheduled</h3>
+              <p>Book your first appointment with our network of doctors</p>
+              <button class="cyber-btn" style="margin-top: 16px;" onclick="showSection('doctors')">Find Doctors</button>
             </div>
-          </div>
-        </div>
-
-        <!-- AI Analysis Section -->
-        <div id="ai-analysis-section" class="section">
-          <h1 class="page-title">AI Medical Analysis</h1>
-          <p class="page-subtitle">Leverage AI to analyze patient data and generate insights</p>
-          
-          <div class="content-card">
-            <h2 class="card-title">Upload Patient Data</h2>
-            <div style="text-align: center; padding: 40px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 16px; margin: 20px 0;">
-              <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; margin-bottom: 16px; color: #4facfe;"></i>
-              <p style="margin-bottom: 16px; color: rgba(255,255,255,0.7);">Upload medical images, lab results, or patient records</p>
-              <button class="cyber-btn">Choose Files</button>
-            </div>
-            
-            <h3 style="margin: 24px 0 16px 0; color: white;">Or analyze patient symptoms:</h3>
-            <textarea style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Enter patient symptoms, medical history, or clinical observations..."></textarea>
-            <button class="cyber-btn" style="margin-top: 16px;">
-              <i class="fas fa-brain"></i> Generate AI Report
-            </button>
           </div>
         </div>
 
         <!-- Reports Section -->
         <div id="reports-section" class="section">
           <h1 class="page-title">Medical Reports</h1>
-          <p class="page-subtitle">View and manage patient reports and AI analyses</p>
+          <p class="page-subtitle">View and manage all your medical reports and AI analyses</p>
           
           <div class="content-card">
-            <h2 class="card-title">Recent Reports</h2>
+            <h2 class="card-title">Your Reports</h2>
             <div class="empty-state">
               <div class="empty-icon">📋</div>
-              <h3 style="color: white; margin-bottom: 8px;">No reports generated yet</h3>
-              <p>Start analyzing patient data to generate comprehensive medical reports</p>
-              <button class="cyber-btn" style="margin-top: 16px;" onclick="showSection('ai-analysis')">Generate Report</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Schedule Section -->
-        <div id="schedule-section" class="section">
-          <h1 class="page-title">Schedule Management</h1>
-          <p class="page-subtitle">Manage your availability and appointment slots</p>
-          
-          <div class="content-card">
-            <h2 class="card-title">Weekly Schedule</h2>
-            <div class="empty-state">
-              <div class="empty-icon">📅</div>
-              <h3 style="color: white; margin-bottom: 8px;">Schedule management coming soon</h3>
-              <p>Advanced scheduling features will be available in the next update</p>
+              <h3 style="color: white; margin-bottom: 8px;">No reports yet</h3>
+              <p>Upload your first medical document for AI analysis</p>
+              <button class="cyber-btn" style="margin-top: 16px;" onclick="showSection('ai-diagnostics')">Start Analysis</button>
             </div>
           </div>
         </div>

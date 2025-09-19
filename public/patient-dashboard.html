@@ -4,126 +4,299 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>MediVerse AI – Patient Dashboard</title>
-
-  <!-- Icons + Font -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#2563eb',
-            secondary: '#10b981',
-            accent: '#f59e0b',
-            dark: '#0f172a',
-          },
-          animation: {
-            'float': 'float 6s ease-in-out infinite',
-            'glow': 'glow 2s ease-in-out infinite alternate',
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-          }
-        }
-      }
-    }
-  </script>
 
   <style>
-    :root{
-      --primary:#10b981;
-      --secondary:#2563eb;
-      --danger:#ef4444;
-      --muted:rgba(255, 255, 255, 0.6);
-      --bg:linear-gradient(-45deg, #0ea5e9, #06b6d4, #10b981, #3b82f6);
-      --card:rgba(255, 255, 255, 0.1);
-      --line:rgba(255, 255, 255, 0.2);
-      --shadow:0 25px 50px rgba(0, 0, 0, 0.15);
-    }
-    *{box-sizing:border-box}
-    body{
-      font-family:'Inter',system-ui,Arial;
-      background:linear-gradient(-45deg, #0ea5e9, #06b6d4, #10b981, #3b82f6);
-      background-size:400% 400%;
-      animation:gradientShift 8s ease infinite;
-      color:#ffffff;
-      margin:0;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(-45deg, #0f0f23, #1a1a2e, #16213e, #0f3460);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      color: white;
+      overflow-x: hidden;
     }
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    .app{display:flex;min-height:100vh;position:relative}
+    .particle { position: absolute; width: 2px; height: 2px; background: rgba(255,255,255,0.3); border-radius: 50%; animation: float-particle 25s linear infinite; }
+    @keyframes float-particle { 0% { transform: translateY(100vh); opacity: 0; } 10%, 90% { opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
+    .app { display: flex; min-height: 100vh; position: relative; z-index: 10; }
+    .particle-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+    .sidebar { width: 280px; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.1); padding: 24px 20px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .brand { display: flex; align-items: center; gap: 12px; color: white; text-decoration: none; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px; }
+    .brand-icon { width: 48px; height: 48px; background: linear-gradient(45deg, #ff6b9d, #4facfe); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 0 20px rgba(255,107,157,0.3); }
+    .brand-text { font-size: 1.25rem; font-weight: 800; background: linear-gradient(45deg, #ff6b9d, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-link { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 600; transition: all 0.3s ease; margin-bottom: 8px; }
+    .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.1); color: white; transform: translateX(8px); box-shadow: 0 8px 25px rgba(255,107,157,0.3); }
+    .main { flex: 1; display: flex; flex-direction: column; }
+    .header { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
+    .search { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px 20px; flex: 1; max-width: 500px; }
+    .search input { border: none; outline: none; background: transparent; width: 100%; color: white; }
+    .search input::placeholder { color: rgba(255,255,255,0.5); }
+    .user-avatar { width: 48px; height: 48px; background: linear-gradient(45deg, #4facfe, #43e97b); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: white; }
+    .content { padding: 32px; flex: 1; }
+    .page-title { font-size: 2.5rem; font-weight: 900; background: linear-gradient(45deg, #ff6b9d, #4facfe, #43e97b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+    .page-subtitle { color: rgba(255,255,255,0.7); font-size: 1.1rem; margin-bottom: 32px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 32px; }
+    .stat-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 24px; transition: all 0.4s ease; }
+    .stat-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); border-color: #ff6b9d; }
+    .stat-value { font-size: 2.5rem; font-weight: 900; color: white; margin-bottom: 8px; }
+    .stat-label { color: rgba(255,255,255,0.7); font-weight: 600; }
+    .cyber-btn { background: linear-gradient(45deg, #ff6b9d, #4facfe); border: none; border-radius: 16px; padding: 16px 32px; color: white; font-weight: 700; cursor: pointer; transition: all 0.4s ease; text-transform: uppercase; }
+    .cyber-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 35px rgba(255,107,157,0.4); }
+    .content-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 28px; margin-bottom: 24px; transition: all 0.4s ease; }
+    .content-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); border-color: #ff6b9d; }
+    .card-title { font-size: 1.4rem; font-weight: 700; color: white; margin-bottom: 16px; }
+    .empty-state { text-align: center; padding: 48px 24px; color: rgba(255,255,255,0.7); }
+    .empty-icon { font-size: 4rem; margin-bottom: 16px; opacity: 0.5; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .doctor-card, .hospital-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 16px; transition: all 0.3s ease; }
+    .doctor-card:hover, .hospital-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); border-color: #ff6b9d; }
+    .doctor-info h3, .hospital-info h3 { color: white; font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+    .doctor-info p, .hospital-info p { color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; left: -280px; z-index: 1000; transition: left 0.3s ease; }
+      .sidebar.open { left: 0; }
+      .mobile-btn { display: block; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; cursor: pointer; margin-right: 16px; }
+      .content { padding: 20px; }
+      .page-title { font-size: 2rem; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
 
-    /* Mobile Menu Toggle */
-    .mobile-menu-toggle{display:none;position:fixed;top:15px;left:15px;z-index:1000;background:var(--brand);color:#fff;border:none;border-radius:8px;padding:10px;cursor:pointer;font-size:18px}
-    .mobile-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:998}
 
-    /* Sidebar */
-    .sidebar{
-      width:270px;
-      background:rgba(255, 255, 255, 0.1);
-      backdrop-filter:blur(20px);
-      border-right:1px solid var(--line);
-      padding:18px 16px;
-      position:sticky;
-      top:0;
-      height:100vh;
-      transition:all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index:999;
-      box-shadow:0 0 20px rgba(59, 130, 246, 0.3);
+  </style>
+</head>
+<body>
+  <div class="particle-bg" id="particleBg"></div>
+  
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <a href="#" class="brand">
+        <div class="brand-icon"><i class="fas fa-brain"></i></div>
+        <span class="brand-text">MediVerse AI</span>
+      </a>
+      
+      <nav>
+        <a href="#" class="nav-link active" onclick="showSection('dashboard')">
+          <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a href="#" class="nav-link" onclick="showSection('ai-diagnostics')">
+          <i class="fas fa-brain"></i> AI Diagnostics
+        </a>
+        <a href="#" class="nav-link" onclick="showSection('appointments')">
+          <i class="fas fa-calendar-check"></i> Appointments
+        </a>
+        <a href="#" class="nav-link" onclick="showSection('reports')">
+          <i class="fas fa-file-medical"></i> Reports
+        </a>
+        <a href="#" class="nav-link" onclick="showSection('doctors')">
+          <i class="fas fa-user-doctor"></i> Find Doctors
+        </a>
+        <a href="#" class="nav-link" onclick="showSection('hospitals')">
+          <i class="fas fa-hospital"></i> Find Hospitals
+        </a>
+        <a href="#" class="nav-link" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <button class="mobile-btn" id="mobileBtn" style="display: none;" onclick="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="search">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search doctors, hospitals, services...">
+        </div>
+        
+        <div class="user-avatar" id="userAvatar">P</div>
+      </header>
+
+      <div class="content">
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="section active">
+          <h1 class="page-title">Welcome to MediVerse AI</h1>
+          <p class="page-subtitle">Your intelligent healthcare companion powered by advanced AI</p>
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value">0</div>
+              <div class="stat-label">AI Reports Generated</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">0</div>
+              <div class="stat-label">Appointments</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">85</div>
+              <div class="stat-label">Health Score</div>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h2 class="card-title">🤖 AI Health Assistant</h2>
+            <p style="margin-bottom: 20px; color: rgba(255,255,255,0.7);">Upload medical images, reports, or describe symptoms for instant AI analysis</p>
+            <button class="cyber-btn" onclick="showSection('ai-diagnostics')">
+              <i class="fas fa-rocket"></i> Start AI Analysis
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Diagnostics Section -->
+        <div id="ai-diagnostics-section" class="section">
+          <h1 class="page-title">AI Diagnostics</h1>
+          <p class="page-subtitle">Upload medical files or describe symptoms for AI-powered analysis</p>
+          
+          <div class="content-card">
+            <h2 class="card-title">Upload Medical Files</h2>
+            <div style="text-align: center; padding: 40px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 16px; margin: 20px 0;">
+              <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; margin-bottom: 16px; color: #4facfe;"></i>
+              <p style="margin-bottom: 16px; color: rgba(255,255,255,0.7);">Drag & drop files here or click to browse</p>
+              <button class="cyber-btn">Choose Files</button>
+            </div>
+            
+            <h3 style="margin: 24px 0 16px 0; color: white;">Or describe your symptoms:</h3>
+            <textarea style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Describe your symptoms, medical history, or paste lab results here..."></textarea>
+            <button class="cyber-btn" style="margin-top: 16px;">
+              <i class="fas fa-brain"></i> Analyze Symptoms
+            </button>
+          </div>
+        </div>
+
+        <!-- Doctors Section -->
+        <div id="doctors-section" class="section">
+          <h1 class="page-title">Find Doctors</h1>
+          <p class="page-subtitle">Connect with qualified healthcare professionals</p>
+          
+          <div class="content-card">
+            <h2 class="card-title">Available Doctors</h2>
+            <div class="empty-state">
+              <div class="empty-icon">👨‍⚕️</div>
+              <h3 style="color: white; margin-bottom: 8px;">No doctors available</h3>
+              <p>Check back later for available doctors in your area</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hospitals Section -->
+        <div id="hospitals-section" class="section">
+          <h1 class="page-title">Find Hospitals</h1>
+          <p class="page-subtitle">Locate hospitals with available beds and facilities</p>
+          
+          <div class="content-card">
+            <h2 class="card-title">Available Hospitals</h2>
+            <div class="empty-state">
+              <div class="empty-icon">🏥</div>
+              <h3 style="color: white; margin-bottom: 8px;">No hospitals available</h3>
+              <p>Check back later for hospital availability in your area</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointments Section -->
+        <div id="appointments-section" class="section">
+          <h1 class="page-title">My Appointments</h1>
+          <p class="page-subtitle">Manage your upcoming and past appointments</p>
+          
+          <div class="content-card">
+            <h2 class="card-title">Upcoming Appointments</h2>
+            <div class="empty-state">
+              <div class="empty-icon">📅</div>
+              <h3 style="color: white; margin-bottom: 8px;">No appointments scheduled</h3>
+              <p>Book your first appointment with our network of doctors</p>
+              <button class="cyber-btn" style="margin-top: 16px;" onclick="showSection('doctors')">Find Doctors</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports-section" class="section">
+          <h1 class="page-title">Medical Reports</h1>
+          <p class="page-subtitle">View and manage all your medical reports and AI analyses</p>
+          
+          <div class="content-card">
+            <h2 class="card-title">Your Reports</h2>
+            <div class="empty-state">
+              <div class="empty-icon">📋</div>
+              <h3 style="color: white; margin-bottom: 8px;">No reports yet</h3>
+              <p>Upload your first medical document for AI analysis</p>
+              <button class="cyber-btn" style="margin-top: 16px;" onclick="showSection('ai-diagnostics')">Start Analysis</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/auth-simple.js"></script>
+  <script src="js/toast.js"></script>
+  
+  <script>
+    // Create particles
+    function createParticles() {
+      const bg = document.getElementById('particleBg');
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 25 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 20) + 's';
+        bg.appendChild(particle);
+      }
     }
-    .sidebar.mobile-hidden{transform:translateX(-100%)}
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:.75rem;
-      text-decoration:none;
-      color:var(--text);
-      padding:4px 8px 14px 8px;
-      border-bottom:1px solid var(--line);
+
+    // Section navigation
+    function showSection(sectionName) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      
+      document.getElementById(sectionName + '-section').classList.add('active');
+      event.target.classList.add('active');
     }
-    .brand-badge{
-      width:36px;
-      height:36px;
-      border-radius:10px;
-      background:linear-gradient(135deg, var(--brand), #3b82f6);
-      color:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:800;
-      box-shadow:0 0 20px rgba(59, 130, 246, 0.5);
-      animation:float3d 6s ease-in-out infinite;
+
+    // Mobile sidebar toggle
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
     }
-    @keyframes float3d {
-      0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
-      33% { transform: translateY(-5px) rotateX(2deg) rotateY(1deg); }
-      66% { transform: translateY(-2px) rotateX(-1deg) rotateY(-2deg); }
+
+    // Logout function
+    function logout() {
+      if (window.SimpleAuth) {
+        window.SimpleAuth.signOut();
+      } else {
+        window.location.href = 'login.html';
+      }
     }
-    .brand span{font-weight:800;font-size:1.1rem;color:var(--text)}
-    .menu{list-style:none;margin:14px 0 0 0;padding:0}
-    .menu a{
-      display:flex;
-      align-items:center;
-      gap:.75rem;
-      padding:.7rem .9rem;
-      border-radius:10px;
-      color:rgba(255, 255, 255, 0.8);
-      text-decoration:none;
-      font-weight:600;
-      transition:all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      transform-style:preserve-3d;
-    }
-    .menu a i{width:18px;text-align:center;color:rgba(255, 255, 255, 0.6)}
-    .menu a.active,.menu a:hover{
-      background: rgba(16, 185, 129, 0.6);
-      color:var(--text);
-      transform:translateY(-2px) scale(1.02);
-      box-shadow:0 10px 25px rgba(59, 130, 246, 0.3);
-    }
-    .menu a.active i,.menu a:hover i{color:var(--text)}
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      
+      // Check authentication
+      if (window.SimpleAuth) {
+        // Auth check will be handled by existing scripts
+      }
+      
+      // Mobile responsive
+      if (window.innerWidth <= 768) {
+        document.getElementById('mobileBtn').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
     .spacer{height:8px}
 
     /* Main */
