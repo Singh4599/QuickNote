@@ -180,10 +180,66 @@
           
           <div class="content-card">
             <h2 class="card-title">Available Doctors</h2>
-            <div class="empty-state">
-              <div class="empty-icon">👨‍⚕️</div>
-              <h3 style="color: white; margin-bottom: 8px;">No doctors available</h3>
-              <p>Check back later for available doctors in your area</p>
+            <div id="doctorsList">
+              <div class="doctor-card">
+                <div class="doctor-info">
+                  <h3>Dr. Rajesh Sharma</h3>
+                  <p><i class="fas fa-stethoscope"></i> Cardiologist</p>
+                  <p><i class="fas fa-star"></i> 4.9/5 Rating • 18 years experience</p>
+                  <p><i class="fas fa-map-marker-alt"></i> AIIMS Delhi</p>
+                  <p><i class="fas fa-clock"></i> Available: Mon-Fri 9AM-5PM</p>
+                  <p><i class="fas fa-rupee-sign"></i> Consultation: ₹800</p>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="bookAppointment('Dr. Rajesh Sharma', 'Cardiologist')">Book Appointment</button>
+                </div>
+              </div>
+              
+              <div class="doctor-card">
+                <div class="doctor-info">
+                  <h3>Dr. Priya Patel</h3>
+                  <p><i class="fas fa-brain"></i> Neurologist</p>
+                  <p><i class="fas fa-star"></i> 4.8/5 Rating • 15 years experience</p>
+                  <p><i class="fas fa-map-marker-alt"></i> Apollo Hospital Mumbai</p>
+                  <p><i class="fas fa-clock"></i> Available: Tue-Sat 10AM-6PM</p>
+                  <p><i class="fas fa-rupee-sign"></i> Consultation: ₹1200</p>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="bookAppointment('Dr. Priya Patel', 'Neurologist')">Book Appointment</button>
+                </div>
+              </div>
+              
+              <div class="doctor-card">
+                <div class="doctor-info">
+                  <h3>Dr. Amit Kumar</h3>
+                  <p><i class="fas fa-user-md"></i> General Physician</p>
+                  <p><i class="fas fa-star"></i> 4.7/5 Rating • 12 years experience</p>
+                  <p><i class="fas fa-map-marker-alt"></i> Fortis Hospital Bangalore</p>
+                  <p><i class="fas fa-clock"></i> Available: Mon-Sat 8AM-8PM</p>
+                  <p><i class="fas fa-rupee-sign"></i> Consultation: ₹600</p>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="bookAppointment('Dr. Amit Kumar', 'General Physician')">Book Appointment</button>
+                </div>
+              </div>
+              
+              <div class="doctor-card">
+                <div class="doctor-info">
+                  <h3>Dr. Sunita Gupta</h3>
+                  <p><i class="fas fa-female"></i> Gynecologist</p>
+                  <p><i class="fas fa-star"></i> 4.9/5 Rating • 20 years experience</p>
+                  <p><i class="fas fa-map-marker-alt"></i> Max Hospital Delhi</p>
+                  <p><i class="fas fa-clock"></i> Available: Mon-Fri 11AM-7PM</p>
+                  <p><i class="fas fa-rupee-sign"></i> Consultation: ₹1000</p>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="bookAppointment('Dr. Sunita Gupta', 'Gynecologist')">Book Appointment</button>
+                </div>
+              </div>
+              
+              <div class="doctor-card">
+                <div class="doctor-info">
+                  <h3>Dr. Vikram Singh</h3>
+                  <p><i class="fas fa-bone"></i> Orthopedic Surgeon</p>
+                  <p><i class="fas fa-star"></i> 4.8/5 Rating • 16 years experience</p>
+                  <p><i class="fas fa-map-marker-alt"></i> Medanta Hospital Gurgaon</p>
+                  <p><i class="fas fa-clock"></i> Available: Wed-Sun 9AM-4PM</p>
+                  <p><i class="fas fa-rupee-sign"></i> Consultation: ₹1500</p>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="bookAppointment('Dr. Vikram Singh', 'Orthopedic Surgeon')">Book Appointment</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -203,7 +259,7 @@
                   <p><i class="fas fa-ambulance"></i> Trauma Center Level 1</p>
                   <p><i class="fas fa-map-marker-alt"></i> Ansari Nagar, New Delhi</p>
                   <p><i class="fas fa-phone"></i> +91-11-2658-8500</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="viewHospitalDetails('AIIMS Delhi', '120 beds available')">View Details</button>
                 </div>
               </div>
               
@@ -214,7 +270,7 @@
                   <p><i class="fas fa-heart"></i> Specialized in Cardiology & Oncology</p>
                   <p><i class="fas fa-map-marker-alt"></i> Tardeo, Mumbai, Maharashtra</p>
                   <p><i class="fas fa-phone"></i> +91-22-3982-3982</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="viewHospitalDetails('Apollo Hospital Mumbai', '85 beds available')">View Details</button>
                 </div>
               </div>
               
@@ -225,7 +281,7 @@
                   <p><i class="fas fa-user-friends"></i> Multi-specialty Hospital</p>
                   <p><i class="fas fa-map-marker-alt"></i> Bannerghatta Road, Bangalore</p>
                   <p><i class="fas fa-phone"></i> +91-80-6621-4444</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="viewHospitalDetails('Fortis Hospital Bangalore', '65 beds available')">View Details</button>
                 </div>
               </div>
               
@@ -236,7 +292,7 @@
                   <p><i class="fas fa-brain"></i> Advanced Neurology & Cardiology</p>
                   <p><i class="fas fa-map-marker-alt"></i> Saket, New Delhi</p>
                   <p><i class="fas fa-phone"></i> +91-11-2651-5050</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
+                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="viewHospitalDetails('Max Hospital Delhi', '95 beds available')">View Details</button>
                 </div>
               </div>
             </div>
@@ -446,6 +502,38 @@
           appointmentsStat.textContent = currentCount + 1;
         }
       }, 1500);
+    }
+
+    // View hospital details function
+    function viewHospitalDetails(hospitalName, bedInfo) {
+      const detailsHtml = `
+        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(79,172,254,0.3); border-radius: 16px; padding: 20px; margin-top: 16px;">
+          <h4 style="color: #4facfe; margin-bottom: 12px;"><i class="fas fa-hospital"></i> Hospital Details</h4>
+          <p style="color: rgba(255,255,255,0.9);"><strong>Hospital:</strong> ${hospitalName}</p>
+          <p style="color: rgba(255,255,255,0.9);"><strong>Availability:</strong> ${bedInfo}</p>
+          <p style="color: rgba(255,255,255,0.9);"><strong>Services:</strong> Emergency Care, ICU, Surgery, Diagnostics</p>
+          <p style="color: rgba(255,255,255,0.9);"><strong>Insurance:</strong> Accepted for all major providers</p>
+          <div style="margin-top: 12px;">
+            <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; margin-right: 8px;" onclick="alert('Directions feature coming soon!')">Get Directions</button>
+            <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="alert('Call feature: Would dial hospital number')">Call Hospital</button>
+          </div>
+        </div>
+      `;
+      
+      // Add details to the hospital card
+      const button = event.target;
+      const card = button.closest('.hospital-card');
+      const existingDetails = card.querySelector('.hospital-details');
+      if (existingDetails) {
+        existingDetails.remove();
+        button.innerHTML = 'View Details';
+      } else {
+        const detailsDiv = document.createElement('div');
+        detailsDiv.className = 'hospital-details';
+        detailsDiv.innerHTML = detailsHtml;
+        card.appendChild(detailsDiv);
+        button.innerHTML = 'Hide Details';
+      }
     }
 
     // Logout function

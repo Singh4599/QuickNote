@@ -321,18 +321,72 @@
 
     <!-- Login Form -->
     <form id="loginForm">
-      <div class="form-group">
-        <label class="form-label">Email Address</label>
-        <input type="email" id="email" class="form-input" placeholder="Enter your email address" required>
+      <!-- Patient Form -->
+      <div id="patientForm" class="role-form">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="patientEmail" class="form-input" placeholder="Enter your email address" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="password-container">
+            <input type="password" id="patientPassword" class="form-input" placeholder="Enter your password" required>
+            <button type="button" class="password-toggle" onclick="togglePassword('patientPassword', 'patientPasswordIcon')">
+              <i class="far fa-eye" id="patientPasswordIcon"></i>
+            </button>
+          </div>
+        </div>
       </div>
-      
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <div class="password-container">
-          <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
-          <button type="button" class="password-toggle" onclick="togglePassword()">
-            <i class="far fa-eye" id="passwordIcon"></i>
-          </button>
+
+      <!-- Doctor Form -->
+      <div id="doctorForm" class="role-form hidden">
+        <div class="form-group">
+          <label class="form-label">Medical License Number</label>
+          <input type="text" id="doctorLicense" class="form-input" placeholder="Enter your medical license number" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="doctorEmail" class="form-input" placeholder="Enter your professional email" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="password-container">
+            <input type="password" id="doctorPassword" class="form-input" placeholder="Enter your password" required>
+            <button type="button" class="password-toggle" onclick="togglePassword('doctorPassword', 'doctorPasswordIcon')">
+              <i class="far fa-eye" id="doctorPasswordIcon"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hospital Form -->
+      <div id="hospitalForm" class="role-form hidden">
+        <div class="form-group">
+          <label class="form-label">Hospital Registration ID</label>
+          <input type="text" id="hospitalId" class="form-input" placeholder="Enter hospital registration ID" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Hospital Name</label>
+          <input type="text" id="hospitalName" class="form-input" placeholder="Enter hospital name" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Admin Email</label>
+          <input type="email" id="hospitalEmail" class="form-input" placeholder="Enter admin email address" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="password-container">
+            <input type="password" id="hospitalPassword" class="form-input" placeholder="Enter your password" required>
+            <button type="button" class="password-toggle" onclick="togglePassword('hospitalPassword', 'hospitalPasswordIcon')">
+              <i class="far fa-eye" id="hospitalPasswordIcon"></i>
+            </button>
+          </div>
         </div>
       </div>
       
@@ -384,13 +438,17 @@
         document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active'));
         card.classList.add('active');
         selectedRole = card.dataset.role;
+        
+        // Show appropriate form
+        document.querySelectorAll('.role-form').forEach(form => form.classList.add('hidden'));
+        document.getElementById(selectedRole + 'Form').classList.remove('hidden');
       });
     });
 
     // Password toggle
-    function togglePassword() {
-      const passwordInput = document.getElementById('password');
-      const passwordIcon = document.getElementById('passwordIcon');
+    function togglePassword(inputId, iconId) {
+      const passwordInput = document.getElementById(inputId);
+      const passwordIcon = document.getElementById(iconId);
       
       if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
@@ -405,8 +463,40 @@
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      let email, password, additionalData = {};
+      
+      // Get form data based on selected role
+      if (selectedRole === 'patient') {
+        email = document.getElementById('patientEmail').value;
+        password = document.getElementById('patientPassword').value;
+      } else if (selectedRole === 'doctor') {
+        email = document.getElementById('doctorEmail').value;
+        password = document.getElementById('doctorPassword').value;
+        additionalData.license = document.getElementById('doctorLicense').value;
+        
+        if (!additionalData.license) {
+          if (window.Toast) {
+            Toast.show('Please enter your medical license number', 'error');
+          } else {
+            alert('Please enter your medical license number');
+          }
+          return;
+        }
+      } else if (selectedRole === 'hospital') {
+        email = document.getElementById('hospitalEmail').value;
+        password = document.getElementById('hospitalPassword').value;
+        additionalData.hospitalId = document.getElementById('hospitalId').value;
+        additionalData.hospitalName = document.getElementById('hospitalName').value;
+        
+        if (!additionalData.hospitalId || !additionalData.hospitalName) {
+          if (window.Toast) {
+            Toast.show('Please fill in all hospital details', 'error');
+          } else {
+            alert('Please fill in all hospital details');
+          }
+          return;
+        }
+      }
       
       if (!email || !password) {
         if (window.Toast) {

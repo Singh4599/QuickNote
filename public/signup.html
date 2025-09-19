@@ -373,44 +373,162 @@
 
     <!-- Signup Form -->
     <form id="signupForm">
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">First Name</label>
-          <input type="text" id="firstName" class="form-input" placeholder="Enter first name" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Last Name</label>
-          <input type="text" id="lastName" class="form-input" placeholder="Enter last name" required>
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Email Address</label>
-        <input type="email" id="email" class="form-input" placeholder="Enter your email address" required>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Phone Number</label>
-        <input type="tel" id="phone" class="form-input" placeholder="Enter your phone number" required>
-      </div>
-      
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <div class="password-container">
-            <input type="password" id="password" class="form-input" placeholder="Create password" required>
-            <button type="button" class="password-toggle" onclick="togglePassword('password', 'passwordIcon1')">
-              <i class="far fa-eye" id="passwordIcon1"></i>
-            </button>
+      <!-- Patient Form -->
+      <div id="patientSignupForm" class="role-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" id="patientFirstName" class="form-input" placeholder="Enter first name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" id="patientLastName" class="form-input" placeholder="Enter last name" required>
           </div>
         </div>
+        
         <div class="form-group">
-          <label class="form-label">Confirm Password</label>
-          <div class="password-container">
-            <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm password" required>
-            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword', 'passwordIcon2')">
-              <i class="far fa-eye" id="passwordIcon2"></i>
-            </button>
+          <label class="form-label">Email Address</label>
+          <input type="email" id="patientEmail" class="form-input" placeholder="Enter your email address" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" id="patientPhone" class="form-input" placeholder="Enter your phone number" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="password-container">
+              <input type="password" id="patientPassword" class="form-input" placeholder="Create password" required>
+              <button type="button" class="password-toggle" onclick="togglePassword('patientPassword', 'patientPasswordIcon1')">
+                <i class="far fa-eye" id="patientPasswordIcon1"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <div class="password-container">
+              <input type="password" id="patientConfirmPassword" class="form-input" placeholder="Confirm password" required>
+              <button type="button" class="password-toggle" onclick="togglePassword('patientConfirmPassword', 'patientPasswordIcon2')">
+                <i class="far fa-eye" id="patientPasswordIcon2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Doctor Form -->
+      <div id="doctorSignupForm" class="role-form hidden">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" id="doctorFirstName" class="form-input" placeholder="Enter first name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" id="doctorLastName" class="form-input" placeholder="Enter last name" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Medical License Number</label>
+          <input type="text" id="doctorLicense" class="form-input" placeholder="Enter your medical license number" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Specialization</label>
+          <input type="text" id="doctorSpecialization" class="form-input" placeholder="Enter your specialization" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Professional Email</label>
+          <input type="email" id="doctorEmail" class="form-input" placeholder="Enter your professional email" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" id="doctorPhone" class="form-input" placeholder="Enter your phone number" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="password-container">
+              <input type="password" id="doctorPassword" class="form-input" placeholder="Create password" required>
+              <button type="button" class="password-toggle" onclick="togglePassword('doctorPassword', 'doctorPasswordIcon1')">
+                <i class="far fa-eye" id="doctorPasswordIcon1"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <div class="password-container">
+              <input type="password" id="doctorConfirmPassword" class="form-input" placeholder="Confirm password" required>
+              <button type="button" class="password-toggle" onclick="togglePassword('doctorConfirmPassword', 'doctorPasswordIcon2')">
+                <i class="far fa-eye" id="doctorPasswordIcon2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hospital Form -->
+      <div id="hospitalSignupForm" class="role-form hidden">
+        <div class="form-group">
+          <label class="form-label">Hospital Name</label>
+          <input type="text" id="hospitalName" class="form-input" placeholder="Enter hospital name" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Hospital Registration ID</label>
+          <input type="text" id="hospitalRegId" class="form-input" placeholder="Enter registration ID" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Hospital Address</label>
+          <input type="text" id="hospitalAddress" class="form-input" placeholder="Enter hospital address" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Admin First Name</label>
+            <input type="text" id="hospitalAdminFirstName" class="form-input" placeholder="Admin first name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Admin Last Name</label>
+            <input type="text" id="hospitalAdminLastName" class="form-input" placeholder="Admin last name" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Admin Email</label>
+          <input type="email" id="hospitalEmail" class="form-input" placeholder="Enter admin email address" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" id="hospitalPhone" class="form-input" placeholder="Enter hospital phone number" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="password-container">
+              <input type="password" id="hospitalPassword" class="form-input" placeholder="Create password" required>
+              <button type="button" class="password-toggle" onclick="togglePassword('hospitalPassword', 'hospitalPasswordIcon1')">
+                <i class="far fa-eye" id="hospitalPasswordIcon1"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <div class="password-container">
+              <input type="password" id="hospitalConfirmPassword" class="form-input" placeholder="Confirm password" required>
+              <button type="button" class="password-toggle" onclick="togglePassword('hospitalConfirmPassword', 'hospitalPasswordIcon2')">
+                <i class="far fa-eye" id="hospitalPasswordIcon2"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -474,6 +592,10 @@
         document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active'));
         card.classList.add('active');
         selectedRole = card.dataset.role;
+        
+        // Show appropriate form
+        document.querySelectorAll('.role-form').forEach(form => form.classList.add('hidden'));
+        document.getElementById(selectedRole + 'SignupForm').classList.remove('hidden');
       });
     });
 
