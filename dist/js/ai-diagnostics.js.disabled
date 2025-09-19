@@ -98,22 +98,45 @@ class AIDiagnostics {
       const fileName = `${report.id}.${fileExt}`;
       const filePath = `diagnostic-files/${Auth.getCurrentUser().id}/${fileName}`;
 
-      const { data: uploadData, error: uploadError } = await supabaseClient.storage
-        .from('medical-files')
-        .upload(filePath, file);
+      // Try to upload to storage bucket, but handle gracefully if bucket doesn't exist
+      let fileUrl = null;
+      try {
+        const { data: uploadData, error: uploadError } = await supabaseClient.storage
+          .from('medical-files')
+          .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.warn('Storage upload failed, proceeding without file storage:', uploadError.message);
+          // Continue without file storage - use base64 data instead
+          const reader = new FileReader();
+          reader.onload = () => {
+            fileUrl = reader.result; // base64 data URL
+          };
+          reader.readAsDataURL(file);
+        } else {
+          // Get public URL if upload succeeded
+          const { data: urlData } = supabaseClient.storage
+            .from('medical-files')
+            .getPublicUrl(filePath);
+          fileUrl = urlData.publicUrl;
+        }
+      } catch (storageError) {
+        console.warn('Storage not available, using base64 encoding:', storageError.message);
+        // Fallback to base64 encoding
+        const reader = new FileReader();
+        reader.onload = () => {
+          fileUrl = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
 
-      // Get public URL
-      const { data: urlData } = supabaseClient.storage
-        .from('medical-files')
-        .getPublicUrl(filePath);
-
-      // Update report with file URL
-      await supabaseClient
-        .from('diagnostic_reports')
-        .update({ file_url: urlData.publicUrl })
-        .eq('id', report.id);
+      // Update report with file URL (if we have one)
+      if (fileUrl) {
+        await supabaseClient
+          .from('diagnostic_reports')
+          .update({ file_url: fileUrl })
+          .eq('id', report.id);
+      }
 
       // Call AI analysis
       await this.callAIAnalysis(report.id, file);
@@ -149,6 +172,9 @@ class AIDiagnostics {
 
     try {
       // Create report entry
+      const user = Auth.getCurrentUser();
+      if (!user) throw new Error('User not authenticated');
+      
       const { data: reportData, error: insertError } = await supabaseClient
         .from('diagnostic_reports')
         .insert({
@@ -198,17 +224,15 @@ class AIDiagnostics {
         console.log('✅ AI Analysis Result:', mockAIAnalysis);
 
         // Update the report in database with AI results
+        const user = Auth.getCurrentUser();
         const { data, error } = await supabaseClient
           .from('diagnostic_reports')
           .update({
-            owner_id: user.id,
-            file_url: fileUrl,
-            file_type: file.type,
-            mime: file.type,
-            summary: mockAIAnalysis.summary,
-            key_findings: mockAIAnalysis.key_findings,
-            followups: mockAIAnalysis.followups,
-            patient_friendly_explainer: mockAIAnalysis.patient_friendly_explainer,
+            processing_status: 'completed',
+            ai_summary: mockAIAnalysis.summary,
+            key_findings: Array.isArray(mockAIAnalysis.key_findings) ? mockAIAnalysis.key_findings : [mockAIAnalysis.key_findings],
+            follow_ups: Array.isArray(mockAIAnalysis.followups) ? mockAIAnalysis.followups : [mockAIAnalysis.followups],
+            explanation: mockAIAnalysis.patient_friendly_explainer,
             risk_level: mockAIAnalysis.risk_level,
             updated_at: new Date().toISOString()
           })
@@ -618,8 +642,8 @@ async function simulateAIAnalysis(fileContent, fileType, originalText = '') {
 
   return {
     summary: `${analysisTypes[fileType] || 'Medical Analysis'}: ${findings.primary}`,
-    key_findings: findings.detailed.join('; '),
-    followups: recommendations.join('; '),
+    key_findings: findings.detailed,
+    followups: recommendations,
     patient_friendly_explainer: patientExplanation,
     risk_level: riskLevel,
     confidence_score: findings.confidence,

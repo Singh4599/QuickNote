@@ -14,10 +14,7 @@ const FloatingElements = () => {
       {elements.map((element, index) => (
         <motion.div
           key={index}
-          className="absolute w-64 h-64 rounded-full opacity-30 blur-3xl animate-float"
-          style={{
-            background: `linear-gradient(45deg, ${colors[index % colors.length]})`,
-          }}
+          className={`absolute w-64 h-64 rounded-full opacity-30 blur-3xl animate-float bg-gradient-to-r ${element.gradient}`}
           animate={{
             y: [-10, 10, -10],
             x: [-5, 5, -5],

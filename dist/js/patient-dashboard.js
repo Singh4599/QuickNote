@@ -1,14 +1,17 @@
 // Patient Dashboard Logic (JS)
 
 // --------- Dummy Data (replace with Supabase if needed) ----------
-const dummyHospitals = [
+// Check if already declared to prevent duplicate declaration errors
+if (typeof window.dummyHospitals === 'undefined') {
+  window.dummyHospitals = [
   { id: 1, name: "City General Hospital", location: "Mumbai, Maharashtra", beds: 45, available: 12, status: "available", contact: "+91 98765 43210" },
   { id: 2, name: "Metro Health Center", location: "Delhi", beds: 30, available: 0, status: "full", contact: "+91 98765 12345" },
   { id: 3, name: "Sunshine Medical", location: "Bangalore, Karnataka", beds: 25, available: 5, status: "available", contact: "+91 98765 67890" },
   { id: 4, name: "Green Valley Hospital", location: "Hyderabad", beds: 50, available: 3, status: "available", contact: "+91 98765 09876" }
-];
+  ];
+}
 
-const dummyDoctors = [
+const dummyDoctors = window.dummyDoctors || [
   { id: 1, name: "Dr. Ramesh Kumar", specialization: "Cardiologist", hospital: "City General Hospital", availability: "Mon-Fri 9AM-1PM" },
   { id: 2, name: "Dr. Priya Singh", specialization: "Neurologist", hospital: "Metro Health Center", availability: "Tue-Thu 2PM-6PM" },
   { id: 3, name: "Dr. Amit Patel", specialization: "Orthopedic", hospital: "Sunshine Medical", availability: "Mon, Wed 10AM-3PM" },
@@ -36,7 +39,7 @@ function showHospitals(){
   const container = document.getElementById("contentArea");
   let html = `<h2 style="font-weight:700;margin:18px 0">Available Hospitals</h2>`;
   html += `<div class="data-grid">`;
-  dummyHospitals.forEach(h=>{
+  window.dummyHospitals.forEach(h=>{
     const occ = h.beds ? Math.round(((h.beds - h.available) / h.beds) * 100) : 0;
     html += `
       <div class="data-card">
@@ -183,8 +186,8 @@ function cancelAppointment(id){
 function applyFilter(){
   const q = (document.getElementById("globalSearch").value||"").toLowerCase();
   if(document.querySelector(".nav-link.active").textContent.includes("Hospital")){
-    const filtered = dummyHospitals.filter(h=>(h.name+h.location).toLowerCase().includes(q));
-    if(filtered.length){ dummyHospitals.splice(0,dummyHospitals.length,...filtered); showHospitals(); }
+    const filtered = window.dummyHospitals.filter(h=>(h.name+h.location).toLowerCase().includes(q));
+    if(filtered.length){ window.dummyHospitals.splice(0,window.dummyHospitals.length,...filtered); showHospitals(); }
   } else if(document.querySelector(".nav-link.active").textContent.includes("Doctor")){
     const filtered = dummyDoctors.filter(d=>(d.name+d.specialization).toLowerCase().includes(q));
     if(filtered.length){ dummyDoctors.splice(0,dummyDoctors.length,...filtered); showDoctors(); }
@@ -355,9 +358,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Load user data if available
   const user = Auth.getCurrentUser();
   if (user) {
-    document.getElementById('userName').textContent = user.name || 'Patient';
+    document.getElementById('userName').textContent = user.full_name || user.name || 'Patient';
     document.getElementById('userEmail').textContent = user.email || 'you@example.com';
-    document.getElementById('userAvatar').textContent = (user.name || 'P').charAt(0).toUpperCase();
+    document.getElementById('userAvatar').textContent = ((user.full_name || user.name || 'P').charAt(0).toUpperCase());
   }
   
   // Add event listener for search with debouncing
