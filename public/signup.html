@@ -7,9 +7,8 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@supabase/supabase-js"></script>
-
   <script src="js/config.js"></script>
-  <script src="js/auth.js"></script>
+  <script src="js/auth-simple.js"></script>
   <script src="js/toast.js"></script>
   <script src="js/loader.js"></script>
 
@@ -326,15 +325,15 @@
           <div id="patientForm" class="form-section">
             <div class="space-y-4">
               <div>
-                <label class="block text-white font-medium mb-2">Full Name</label>
+                <label class="block text-slate-700 font-medium mb-2">Full Name</label>
                 <input id="patientName" type="text" class="w-full modern-input" placeholder="Enter your full name">
               </div>
               <div>
-                <label class="block text-white font-medium mb-2">Email Address</label>
+                <label class="block text-slate-700 font-medium mb-2">Email Address</label>
                 <input id="patientEmail" type="email" class="w-full modern-input" placeholder="you@email.com">
               </div>
               <div>
-                <label class="block text-white font-medium mb-2">Password</label>
+                <label class="block text-slate-700 font-medium mb-2">Password</label>
                 <input id="patientPassword" type="password" class="w-full modern-input" placeholder="Create a strong password">
               </div>
             </div>
@@ -344,19 +343,19 @@
           <div id="doctorForm" class="form-section hidden">
             <div class="space-y-4">
               <div>
-                <label class="block text-white font-medium mb-2">Full Name</label>
-                <input id="doctorName" type="text" class="w-full modern-input" placeholder="Dr. Your Name">
+                <label class="block text-slate-700 font-medium mb-2">Full Name</label>
+                <input id="doctorName" type="text" class="w-full modern-input" placeholder="Dr. John Doe">
               </div>
               <div>
-                <label class="block text-white font-medium mb-2">Email Address</label>
+                <label class="block text-slate-700 font-medium mb-2">Email Address</label>
                 <input id="doctorEmail" type="email" class="w-full modern-input" placeholder="doctor@hospital.com">
               </div>
               <div>
-                <label class="block text-white font-medium mb-2">Medical License</label>
-                <input id="doctorLicense" type="text" class="w-full modern-input" placeholder="Enter license number">
+                <label class="block text-slate-700 font-medium mb-2">License Number</label>
+                <input id="doctorLicense" type="text" class="w-full modern-input" placeholder="Medical License Number">
               </div>
               <div>
-                <label class="block text-white font-medium mb-2">Password</label>
+                <label class="block text-slate-700 font-medium mb-2">Password</label>
                 <input id="doctorPassword" type="password" class="w-full modern-input" placeholder="Create a strong password">
               </div>
             </div>
@@ -366,19 +365,19 @@
           <div id="hospitalForm" class="form-section hidden">
             <div class="space-y-4">
               <div>
-                <label class="block text-white font-medium mb-2">Hospital Name</label>
-                <input id="hospitalName" type="text" class="w-full modern-input" placeholder="Hospital/Clinic Name">
+                <label class="block text-slate-700 font-medium mb-2">Hospital Name</label>
+                <input id="hospitalName" type="text" class="w-full modern-input" placeholder="City General Hospital">
               </div>
               <div>
-                <label class="block text-white font-medium mb-2">Email Address</label>
+                <label class="block text-slate-700 font-medium mb-2">Email Address</label>
                 <input id="hospitalEmail" type="email" class="w-full modern-input" placeholder="admin@hospital.com">
               </div>
               <div>
-                <label class="block text-white font-medium mb-2">Registration ID</label>
-                <input id="hospitalReg" type="text" class="w-full modern-input" placeholder="Hospital registration number">
+                <label class="block text-slate-700 font-medium mb-2">Registration ID</label>
+                <input id="hospitalReg" type="text" class="w-full modern-input" placeholder="Hospital Registration Number">
               </div>
               <div>
-                <label class="block text-white font-medium mb-2">Password</label>
+                <label class="block text-slate-700 font-medium mb-2">Password</label>
                 <input id="hospitalPassword" type="password" class="w-full modern-input" placeholder="Create a strong password">
               </div>
             </div>
@@ -393,9 +392,9 @@
         </form>
         
         <div class="text-center mt-6">
-          <p class="text-white/70">
+          <p class="text-slate-600">
             Already have an account? 
-            <a href="login.html" class="text-white font-semibold hover:underline transition-all duration-300">
+            <a href="login.html" class="text-blue-600 font-semibold hover:underline transition-all duration-300">
               Sign In
             </a>
           </p>
@@ -405,5 +404,245 @@
   </div>
 
   <script src="js/signup.js" defer></script>
+  <script src="js/debug.js" defer></script>
+  
+  <!-- Immediate Role Button Fix -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔧 Fixing role buttons...');
+      
+      // Get all elements
+      const patientBtn = document.getElementById('card-patient');
+      const doctorBtn = document.getElementById('card-doctor');
+      const hospitalBtn = document.getElementById('card-hospital');
+      
+      const patientForm = document.getElementById('patientForm');
+      const doctorForm = document.getElementById('doctorForm');
+      const hospitalForm = document.getElementById('hospitalForm');
+      
+      console.log('Elements found:', {
+        patientBtn: !!patientBtn,
+        doctorBtn: !!doctorBtn,
+        hospitalBtn: !!hospitalBtn,
+        patientForm: !!patientForm,
+        doctorForm: !!doctorForm,
+        hospitalForm: !!hospitalForm
+      });
+      
+      // Function to switch roles
+      function switchRole(role) {
+        console.log('Switching to role:', role);
+        
+        // Hide all forms and disable their inputs
+        if (patientForm) {
+          patientForm.classList.add('hidden');
+          patientForm.querySelectorAll('input').forEach(input => {
+            input.removeAttribute('required');
+            input.disabled = true;
+          });
+        }
+        if (doctorForm) {
+          doctorForm.classList.add('hidden');
+          doctorForm.querySelectorAll('input').forEach(input => {
+            input.removeAttribute('required');
+            input.disabled = true;
+          });
+        }
+        if (hospitalForm) {
+          hospitalForm.classList.add('hidden');
+          hospitalForm.querySelectorAll('input').forEach(input => {
+            input.removeAttribute('required');
+            input.disabled = true;
+          });
+        }
+        
+        // Remove active class from all buttons
+        if (patientBtn) patientBtn.classList.remove('active');
+        if (doctorBtn) doctorBtn.classList.remove('active');
+        if (hospitalBtn) hospitalBtn.classList.remove('active');
+        
+        // Show selected form and activate button
+        if (role === 'patient') {
+          if (patientForm) {
+            patientForm.classList.remove('hidden');
+            patientForm.querySelectorAll('input').forEach(input => {
+              input.disabled = false;
+            });
+          }
+          if (patientBtn) patientBtn.classList.add('active');
+        } else if (role === 'doctor') {
+          if (doctorForm) {
+            doctorForm.classList.remove('hidden');
+            doctorForm.querySelectorAll('input').forEach(input => {
+              input.disabled = false;
+            });
+          }
+          if (doctorBtn) doctorBtn.classList.add('active');
+        } else if (role === 'hospital') {
+          if (hospitalForm) {
+            hospitalForm.classList.remove('hidden');
+            hospitalForm.querySelectorAll('input').forEach(input => {
+              input.disabled = false;
+            });
+          }
+          if (hospitalBtn) hospitalBtn.classList.add('active');
+        }
+      }
+      
+      // Add click handlers
+      if (patientBtn) {
+        patientBtn.addEventListener('click', () => switchRole('patient'));
+        console.log('✅ Patient button handler added');
+      }
+      
+      if (doctorBtn) {
+        doctorBtn.addEventListener('click', () => switchRole('doctor'));
+        console.log('✅ Doctor button handler added');
+      }
+      
+      if (hospitalBtn) {
+        hospitalBtn.addEventListener('click', () => switchRole('hospital'));
+        console.log('✅ Hospital button handler added');
+      }
+      
+      // Initialize with patient selected
+      switchRole('patient');
+      console.log('✅ Role buttons initialized');
+      
+      // Fix form submission with proper validation
+      const signupForm = document.getElementById('signupForm');
+      if (signupForm) {
+        signupForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('🚀 Form submitted!');
+          
+          // Disable HTML5 validation on hidden fields
+          const allInputs = signupForm.querySelectorAll('input');
+          allInputs.forEach(input => {
+            const parentForm = input.closest('.form-section');
+            if (parentForm && parentForm.classList.contains('hidden')) {
+              input.removeAttribute('required');
+              input.disabled = true;
+            } else {
+              input.disabled = false;
+            }
+          });
+          
+          // Get current active role
+          let activeRole = 'patient';
+          if (doctorBtn && doctorBtn.classList.contains('active')) activeRole = 'doctor';
+          if (hospitalBtn && hospitalBtn.classList.contains('active')) activeRole = 'hospital';
+          
+          console.log('Active role:', activeRole);
+          
+          // Get form data based on active role
+          let email = '', password = '', userData = {};
+          
+          if (activeRole === 'patient') {
+            email = document.getElementById('patientEmail')?.value?.trim() || '';
+            password = document.getElementById('patientPassword')?.value?.trim() || '';
+            userData = {
+              fullName: document.getElementById('patientName')?.value?.trim() || '',
+              role: 'patient'
+            };
+          } else if (activeRole === 'doctor') {
+            email = document.getElementById('doctorEmail')?.value?.trim() || '';
+            password = document.getElementById('doctorPassword')?.value?.trim() || '';
+            userData = {
+              fullName: document.getElementById('doctorName')?.value?.trim() || '',
+              licenseNo: document.getElementById('doctorLicense')?.value?.trim() || '',
+              role: 'doctor'
+            };
+          } else if (activeRole === 'hospital') {
+            email = document.getElementById('hospitalEmail')?.value?.trim() || '';
+            password = document.getElementById('hospitalPassword')?.value?.trim() || '';
+            userData = {
+              hospitalName: document.getElementById('hospitalName')?.value?.trim() || '',
+              registrationId: document.getElementById('hospitalReg')?.value?.trim() || '',
+              role: 'hospital',
+              fullName: document.getElementById('hospitalName')?.value?.trim() || ''
+            };
+          }
+          
+          console.log('Form data:', { email, userData });
+          
+          // Basic validation
+          if (!email || !password) {
+            if (window.SimpleAuth) {
+              window.SimpleAuth.showMessage('Please fill in all required fields (Email and Password)', 'error');
+            }
+            return;
+          }
+          
+          if (!userData.fullName && !userData.hospitalName) {
+            if (window.SimpleAuth) {
+              window.SimpleAuth.showMessage('Please enter your name', 'error');
+            }
+            return;
+          }
+          
+          if (password.length < 6) {
+            if (window.SimpleAuth) {
+              window.SimpleAuth.showMessage('Password must be at least 6 characters long', 'error');
+            }
+            return;
+          }
+          
+          // Show loading
+          const submitBtn = e.target.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Creating Account...';
+          
+          try {
+            console.log('🔄 Attempting to create account...');
+            
+            // Use SimpleAuth if available
+            if (window.SimpleAuth) {
+              console.log('Using SimpleAuth...');
+              const result = await window.SimpleAuth.signUp(email, password, userData);
+              
+              console.log('SimpleAuth result:', result);
+              
+              if (result.success) {
+                // SimpleAuth already shows the success message
+                // Only redirect if email doesn't need confirmation
+                if (!result.needsConfirmation) {
+                  setTimeout(() => {
+                    window.location.href = 'login.html';
+                  }, 2000);
+                } else {
+                  // Show additional instruction for email confirmation
+                  setTimeout(() => {
+                    window.SimpleAuth.showMessage('After confirming your email, you can log in here.', 'info');
+                  }, 3000);
+                }
+              }
+              // Error message is already shown by SimpleAuth
+            } else {
+              if (window.SimpleAuth) {
+                window.SimpleAuth.showMessage('Authentication service not available. Please refresh the page.', 'error');
+              }
+            }
+          } catch (error) {
+            console.error('Signup error:', error);
+            if (window.SimpleAuth) {
+              window.SimpleAuth.showMessage(error.message || 'An unexpected error occurred', 'error');
+            }
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+            
+            // Re-enable all inputs
+            allInputs.forEach(input => {
+              input.disabled = false;
+            });
+          }
+        });
+        console.log('✅ Form submission handler added');
+      }
+    });
+  </script>
 </body>
 </html>

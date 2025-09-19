@@ -516,9 +516,9 @@
                   <i class="fas fa-file-upload text-4xl text-gray-400 mb-4"></i>
                   <p class="text-lg font-semibold text-gray-700 mb-2">Drag & drop files here</p>
                   <p class="text-gray-500 mb-4">or</p>
-                  <button onclick="document.getElementById('fileInput').click()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
-                    Choose Files
-                  </button>
+                  <button id="chooseFileBtn" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                  Choose Files
+                </button>
                 </div>
               </div>
               
@@ -526,7 +526,7 @@
               <div class="text-left">
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Or describe your symptoms/medical data:</label>
                 <textarea id="textInput" class="w-full p-4 border border-gray-300 rounded-xl resize-none" rows="4" placeholder="Describe your symptoms, medical history, or paste lab results here..."></textarea>
-                <button onclick="analyzeText()" class="mt-4 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors">
+                <button id="analyzeBtn" class="mt-4 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors">
                   <i class="fas fa-brain mr-2"></i>Analyze Text
                 </button>
               </div>
@@ -607,32 +607,65 @@
   <!-- Supabase + JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
-  <script src="js/auth.js"></script>
+  <script src="js/auth-simple.js"></script>
   <script src="js/toast.js"></script>
   <script src="js/loader.js"></script>
-  <script src="js/patient-dashboard.js"></script>
   <script>
     // Initialize Auth when the page loads
     document.addEventListener('DOMContentLoaded', async () => {
-      await Auth.init();
-      
-      // Update user info in the UI
-      const user = Auth.getCurrentUser();
-      if (user) {
-        document.getElementById('userName').textContent = user.full_name || 'User';
-        document.getElementById('userEmail').textContent = user.email || 'user@example.com';
+      // Initialize SimpleAuth instead of Auth
+      if (window.SimpleAuth) {
+        console.log('✅ SimpleAuth available');
+        
+        // Check current session
+        try {
+          const { data: { session } } = await window.supabaseClient.auth.getSession();
+          if (session && session.user) {
+            const user = session.user;
+            const metadata = user.user_metadata || {};
+            
+            // Update user info in the UI
+            const userNameEl = document.getElementById('userName');
+            const userEmailEl = document.getElementById('userEmail');
+            
+            if (userNameEl) userNameEl.textContent = metadata.full_name || user.email.split('@')[0];
+            if (userEmailEl) userEmailEl.textContent = user.email;
+            
+            console.log('✅ User session loaded:', user.email);
+          } else {
+            console.log('❌ No active session, redirecting to login');
+            window.location.href = 'login.html';
+          }
+        } catch (error) {
+          console.error('Session check error:', error);
+          window.location.href = 'login.html';
+        }
+      } else if (window.Auth) {
+        await Auth.init();
+        
+        // Update user info in the UI
+        const user = Auth.getCurrentUser();
+        if (user) {
+          document.getElementById('userName').textContent = user.full_name || 'User';
+          document.getElementById('userEmail').textContent = user.email || 'user@example.com';
+        }
       }
       
       // Initialize logout functionality
       document.querySelectorAll('[onclick*="logout"]').forEach(button => {
         button.onclick = async (e) => {
           e.preventDefault();
-          await Auth.signOut();
+          if (window.SimpleAuth) {
+            await window.SimpleAuth.signOut();
+          } else if (window.Auth) {
+            await window.Auth.signOut();
+          }
         };
       });
     });
   </script>
   <script src="js/patient-dashboard.js"></script>
-  <script src="js/ai-diagnostics.js"></script>
+  <script src="js/gemini-ai-medical.js"></script>
+  <script src="js/ai-diagnostics-fixed.js"></script>
 </body>
 </html>

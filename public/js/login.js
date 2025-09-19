@@ -26,8 +26,8 @@
       Object.keys(sections).forEach(k => sections[k].classList.add("hidden"));
       sections[role].classList.remove("hidden");
   
-      Object.keys(roleCards).forEach(k => roleCards[k].classList.remove("border-sky-500","shadow-lg"));
-      roleCards[role].classList.add("border-sky-500","shadow-lg");
+      Object.keys(roleCards).forEach(k => roleCards[k].classList.remove("active"));
+      roleCards[role].classList.add("active");
   
       if (role === "patient") {
         brand.className = "relative p-10 md:p-12 bg-gradient-to-br from-sky-100 via-white to-emerald-100";
