@@ -122,34 +122,58 @@
       <div class="content">
         <!-- Dashboard Section -->
         <div id="dashboard-section" class="section active">
-          <h1 class="page-title">Doctor Dashboard</h1>
-          <p class="page-subtitle">Manage your patients and appointments with AI-powered insights</p>
+          <h1 class="page-title">Welcome, Dr. Rajesh</h1>
+          <p class="page-subtitle">Your intelligent medical practice companion powered by advanced AI</p>
           
           <div class="stats-grid">
             <div class="stat-card">
-              <div class="stat-value">24</div>
-              <div class="stat-label">Active Patients</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">8</div>
+              <div class="stat-value">12</div>
               <div class="stat-label">Today's Appointments</div>
             </div>
             <div class="stat-card">
-              <div class="stat-value">15</div>
-              <div class="stat-label">AI Reports Generated</div>
+              <div class="stat-value">45</div>
+              <div class="stat-label">This Week's Patients</div>
             </div>
             <div class="stat-card">
-              <div class="stat-value">96%</div>
-              <div class="stat-label">Patient Satisfaction</div>
+              <div class="stat-value">3</div>
+              <div class="stat-label">Pending Reports</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">₹28,500</div>
+              <div class="stat-label">This Month's Revenue</div>
             </div>
           </div>
 
           <div class="content-card">
             <h2 class="card-title">🤖 AI Medical Assistant</h2>
-            <p style="margin-bottom: 20px; color: rgba(255,255,255,0.7);">Analyze patient data, medical images, and generate comprehensive reports with AI</p>
+            <p style="margin-bottom: 20px; color: rgba(255,255,255,0.7);">Analyze patient data, generate reports, and get AI-powered diagnostic insights</p>
             <button class="cyber-btn" onclick="showSection('ai-analysis')">
               <i class="fas fa-brain"></i> Start AI Analysis
             </button>
+          </div>
+
+          <div class="content-card">
+            <h2 class="card-title">📅 Today's Schedule</h2>
+            <div style="display: grid; gap: 12px;">
+              <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border-left: 4px solid #43e97b;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <h4 style="color: white; margin-bottom: 4px;">Priya Sharma - Cardiology Checkup</h4>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">10:00 AM - 10:30 AM</p>
+                  </div>
+                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewPatient('Priya Sharma')">View</button>
+                </div>
+              </div>
+              <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border-left: 4px solid #ff6b9d;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <h4 style="color: white; margin-bottom: 4px;">Amit Kumar - Follow-up</h4>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">11:00 AM - 11:30 AM</p>
+                  </div>
+                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewPatient('Amit Kumar')">View</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

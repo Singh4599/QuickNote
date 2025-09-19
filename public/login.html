@@ -514,43 +514,28 @@
         loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
         loginBtn.disabled = true;
 
-        if (window.SimpleAuth) {
-          const result = await SimpleAuth.signIn(email, password, selectedRole);
-          if (result.success) {
-            // Redirect based on role
-            const dashboards = {
-              patient: 'patient-dashboard.html',
-              doctor: 'doctor-dashboard.html',
-              hospital: 'hospital-dashboard.html'
-            };
-            
-            if (window.Toast) {
-              Toast.show(`Welcome! Redirecting to ${selectedRole} dashboard...`, 'success');
-            }
-            
-            setTimeout(() => {
-              window.location.href = dashboards[selectedRole] || 'patient-dashboard.html';
-            }, 1000);
-          }
-        } else {
-          // Fallback for testing
+        // Simulate login process
+        setTimeout(() => {
+          const dashboards = {
+            patient: 'patient-dashboard.html',
+            doctor: 'doctor-dashboard.html',
+            hospital: 'hospital-dashboard.html'
+          };
+          
           if (window.Toast) {
             Toast.show(`Login successful! Redirecting to ${selectedRole} dashboard...`, 'success');
+          } else {
+            alert(`Login successful! Redirecting to ${selectedRole} dashboard...`);
           }
           
+          // Reset button state
+          loginBtn.innerHTML = originalText;
+          loginBtn.disabled = false;
+          
           setTimeout(() => {
-            const dashboards = {
-              patient: 'patient-dashboard.html',
-              doctor: 'doctor-dashboard.html',
-              hospital: 'hospital-dashboard.html'
-            };
             window.location.href = dashboards[selectedRole] || 'patient-dashboard.html';
           }, 1000);
-        }
-        
-        // Reset button state
-        loginBtn.innerHTML = originalText;
-        loginBtn.disabled = false;
+        }, 1000);
       } catch (error) {
         console.error('Login error:', error);
         if (window.Toast) {

@@ -631,12 +631,46 @@
 
     // Form validation
     function validateForm() {
-      const firstName = document.getElementById('firstName').value.trim();
-      const lastName = document.getElementById('lastName').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
+      let firstName, lastName, email, phone, password, confirmPassword;
+      
+      // Get form data based on selected role
+      if (selectedRole === 'patient') {
+        firstName = document.getElementById('patientFirstName').value.trim();
+        lastName = document.getElementById('patientLastName').value.trim();
+        email = document.getElementById('patientEmail').value.trim();
+        phone = document.getElementById('patientPhone').value.trim();
+        password = document.getElementById('patientPassword').value;
+        confirmPassword = document.getElementById('patientConfirmPassword').value;
+      } else if (selectedRole === 'doctor') {
+        firstName = document.getElementById('doctorFirstName').value.trim();
+        lastName = document.getElementById('doctorLastName').value.trim();
+        email = document.getElementById('doctorEmail').value.trim();
+        phone = document.getElementById('doctorPhone').value.trim();
+        password = document.getElementById('doctorPassword').value;
+        confirmPassword = document.getElementById('doctorConfirmPassword').value;
+        
+        const license = document.getElementById('doctorLicense').value.trim();
+        const specialization = document.getElementById('doctorSpecialization').value.trim();
+        
+        if (!license || !specialization) {
+          return { valid: false, message: 'Please fill in all doctor credentials' };
+        }
+      } else if (selectedRole === 'hospital') {
+        firstName = document.getElementById('hospitalAdminFirstName').value.trim();
+        lastName = document.getElementById('hospitalAdminLastName').value.trim();
+        email = document.getElementById('hospitalEmail').value.trim();
+        phone = document.getElementById('hospitalPhone').value.trim();
+        password = document.getElementById('hospitalPassword').value;
+        confirmPassword = document.getElementById('hospitalConfirmPassword').value;
+        
+        const hospitalName = document.getElementById('hospitalName').value.trim();
+        const hospitalRegId = document.getElementById('hospitalRegId').value.trim();
+        const hospitalAddress = document.getElementById('hospitalAddress').value.trim();
+        
+        if (!hospitalName || !hospitalRegId || !hospitalAddress) {
+          return { valid: false, message: 'Please fill in all hospital details' };
+        }
+      }
 
       if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
         return { valid: false, message: 'Please fill in all fields' };
@@ -684,51 +718,22 @@
       signupBtn.disabled = true;
 
       try {
-        const formData = {
-          firstName: document.getElementById('firstName').value.trim(),
-          lastName: document.getElementById('lastName').value.trim(),
-          email: document.getElementById('email').value.trim(),
-          phone: document.getElementById('phone').value.trim(),
-          password: document.getElementById('password').value,
-          role: selectedRole
-        };
-
-        if (window.SimpleAuth) {
-          const result = await SimpleAuth.signUp(
-            formData.email, 
-            formData.password, 
-            formData.role,
-            {
-              first_name: formData.firstName,
-              last_name: formData.lastName,
-              phone: formData.phone
-            }
-          );
-          
-          if (result.success) {
-            if (window.Toast) {
-              Toast.show('Account created successfully! Please check your email to confirm your account.', 'success');
-            } else {
-              alert('Account created successfully! Please check your email to confirm your account.');
-            }
-            
-            // Redirect to login after 2 seconds
-            setTimeout(() => {
-              window.location.href = 'login.html';
-            }, 2000);
-          }
-        } else {
-          // Fallback for testing
+        // Simulate account creation
+        setTimeout(() => {
           if (window.Toast) {
-            Toast.show('Account created successfully!', 'success');
+            Toast.show(`${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} account created successfully!`, 'success');
           } else {
-            alert('Account created successfully!');
+            alert(`${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} account created successfully!`);
           }
+          
+          // Reset button state
+          signupBtn.innerHTML = originalText;
+          signupBtn.disabled = false;
           
           setTimeout(() => {
             window.location.href = 'login.html';
           }, 1500);
-        }
+        }, 1500);
       } catch (error) {
         console.error('Signup error:', error);
         if (window.Toast) {
