@@ -676,6 +676,115 @@
         </div>
       </div>
 
+      <!-- Patient Records Section -->
+      <div id="patients-section" class="section">
+        <h1 class="page-title">👥 Patient Records</h1>
+        <p class="page-subtitle">Comprehensive patient management and medical records</p>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-value">1,247</div>
+            <div class="stat-label">Total Patients</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🆕</div>
+            <div class="stat-value">23</div>
+            <div class="stat-label">New Admissions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🏠</div>
+            <div class="stat-value">18</div>
+            <div class="stat-label">Discharged Today</div>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <h2 class="card-title">📋 Recent Patient Records</h2>
+          <div class="hospital-card" style="margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center;">
+                <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #4facfe, #43e97b); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem;">👤</div>
+                <div>
+                  <h3 style="color: white; margin: 0;">Priya Sharma</h3>
+                  <p style="color: rgba(255,255,255,0.7); margin: 4px 0;">Patient ID: PS-2025-001 • Age: 34</p>
+                  <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">Admitted: Sep 18, 2025 • Cardiology</p>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px; flex-direction: column;">
+                <span style="background: rgba(67, 233, 123, 0.2); color: #43e97b; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem;">Stable</span>
+                <button class="cyber-btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="viewPatientRecord('PS-2025-001')">View Record</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Departments Section -->
+      <div id="departments-section" class="section">
+        <h1 class="page-title">🏢 Departments</h1>
+        <p class="page-subtitle">Hospital departments and specialized units</p>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🏢</div>
+            <div class="stat-value">12</div>
+            <div class="stat-label">Active Departments</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🚨</div>
+            <div class="stat-value">24/7</div>
+            <div class="stat-label">Emergency Services</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔬</div>
+            <div class="stat-value">8</div>
+            <div class="stat-label">Specialized Units</div>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <h2 class="card-title">🏥 Department Overview</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div class="hospital-card">
+              <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #fa709a, #ff6b9d); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem;">🚨</div>
+                <div>
+                  <h3 style="color: white; margin: 0;">Emergency Department</h3>
+                  <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">24/7 Critical Care</p>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: rgba(255,255,255,0.8);">Current Patients:</span>
+                <span style="color: #fa709a; font-weight: bold;">18</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: rgba(255,255,255,0.8);">Staff on Duty:</span>
+                <span style="color: #43e97b; font-weight: bold;">12</span>
+              </div>
+            </div>
+
+            <div class="hospital-card">
+              <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #4facfe, #43e97b); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem;">❤️</div>
+                <div>
+                  <h3 style="color: white; margin: 0;">Cardiology</h3>
+                  <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">Heart & Vascular Care</p>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: rgba(255,255,255,0.8);">Current Patients:</span>
+                <span style="color: #4facfe; font-weight: bold;">24</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: rgba(255,255,255,0.8);">Specialists:</span>
+                <span style="color: #43e97b; font-weight: bold;">8</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Settings Section -->
       <div id="settings-section" class="section">
         <h1 class="page-title">⚙️ Hospital Settings</h1>
@@ -703,7 +812,7 @@
               </div>
               <div style="margin-bottom: 15px;">
                 <label style="color: rgba(255,255,255,0.8); display: block; margin-bottom: 5px;">Emergency Contact</label>
-                <input type="text" value="+1 (555) 911-HELP" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
+                <input type="text" value="+91 (555) 911-HELP" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
               </div>
             </div>
           </div>
@@ -766,6 +875,34 @@
       alert('✅ Settings Saved Successfully!\n\nAll hospital configuration changes have been applied.\n\nChanges include:\n• Hospital information\n• Contact details\n• Operational settings');
     }
 
+    function viewPatientRecord(patientId) {
+      alert(`📋 Patient Record - ${patientId}\n\nPatient Details:\n• Name: Priya Sharma\n• Age: 34\n• Department: Cardiology\n• Status: Stable\n• Admitted: Sep 18, 2025\n• Doctor: Dr. Rajesh Kumar`);
+    }
+
+    // Real-time updates simulation
+    function updateBedStatus() {
+      // Simulate bed status changes
+      const bedCards = document.querySelectorAll('.hospital-card');
+      bedCards.forEach(card => {
+        const progressBar = card.querySelector('.progress-fill');
+        if (progressBar) {
+          const currentWidth = parseInt(progressBar.style.width);
+          const newWidth = Math.max(60, Math.min(95, currentWidth + Math.random() * 10 - 5));
+          progressBar.style.width = newWidth + '%';
+        }
+      });
+    }
+
+    function updateStaffStatus() {
+      // Simulate staff updates
+      console.log('Staff status updated');
+    }
+
+    function updateEquipmentStatus() {
+      // Simulate equipment updates
+      console.log('Equipment status updated');
+    }
+
     // Logout function
     function logout() {
       if (window.SimpleAuth) {
@@ -791,207 +928,15 @@
       if (window.innerWidth <= 768) {
         document.getElementById('mobileBtn').style.display = 'block';
       }
+
+      // Start real-time updates
+      setInterval(updateBedStatus, 30000); // Update every 30 seconds
+      setInterval(updateStaffStatus, 60000); // Update every minute
+      setInterval(updateEquipmentStatus, 45000); // Update every 45 seconds
     });
   </script>
 </body>
 </html>
-    
-    /* Particle background */
-    .particles {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: 0;
-    }
-    .particle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: rgba(16, 185, 129, 0.6);
-      border-radius: 50%;
-      animation: particleFloat 10s infinite linear;
-    }
-    @keyframes particleFloat {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-    }
-    
-    .app-container{display:flex;min-height:100vh;position:relative;z-index:1}
-    /* Futuristic Sidebar */
-    .sidebar{
-      width:260px;
-      background:rgba(255, 255, 255, 0.1);
-      backdrop-filter:blur(20px);
-      box-shadow:0 0 20px rgba(16, 185, 129, 0.3);
-      padding:1.5rem;
-      border-right:1px solid rgba(255, 255, 255, 0.2);
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:.75rem;
-      text-decoration:none;
-      color:#ffffff;
-      font-weight:700;
-    }
-    .brand-logo{
-      width:36px;
-      height:36px;
-      background:linear-gradient(135deg, var(--primary), #059669);
-      color:white;
-      border-radius:8px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      box-shadow:0 0 20px rgba(16, 185, 129, 0.5);
-      animation:float3d 6s ease-in-out infinite;
-    }
-    .nav-menu{list-style:none;padding:0;margin-top:1rem}
-    .nav-link{
-      display:flex;
-      align-items:center;
-      gap:.75rem;
-      padding:.65rem .9rem;
-      border-radius:.6rem;
-      color:rgba(255, 255, 255, 0.8);
-      text-decoration:none;
-      margin-bottom:.35rem;
-      transition:all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      transform-style:preserve-3d;
-    }
-    .nav-link.active, .nav-link:hover{
-      background:rgba(16, 185, 129, 0.2);
-      color:#ffffff;
-      transform:translateY(-2px) scale(1.02);
-      box-shadow:0 10px 25px rgba(16, 185, 129, 0.3);
-    }
-    .main-content{flex:1;overflow:auto}
-    .top-bar{
-      background:rgba(255, 255, 255, 0.1);
-      backdrop-filter:blur(20px);
-      padding:1rem 1.5rem;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      box-shadow:0 0 20px rgba(16, 185, 129, 0.2);
-      position:sticky;
-      top:0;
-      z-index:30;
-      border-bottom:1px solid rgba(255, 255, 255, 0.2);
-    }
-    .search-input{
-      width:100%;
-      padding:.6rem 1rem;
-      border:1px solid rgba(255, 255, 255, 0.1);
-      border-radius:.6rem;
-      background:rgba(255, 255, 255, 0.05);
-      color:#ffffff;
-      transition:all 0.3s ease;
-    }
-    .search-input:focus{
-      background:rgba(255, 255, 255, 0.1);
-      border-color:#10b981;
-      box-shadow:0 0 20px rgba(16, 185, 129, 0.3);
-      transform:translateY(-2px);
-      outline:none;
-    }
-    .search-input::placeholder{color:rgba(255, 255, 255, 0.6)}
-    .dashboard-content{padding:2rem}
-    .dashboard-header{margin-bottom:1.25rem}
-    .dashboard-title{font-size:1.6rem;font-weight:700;color:#ffffff;text-shadow:0 0 20px rgba(255, 255, 255, 0.5)}
-    .dashboard-subtitle{color:var(--muted)}
-    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem}
-    .stat-card{
-      background:rgba(255, 255, 255, 0.1);
-      backdrop-filter:blur(20px);
-      border-radius:12px;
-      padding:1rem;
-      box-shadow:0 25px 50px rgba(0, 0, 0, 0.15);
-      border:1px solid rgba(255, 255, 255, 0.2);
-      transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      transform-style:preserve-3d;
-    }
-    .stat-card:hover{
-      transform:translateY(-8px) rotateX(5deg) rotateY(5deg);
-      box-shadow:0 25px 50px rgba(0, 0, 0, 0.15);
-    }
-    .data-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
-    .data-card{
-      background:rgba(255, 255, 255, 0.1);
-      backdrop-filter:blur(20px);
-      border-radius:12px;
-      overflow:hidden;
-      box-shadow:0 25px 50px rgba(0, 0, 0, 0.15);
-      border:1px solid rgba(255, 255, 255, 0.2);
-      transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      transform-style:preserve-3d;
-    }
-    .data-card:hover{
-      transform:translateY(-8px) rotateX(5deg) rotateY(5deg);
-      box-shadow:0 25px 50px rgba(0, 0, 0, 0.15);
-    }
-    .data-card-header{
-      padding:1rem;
-      border-bottom:1px solid rgba(255, 255, 255, 0.2);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      color:#ffffff;
-    }
-    .data-card-body{padding:1rem;color:#ffffff}
-    .status-badge{padding:.25rem .6rem;border-radius:999px;font-weight:600;font-size:.85rem}
-    .status-available{background:rgba(16, 185, 129, 0.2);color:#10b981;border:1px solid rgba(16, 185, 129, 0.3)}
-    .status-full{background:rgba(239, 68, 68, 0.2);color:#ef4444;border:1px solid rgba(239, 68, 68, 0.3)}
-    .btn{
-      padding:.5rem .9rem;
-      border-radius:.6rem;
-      border:none;
-      background:linear-gradient(135deg, var(--primary), #059669);
-      color:white;
-      font-weight:600;
-      cursor:pointer;
-      transition:all 0.3s ease;
-      position:relative;
-      overflow:hidden;
-    }
-    .btn:hover{
-      transform:translateY(-2px) scale(1.05);
-      box-shadow:0 10px 25px rgba(16, 185, 129, 0.3);
-    }
-    .btn-outline{
-      background:rgba(255, 255, 255, 0.1);
-      border:1px solid rgba(255, 255, 255, 0.2);
-      color:#ffffff;
-      padding:.45rem .8rem;
-      border-radius:.6rem;
-      transition:all 0.3s ease;
-    }
-    .btn-outline:hover{
-      background:rgba(255, 255, 255, 0.2);
-      transform:translateY(-2px) scale(1.05);
-    }
-    .card-list-item{
-      display:block;
-      padding:.75rem 1rem;
-      border-bottom:1px dashed rgba(255, 255, 255, 0.2);
-      text-decoration:none;
-      color:#ffffff;
-      transition:all 0.2s ease;
-    }
-    .card-list-item:hover{background:rgba(255, 255, 255, 0.1)}
-    .profile-box{display:flex;align-items:center;gap:1rem}
-    .avatar{
-      width:44px;
-      height:44px;
-      border-radius:999px;
-      background:linear-gradient(135deg, var(--primary), #059669);
-      color:#fff;
-      display:flex;
-      align-items:center;
       justify-content:center;
       font-weight:700;
       box-shadow:0 0 20px rgba(16, 185, 129, 0.5);
