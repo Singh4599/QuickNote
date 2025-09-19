@@ -667,6 +667,27 @@
       }
     }
 
+    // Email validation helper
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+    
+    // Simple message function
+    function showMessage(message, type = 'info') {
+      if (window.Toast) {
+        if (type === 'error') {
+          window.Toast.error(message);
+        } else if (type === 'success') {
+          window.Toast.success(message);
+        } else {
+          window.Toast.info(message);
+        }
+      } else {
+        alert(message);
+      }
+    }
+
     // Form validation
     function validateForm() {
       let firstName, lastName, email, phone, password, confirmPassword;
@@ -722,8 +743,7 @@
         return { valid: false, message: 'Please accept the terms and conditions' };
       }
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
+      if (!isValidEmail(email)) {
         return { valid: false, message: 'Please enter a valid email address' };
       }
 
@@ -734,13 +754,55 @@
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const validation = validateForm();
-      if (!validation.valid) {
-        if (window.Toast) {
-          Toast.show(validation.message, 'error');
-        } else {
-          alert(validation.message);
-        }
+      // Get form data based on selected role first
+      let firstName, lastName, email, phone, password, confirmPassword;
+      
+      if (selectedRole === 'patient') {
+        firstName = document.getElementById('patientFirstName').value.trim();
+        lastName = document.getElementById('patientLastName').value.trim();
+        email = document.getElementById('patientEmail').value.trim();
+        phone = document.getElementById('patientPhone').value.trim();
+        password = document.getElementById('patientPassword').value;
+        confirmPassword = document.getElementById('patientConfirmPassword').value;
+      } else if (selectedRole === 'doctor') {
+        firstName = document.getElementById('doctorFirstName').value.trim();
+        lastName = document.getElementById('doctorLastName').value.trim();
+        email = document.getElementById('doctorEmail').value.trim();
+        phone = document.getElementById('doctorPhone').value.trim();
+        password = document.getElementById('doctorPassword').value;
+        confirmPassword = document.getElementById('doctorConfirmPassword').value;
+      } else if (selectedRole === 'hospital') {
+        firstName = document.getElementById('hospitalAdminFirstName').value.trim();
+        lastName = document.getElementById('hospitalAdminLastName').value.trim();
+        email = document.getElementById('hospitalEmail').value.trim();
+        phone = document.getElementById('hospitalPhone').value.trim();
+        password = document.getElementById('hospitalPassword').value;
+        confirmPassword = document.getElementById('hospitalConfirmPassword').value;
+      }
+      
+      // Basic validation
+      if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
+        showMessage('Please fill in all fields', 'error');
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        showMessage('Passwords do not match', 'error');
+        return;
+      }
+      
+      if (password.length < 6) {
+        showMessage('Password must be at least 6 characters long', 'error');
+        return;
+      }
+      
+      if (!isValidEmail(email)) {
+        showMessage('Please enter a valid email address', 'error');
+        return;
+      }
+
+      if (!termsAccepted) {
+        showMessage('Please accept the Terms of Service and Privacy Policy', 'error');
         return;
       }
 
@@ -771,14 +833,12 @@
             userData.address = document.getElementById('hospitalAddress')?.value || '';
           }
           
+          console.log('🔍 Attempting signup with:', { email, role: selectedRole, userData });
           const result = await window.SimpleAuth.signUp(email, password, userData);
+          console.log('🔍 Signup result:', result);
           
           if (result && result.success) {
-            if (window.Toast) {
-              Toast.show(`${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} account created successfully! Please check your email to confirm your account.`, 'success');
-            } else {
-              alert(`${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} account created successfully! Please check your email to confirm your account.`);
-            }
+            showMessage(`${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} account created successfully! Please check your email to confirm your account.`, 'success');
             
             // Reset button state
             signupBtn.innerHTML = originalText;
@@ -789,16 +849,14 @@
             }, 2000);
           } else {
             // Reset button state on error
+            console.error('❌ Signup failed:', result);
+            showMessage(result?.error || 'Failed to create account. Please try again.', 'error');
             signupBtn.innerHTML = originalText;
             signupBtn.disabled = false;
           }
         } else {
           // Fallback if SimpleAuth is not available
-          if (window.Toast) {
-            Toast.show('Authentication system not available. Please refresh the page.', 'error');
-          } else {
-            alert('Authentication system not available. Please refresh the page.');
-          }
+          showMessage('Authentication system not available. Please refresh the page.', 'error');
           
           // Reset button state
           signupBtn.innerHTML = originalText;
@@ -806,12 +864,9 @@
         }
       } catch (error) {
         console.error('Signup error:', error);
-        if (window.Toast) {
-          Toast.show('Failed to create account. Please try again.', 'error');
-        } else {
-          alert('Failed to create account. Please try again.');
-        }
-      } finally {
+        showMessage('Failed to create account. Please try again.', 'error');
+        
+        // Reset button state
         signupBtn.innerHTML = originalText;
         signupBtn.disabled = false;
       }
