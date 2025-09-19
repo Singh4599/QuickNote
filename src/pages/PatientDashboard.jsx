@@ -72,65 +72,78 @@ const PatientDashboard = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen flex relative z-20"
     >
-      {/* Sidebar */}
+      {/* Enhanced Sidebar */}
       <motion.aside
         initial={{ x: -300 }}
         animate={{ x: 0 }}
-        className="w-72 glass-dark backdrop-blur-xl border-r border-white/10 p-6"
+        className="w-72 float-3d relative"
       >
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center font-bold text-white">
-            MV
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-white">MediVerse AI</h1>
-            <p className="text-white/60 text-sm">Patient Portal</p>
-          </div>
-        </div>
-
-        <div className="mb-8">
-          <div className="flex items-center gap-3 p-3 rounded-xl glass border border-white/10">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 flex items-center justify-center text-white font-semibold">
-              {user?.user_metadata?.name?.charAt(0) || 'U'}
+        {/* Background gradient and effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 to-purple-900/30 z-0"></div>
+        
+        {/* Electric border effect wrapper */}
+        <div className="electric-border h-full w-full">
+          <div className="electric-border-content h-full w-full p-6">
+            
+            {/* Logo section with glow */}
+            <div className="flex items-center gap-3 mb-8 relative z-10">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center font-bold text-white neon-glow-cyan">
+                MV
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-white">MediVerse AI</h1>
+                <p className="text-white/60 text-sm">Patient Portal</p>
+              </div>
             </div>
-            <div>
-              <p className="text-white font-medium">{user?.user_metadata?.name || 'User'}</p>
-              <p className="text-white/60 text-sm">{user?.email}</p>
-            </div>
-          </div>
-        </div>
 
-        <nav className="space-y-2">
-          {sidebarItems.map((item) => {
-            const Icon = item.icon
-            return (
-              <motion.button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
-                  activeTab === item.id
-                    ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                    : 'text-white/70 hover:text-white hover:bg-white/5'
-                }`}
-                whileHover={{ x: 5 }}
-                whileTap={{ scale: 0.98 }}
+            {/* User profile with glow */}
+            <div className="mb-8 relative z-10">
+              <div className="flex items-center gap-3 p-3 rounded-xl glass border border-white/10 neon-glow">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 flex items-center justify-center text-white font-semibold">
+                  {user?.user_metadata?.name?.charAt(0) || 'U'}
+                </div>
+                <div>
+                  <p className="text-white font-medium">{user?.user_metadata?.name || 'User'}</p>
+                  <p className="text-white/60 text-sm">{user?.email}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Navigation items with enhanced active state */}
+            <nav className="space-y-2 relative z-10">
+              {sidebarItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <motion.button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 relative z-10 ${
+                      activeTab === item.id
+                        ? 'bg-gradient-to-r from-blue-500/30 to-cyan-500/20 text-blue-300 border border-blue-500/30 neon-glow-cyan'
+                        : 'text-white/70 hover:text-white hover:bg-white/5 hover:border border-white/10'
+                    }`}
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Icon size={20} />
+                    <span>{item.label}</span>
+                  </motion.button>
+                )
+              })}
+            </nav>
+
+            {/* Sign out button */}
+            <div className="mt-auto pt-6 relative z-10">
+              <Button
+                onClick={signOut}
+                variant="ghost"
+                className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-500/10 hover:border border-red-500/30"
               >
-                <Icon size={20} />
-                <span>{item.label}</span>
-              </motion.button>
-            )
-          })}
-        </nav>
-
-        <div className="mt-auto pt-6">
-          <Button
-            onClick={signOut}
-            variant="ghost"
-            className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-500/10"
-          >
-            <LogOut size={20} className="mr-3" />
-            Sign Out
-          </Button>
+                <LogOut size={20} className="mr-3" />
+                Sign Out
+              </Button>
+            </div>
+          </div>
         </div>
       </motion.aside>
 
