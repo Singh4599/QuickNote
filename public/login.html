@@ -141,19 +141,37 @@
     
     .role-card:hover, .role-card.active {
       background: rgba(255, 107, 157, 0.2);
-      border-color: #ff6b9d;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3);
+    }
+    .role-card.active {
+      background: linear-gradient(45deg, #ff6b9d, #4facfe);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(255,107,157,0.4);
     }
     
     .role-icon {
       font-size: 1.5rem;
+    }
+    .role-card:hover .role-icon, .role-card.active .role-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
     }
     
     .role-text {
       font-size: 0.85rem;
       font-weight: 600;
       color: white;
+    }
+    .role-card:hover .role-text, .role-card.active .role-text {
+      font-weight: 700;
+      color: white;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    .role-form {
+      margin-top: 24px;
     }
     
     .form-group {
@@ -417,8 +435,6 @@
   </div>
 
   <script>
-    let selectedRole = 'patient';
-
     // Create particles
     function createParticles() {
       const bg = document.getElementById('particleBackground');
@@ -432,6 +448,8 @@
       }
     }
 
+    let selectedRole = 'patient';
+    
     // Role selection
     document.querySelectorAll('.role-card').forEach(card => {
       card.addEventListener('click', () => {
@@ -443,6 +461,11 @@
         document.querySelectorAll('.role-form').forEach(form => form.classList.add('hidden'));
         document.getElementById(selectedRole + 'Form').classList.remove('hidden');
       });
+    });
+    
+    // Initialize default selection
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('[data-role="patient"]').classList.add('active');
     });
 
     // Password toggle
@@ -474,28 +497,14 @@
         password = document.getElementById('doctorPassword').value;
         additionalData.license = document.getElementById('doctorLicense').value;
         
-        if (!additionalData.license) {
-          if (window.Toast) {
-            Toast.show('Please enter your medical license number', 'error');
-          } else {
-            alert('Please enter your medical license number');
-          }
-          return;
-        }
+        // License is optional for demo purposes
       } else if (selectedRole === 'hospital') {
         email = document.getElementById('hospitalEmail').value;
         password = document.getElementById('hospitalPassword').value;
         additionalData.hospitalId = document.getElementById('hospitalId').value;
         additionalData.hospitalName = document.getElementById('hospitalName').value;
         
-        if (!additionalData.hospitalId || !additionalData.hospitalName) {
-          if (window.Toast) {
-            Toast.show('Please fill in all hospital details', 'error');
-          } else {
-            alert('Please fill in all hospital details');
-          }
-          return;
-        }
+        // Hospital details are optional for demo purposes
       }
       
       if (!email || !password) {

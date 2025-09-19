@@ -143,19 +143,25 @@
     
     .role-card:hover, .role-card.active {
       background: rgba(255, 107, 157, 0.2);
-      border-color: #ff6b9d;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3);
+      .role-card.active { background: linear-gradient(45deg, #ff6b9d, #4facfe); transform: translateY(-5px); box-shadow: 0 15px 35px rgba(255,107,157,0.4); }
     }
     
     .role-icon {
-      font-size: 1.5rem;
+      font-size: 2rem;
+      margin-bottom: 8px;
     }
     
     .role-text {
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: 700;
       color: white;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    .role-form {
+      margin-top: 24px;
     }
     
     .form-row {
@@ -598,6 +604,11 @@
         document.getElementById(selectedRole + 'SignupForm').classList.remove('hidden');
       });
     });
+    
+    // Initialize default selection
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('[data-role="patient"]').classList.add('active');
+    });
 
     // Password toggle
     function togglePassword(inputId, iconId) {
@@ -652,9 +663,7 @@
         const license = document.getElementById('doctorLicense').value.trim();
         const specialization = document.getElementById('doctorSpecialization').value.trim();
         
-        if (!license || !specialization) {
-          return { valid: false, message: 'Please fill in all doctor credentials' };
-        }
+        // Doctor credentials are optional for demo
       } else if (selectedRole === 'hospital') {
         firstName = document.getElementById('hospitalAdminFirstName').value.trim();
         lastName = document.getElementById('hospitalAdminLastName').value.trim();
@@ -667,9 +676,7 @@
         const hospitalRegId = document.getElementById('hospitalRegId').value.trim();
         const hospitalAddress = document.getElementById('hospitalAddress').value.trim();
         
-        if (!hospitalName || !hospitalRegId || !hospitalAddress) {
-          return { valid: false, message: 'Please fill in all hospital details' };
-        }
+        // Hospital details are optional for demo
       }
 
       if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {

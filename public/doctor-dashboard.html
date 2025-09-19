@@ -177,6 +177,78 @@
           </div>
         </div>
 
+        <!-- Appointments Section -->
+        <div id="appointments-section" class="section">
+          <h1 class="page-title">Appointments</h1>
+          <p class="page-subtitle">Manage your appointment schedule</p>
+          
+          <div class="content-card">
+            <h2 class="card-title">📅 Today's Appointments</h2>
+            <div id="appointmentsList">
+              <div class="doctor-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <h3 style="color: white; margin-bottom: 8px;">Priya Sharma</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-stethoscope"></i> Cardiology Checkup</p>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-clock"></i> 10:00 AM - 10:30 AM</p>
+                    <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-phone"></i> +91-98765-43210</p>
+                  </div>
+                  <div style="display: flex; gap: 8px; flex-direction: column;">
+                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="markComplete('Priya Sharma')">Complete</button>
+                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #ff6b9d, #fa709a);" onclick="rescheduleAppointment('Priya Sharma')">Reschedule</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="doctor-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <h3 style="color: white; margin-bottom: 8px;">Amit Kumar</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-user-md"></i> Follow-up Consultation</p>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-clock"></i> 11:00 AM - 11:30 AM</p>
+                    <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-phone"></i> +91-87654-32109</p>
+                  </div>
+                  <div style="display: flex; gap: 8px; flex-direction: column;">
+                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="markComplete('Amit Kumar')">Complete</button>
+                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #ff6b9d, #fa709a);" onclick="rescheduleAppointment('Amit Kumar')">Reschedule</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="doctor-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <h3 style="color: white; margin-bottom: 8px;">Sunita Gupta</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-heart"></i> Cardiac Assessment</p>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-clock"></i> 2:00 PM - 2:30 PM</p>
+                    <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-phone"></i> +91-76543-21098</p>
+                  </div>
+                  <div style="display: flex; gap: 8px; flex-direction: column;">
+                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="markComplete('Sunita Gupta')">Complete</button>
+                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #ff6b9d, #fa709a);" onclick="rescheduleAppointment('Sunita Gupta')">Reschedule</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="content-card">
+            <h2 class="card-title">📋 Add New Appointment</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+              <input type="text" id="patientName" placeholder="Patient Name" style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
+              <input type="text" id="patientPhone" placeholder="Phone Number" style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+              <input type="date" id="appointmentDate" style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
+              <input type="time" id="appointmentTime" style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
+            </div>
+            <input type="text" id="appointmentType" placeholder="Appointment Type (e.g., Checkup, Follow-up)" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; margin-bottom: 16px;">
+            <button class="cyber-btn" onclick="addAppointment()">
+              <i class="fas fa-plus"></i> Add Appointment
+            </button>
+          </div>
+        </div>
+
         <!-- Patients Section -->
         <div id="patients-section" class="section">
           <h1 class="page-title">My Patients</h1>
@@ -185,17 +257,33 @@
           <div class="content-card">
             <h2 class="card-title">Active Patients</h2>
             <div id="patientsList">
-              <div class="patient-card">
-                <div class="patient-info">
-                  <h3>John Smith</h3>
-                  <p><i class="fas fa-user"></i> Age: 45 • Male</p>
-                  <p><i class="fas fa-heart"></i> Condition: Hypertension</p>
-                  <p><i class="fas fa-calendar"></i> Last Visit: 2 days ago</p>
-                  <p><i class="fas fa-exclamation-triangle"></i> Status: Requires Follow-up</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
+              <div class="doctor-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <h3 style="color: white; margin-bottom: 8px;">Priya Sharma</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-calendar"></i> Last Visit: Dec 15, 2024</p>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-heartbeat"></i> Condition: Hypertension</p>
+                    <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-pills"></i> Medication: Ongoing</p>
+                  </div>
+                  <div style="display: flex; gap: 8px; flex-direction: column;">
+                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewPatientHistory('Priya Sharma')">View History</button>
+                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="addPrescription('Priya Sharma')">Prescribe</button>
+                  </div>
                 </div>
               </div>
               
+              <div class="doctor-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <h3 style="color: white; margin-bottom: 8px;">Amit Kumar</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-calendar"></i> Last Visit: Dec 12, 2024</p>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-heartbeat"></i> Condition: Diabetes</p>
+                    <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-pills"></i> Medication: Metformin</p>
+                  </div>
+                  <div style="display: flex; gap: 8px; flex-direction: column;">
+                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewPatientHistory('Amit Kumar')">View History</button>
+                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="addPrescription('Amit Kumar')">Prescribe</button>
+                  </div>
               <div class="patient-card">
                 <div class="patient-info">
                   <h3>Maria Garcia</h3>
@@ -349,6 +437,98 @@
     // Mobile sidebar toggle
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    // Appointment management functions
+    function markComplete(patientName) {
+      const button = event.target;
+      button.innerHTML = '<i class="fas fa-check"></i> Completed';
+      button.style.background = 'linear-gradient(45deg, #43e97b, #4facfe)';
+      button.disabled = true;
+      
+      // Update today's appointments count
+      const appointmentsStat = document.querySelector('.stat-card:nth-child(1) .stat-value');
+      if (appointmentsStat) {
+        const currentCount = parseInt(appointmentsStat.textContent) || 0;
+        appointmentsStat.textContent = Math.max(0, currentCount - 1);
+      }
+      
+      alert(`Appointment with ${patientName} marked as completed!`);
+    }
+    
+    function rescheduleAppointment(patientName) {
+      const newDate = prompt(`Enter new date for ${patientName}'s appointment (DD/MM/YYYY):`);
+      const newTime = prompt(`Enter new time (HH:MM AM/PM):`);
+      
+      if (newDate && newTime) {
+        alert(`Appointment with ${patientName} rescheduled to ${newDate} at ${newTime}`);
+      }
+    }
+    
+    function addAppointment() {
+      const patientName = document.getElementById('patientName').value;
+      const patientPhone = document.getElementById('patientPhone').value;
+      const appointmentDate = document.getElementById('appointmentDate').value;
+      const appointmentTime = document.getElementById('appointmentTime').value;
+      const appointmentType = document.getElementById('appointmentType').value;
+      
+      if (!patientName || !patientPhone || !appointmentDate || !appointmentTime || !appointmentType) {
+        alert('Please fill in all fields');
+        return;
+      }
+      
+      // Add new appointment to the list
+      const appointmentsList = document.getElementById('appointmentsList');
+      const newAppointment = document.createElement('div');
+      newAppointment.className = 'doctor-card';
+      newAppointment.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="color: white; margin-bottom: 8px;">${patientName}</h3>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-stethoscope"></i> ${appointmentType}</p>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-clock"></i> ${appointmentTime} - ${appointmentDate}</p>
+            <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-phone"></i> ${patientPhone}</p>
+          </div>
+          <div style="display: flex; gap: 8px; flex-direction: column;">
+            <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="markComplete('${patientName}')">Complete</button>
+            <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #ff6b9d, #fa709a);" onclick="rescheduleAppointment('${patientName}')">Reschedule</button>
+          </div>
+        </div>
+      `;
+      
+      appointmentsList.appendChild(newAppointment);
+      
+      // Clear form
+      document.getElementById('patientName').value = '';
+      document.getElementById('patientPhone').value = '';
+      document.getElementById('appointmentDate').value = '';
+      document.getElementById('appointmentTime').value = '';
+      document.getElementById('appointmentType').value = '';
+      
+      // Update appointments count
+      const appointmentsStat = document.querySelector('.stat-card:nth-child(1) .stat-value');
+      if (appointmentsStat) {
+        const currentCount = parseInt(appointmentsStat.textContent) || 0;
+        appointmentsStat.textContent = currentCount + 1;
+      }
+      
+      alert(`Appointment scheduled for ${patientName} on ${appointmentDate} at ${appointmentTime}`);
+    }
+    
+    // Patient management functions
+    function viewPatientHistory(patientName) {
+      alert(`Viewing medical history for ${patientName}:\n\n• Previous visits: 5\n• Last diagnosis: Hypertension\n• Current medications: Lisinopril 10mg\n• Allergies: None known\n• Blood type: O+`);
+    }
+    
+    function addPrescription(patientName) {
+      const medication = prompt(`Enter prescription for ${patientName}:`);
+      if (medication) {
+        alert(`Prescription added for ${patientName}: ${medication}`);
+      }
+    }
+    
+    function viewPatient(patientName) {
+      alert(`Patient Details: ${patientName}\n\n• Age: 35\n• Gender: Female\n• Contact: +91-98765-43210\n• Last visit: Today\n• Condition: Stable`);
     }
 
     // Logout function
