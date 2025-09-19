@@ -418,6 +418,12 @@
       }
 
       try {
+        // Show loading state
+        const loginBtn = document.querySelector('.login-btn');
+        const originalText = loginBtn.innerHTML;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+        loginBtn.disabled = true;
+
         if (window.SimpleAuth) {
           const result = await SimpleAuth.signIn(email, password, selectedRole);
           if (result.success) {
@@ -427,12 +433,34 @@
               doctor: 'doctor-dashboard.html',
               hospital: 'hospital-dashboard.html'
             };
-            window.location.href = dashboards[selectedRole] || 'patient-dashboard.html';
+            
+            if (window.Toast) {
+              Toast.show(`Welcome! Redirecting to ${selectedRole} dashboard...`, 'success');
+            }
+            
+            setTimeout(() => {
+              window.location.href = dashboards[selectedRole] || 'patient-dashboard.html';
+            }, 1000);
           }
         } else {
           // Fallback for testing
-          window.location.href = selectedRole === 'doctor' ? 'doctor-dashboard.html' : 'patient-dashboard.html';
+          if (window.Toast) {
+            Toast.show(`Login successful! Redirecting to ${selectedRole} dashboard...`, 'success');
+          }
+          
+          setTimeout(() => {
+            const dashboards = {
+              patient: 'patient-dashboard.html',
+              doctor: 'doctor-dashboard.html',
+              hospital: 'hospital-dashboard.html'
+            };
+            window.location.href = dashboards[selectedRole] || 'patient-dashboard.html';
+          }, 1000);
         }
+        
+        // Reset button state
+        loginBtn.innerHTML = originalText;
+        loginBtn.disabled = false;
       } catch (error) {
         console.error('Login error:', error);
         if (window.Toast) {

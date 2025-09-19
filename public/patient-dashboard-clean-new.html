@@ -195,50 +195,10 @@
           
           <div class="content-card">
             <h2 class="card-title">Available Hospitals</h2>
-            <div id="hospitalsList">
-              <div class="hospital-card">
-                <div class="hospital-info">
-                  <h3>AIIMS Delhi</h3>
-                  <p><i class="fas fa-bed"></i> 120 beds available • Emergency: 24/7</p>
-                  <p><i class="fas fa-ambulance"></i> Trauma Center Level 1</p>
-                  <p><i class="fas fa-map-marker-alt"></i> Ansari Nagar, New Delhi</p>
-                  <p><i class="fas fa-phone"></i> +91-11-2658-8500</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
-                </div>
-              </div>
-              
-              <div class="hospital-card">
-                <div class="hospital-info">
-                  <h3>Apollo Hospital Mumbai</h3>
-                  <p><i class="fas fa-bed"></i> 85 beds available • Emergency: 24/7</p>
-                  <p><i class="fas fa-heart"></i> Specialized in Cardiology & Oncology</p>
-                  <p><i class="fas fa-map-marker-alt"></i> Tardeo, Mumbai, Maharashtra</p>
-                  <p><i class="fas fa-phone"></i> +91-22-3982-3982</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
-                </div>
-              </div>
-              
-              <div class="hospital-card">
-                <div class="hospital-info">
-                  <h3>Fortis Hospital Bangalore</h3>
-                  <p><i class="fas fa-bed"></i> 65 beds available • Walk-ins welcome</p>
-                  <p><i class="fas fa-user-friends"></i> Multi-specialty Hospital</p>
-                  <p><i class="fas fa-map-marker-alt"></i> Bannerghatta Road, Bangalore</p>
-                  <p><i class="fas fa-phone"></i> +91-80-6621-4444</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
-                </div>
-              </div>
-              
-              <div class="hospital-card">
-                <div class="hospital-info">
-                  <h3>Max Hospital Delhi</h3>
-                  <p><i class="fas fa-bed"></i> 95 beds available • Emergency: 24/7</p>
-                  <p><i class="fas fa-brain"></i> Advanced Neurology & Cardiology</p>
-                  <p><i class="fas fa-map-marker-alt"></i> Saket, New Delhi</p>
-                  <p><i class="fas fa-phone"></i> +91-11-2651-5050</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">View Details</button>
-                </div>
-              </div>
+            <div class="empty-state">
+              <div class="empty-icon">🏥</div>
+              <h3 style="color: white; margin-bottom: 8px;">No hospitals available</h3>
+              <p>Check back later for hospital availability in your area</p>
             </div>
           </div>
         </div>
@@ -247,40 +207,14 @@
         <div id="appointments-section" class="section">
           <h1 class="page-title">My Appointments</h1>
           <p class="page-subtitle">Manage your upcoming and past appointments</p>
-          <div class="doctor-card">
-            <div class="doctor-info">
-              <h3>Dr. Rajesh Sharma</h3>
-              <p><i class="fas fa-stethoscope"></i> Cardiologist</p>
-              <p><i class="fas fa-star"></i> 4.9/5 Rating • 18 years experience</p>
-              <p><i class="fas fa-map-marker-alt"></i> AIIMS Delhi</p>
-              <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="bookAppointment('Dr. Rajesh Sharma', 'Cardiologist')">Book Appointment</button>
-            </div>
-          </div>
-          <div class="doctor-card">
-            <div class="doctor-info">
-              <h3>Dr. Priya Patel</h3>
-              <p><i class="fas fa-brain"></i> Neurologist</p>
-              <p><i class="fas fa-star"></i> 4.8/5 Rating • 15 years experience</p>
-              <p><i class="fas fa-map-marker-alt"></i> Apollo Hospital Mumbai</p>
-              <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="bookAppointment('Dr. Priya Patel', 'Neurologist')">Book Appointment</button>
-            </div>
-          </div>
-          <div class="doctor-card">
-            <div class="doctor-info">
-              <h3>Dr. Amit Kumar</h3>
-              <p><i class="fas fa-user-md"></i> General Physician</p>
-              <p><i class="fas fa-star"></i> 4.7/5 Rating • 12 years experience</p>
-              <p><i class="fas fa-map-marker-alt"></i> Fortis Hospital Bangalore</p>
-              <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="bookAppointment('Dr. Amit Kumar', 'General Physician')">Book Appointment</button>
-            </div>
-          </div>
-          <div class="doctor-card">
-            <div class="doctor-info">
-              <h3>Dr. Sunita Gupta</h3>
-              <p><i class="fas fa-female"></i> Gynecologist</p>
-              <p><i class="fas fa-star"></i> 4.9/5 Rating • 20 years experience</p>
-              <p><i class="fas fa-map-marker-alt"></i> Max Hospital Delhi</p>
-              <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;" onclick="bookAppointment('Dr. Sunita Gupta', 'Gynecologist')">Book Appointment</button>
+          
+          <div class="content-card">
+            <h2 class="card-title">Upcoming Appointments</h2>
+            <div class="empty-state">
+              <div class="empty-icon">📅</div>
+              <h3 style="color: white; margin-bottom: 8px;">No appointments scheduled</h3>
+              <p>Book your first appointment with our network of doctors</p>
+              <button class="cyber-btn" style="margin-top: 16px;" onclick="showSection('doctors')">Find Doctors</button>
             </div>
           </div>
         </div>
@@ -402,50 +336,6 @@
       resultsDiv.className = 'ai-results';
       resultsDiv.innerHTML = resultsHtml;
       diagnosticsSection.appendChild(resultsDiv);
-    }
-
-    // Book appointment function
-    function bookAppointment(doctorName, specialty) {
-      const appointmentHtml = `
-        <div style="background: rgba(67,233,123,0.1); border: 1px solid rgba(67,233,123,0.3); border-radius: 16px; padding: 20px; margin-top: 16px;">
-          <h4 style="color: #43e97b; margin-bottom: 12px;"><i class="fas fa-calendar-check"></i> Appointment Booked!</h4>
-          <p style="color: rgba(255,255,255,0.9);"><strong>Doctor:</strong> ${doctorName}</p>
-          <p style="color: rgba(255,255,255,0.9);"><strong>Specialty:</strong> ${specialty}</p>
-          <p style="color: rgba(255,255,255,0.9);"><strong>Date:</strong> ${new Date(Date.now() + 24*60*60*1000).toLocaleDateString()}</p>
-          <p style="color: rgba(255,255,255,0.9);"><strong>Time:</strong> 10:00 AM</p>
-          <p style="color: rgba(255,255,255,0.7); margin-top: 8px; font-size: 0.9rem;">You will receive a confirmation email shortly.</p>
-        </div>
-      `;
-      
-      // Show booking confirmation
-      const button = event.target;
-      const originalText = button.innerHTML;
-      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Booking...';
-      button.disabled = true;
-      
-      setTimeout(() => {
-        button.innerHTML = '<i class="fas fa-check"></i> Booked';
-        button.style.background = 'linear-gradient(45deg, #43e97b, #4facfe)';
-        
-        // Add confirmation to the card
-        const card = button.closest('.doctor-card');
-        const existingConfirmation = card.querySelector('.booking-confirmation');
-        if (existingConfirmation) {
-          existingConfirmation.remove();
-        }
-        
-        const confirmationDiv = document.createElement('div');
-        confirmationDiv.className = 'booking-confirmation';
-        confirmationDiv.innerHTML = appointmentHtml;
-        card.appendChild(confirmationDiv);
-        
-        // Update appointments count
-        const appointmentsStat = document.querySelector('.stat-card:nth-child(2) .stat-value');
-        if (appointmentsStat) {
-          const currentCount = parseInt(appointmentsStat.textContent) || 0;
-          appointmentsStat.textContent = currentCount + 1;
-        }
-      }, 1500);
     }
 
     // Logout function
