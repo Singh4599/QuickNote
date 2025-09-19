@@ -672,20 +672,45 @@
 
         <div class="content-card">
           <h2 class="card-title">👥 Current Shift Staff</h2>
-          <div class="hospital-card">
+          <div class="hospital-card" id="staffCard1">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div style="display: flex; align-items: center;">
                 <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #4facfe, #43e97b); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem;">👨‍⚕️</div>
                 <div>
-                  <h3 style="color: white; margin: 0;">Dr. Rajesh Kumar</h3>
+                  <h3 style="color: white; margin: 0;" id="doctor1Name">Dr. Rajesh Kumar</h3>
                   <p style="color: rgba(255,255,255,0.7); margin: 4px 0;">Cardiologist • Emergency Dept</p>
-                  <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">Shift: 8:00 AM - 8:00 PM</p>
+                  <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;" id="doctor1Shift">Shift: 8:00 AM - 8:00 PM</p>
                 </div>
               </div>
               <div style="display: flex; gap: 8px;">
-                <span style="background: rgba(67, 233, 123, 0.2); color: #43e97b; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem;">On Duty</span>
+                <span style="background: rgba(67, 233, 123, 0.2); color: #43e97b; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem;" id="doctor1Status">On Duty</span>
               </div>
             </div>
+          </div>
+
+          <div class="hospital-card" id="staffCard2">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center;">
+                <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #ff6b9d, #fa709a); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem;">👩‍⚕️</div>
+                <div>
+                  <h3 style="color: white; margin: 0;" id="nurse1Name">Nurse Priya Sharma</h3>
+                  <p style="color: rgba(255,255,255,0.7); margin: 4px 0;">ICU Specialist • Critical Care</p>
+                  <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;" id="nurse1Shift">Shift: 6:00 AM - 6:00 PM</p>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <span style="background: rgba(67, 233, 123, 0.2); color: #43e97b; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem;" id="nurse1Status">On Duty</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button class="cyber-btn" onclick="updateStaffStatus()" style="background: linear-gradient(45deg, #43e97b, #4facfe);">
+              <i class="fas fa-sync"></i> Update Staff Status
+            </button>
+            <button class="cyber-btn" onclick="viewAllStaff()">
+              <i class="fas fa-users"></i> View All Staff
+            </button>
           </div>
         </div>
       </div>
@@ -963,15 +988,59 @@
     }
 
     function updateStaffStatus() {
-      // Simulate staff updates
-      const staffCount = Math.floor(Math.random() * 10) + 40; // 40-49
-      console.log('👨‍⚕️ Staff status updated - Active staff:', staffCount);
+      // Update doctor status
+      const doctorStatuses = ['On Duty', 'Break', 'Surgery', 'Consultation'];
+      const nurseStatuses = ['On Duty', 'Break', 'Patient Care', 'Emergency'];
+      const shifts = ['6:00 AM - 6:00 PM', '6:00 PM - 6:00 AM', '8:00 AM - 8:00 PM', '12:00 PM - 12:00 AM'];
       
-      // Update staff card if exists
+      // Update doctor
+      const doctor1Status = document.getElementById('doctor1Status');
+      const doctor1Shift = document.getElementById('doctor1Shift');
+      const newDoctorStatus = doctorStatuses[Math.floor(Math.random() * doctorStatuses.length)];
+      const newDoctorShift = shifts[Math.floor(Math.random() * shifts.length)];
+      
+      if (doctor1Status) {
+        doctor1Status.textContent = newDoctorStatus;
+        doctor1Status.style.background = newDoctorStatus === 'On Duty' ? 'rgba(67, 233, 123, 0.2)' : 
+                                        newDoctorStatus === 'Break' ? 'rgba(250, 112, 154, 0.2)' : 
+                                        'rgba(79, 172, 254, 0.2)';
+        doctor1Status.style.color = newDoctorStatus === 'On Duty' ? '#43e97b' : 
+                                   newDoctorStatus === 'Break' ? '#fa709a' : '#4facfe';
+      }
+      if (doctor1Shift) {
+        doctor1Shift.textContent = `Shift: ${newDoctorShift}`;
+      }
+      
+      // Update nurse
+      const nurse1Status = document.getElementById('nurse1Status');
+      const nurse1Shift = document.getElementById('nurse1Shift');
+      const newNurseStatus = nurseStatuses[Math.floor(Math.random() * nurseStatuses.length)];
+      const newNurseShift = shifts[Math.floor(Math.random() * shifts.length)];
+      
+      if (nurse1Status) {
+        nurse1Status.textContent = newNurseStatus;
+        nurse1Status.style.background = newNurseStatus === 'On Duty' ? 'rgba(67, 233, 123, 0.2)' : 
+                                       newNurseStatus === 'Break' ? 'rgba(250, 112, 154, 0.2)' : 
+                                       'rgba(79, 172, 254, 0.2)';
+        nurse1Status.style.color = newNurseStatus === 'On Duty' ? '#43e97b' : 
+                                  newNurseStatus === 'Break' ? '#fa709a' : '#4facfe';
+      }
+      if (nurse1Shift) {
+        nurse1Shift.textContent = `Shift: ${newNurseShift}`;
+      }
+      
+      // Update staff count
+      const staffCount = Math.floor(Math.random() * 10) + 40; // 40-49
       const staffCard = document.querySelector('#staff-section .stat-value');
       if (staffCard) {
         staffCard.textContent = staffCount;
       }
+      
+      console.log('👨‍⚕️ Staff status updated - Doctor:', newDoctorStatus, 'Nurse:', newNurseStatus, 'Total:', staffCount);
+    }
+
+    function viewAllStaff() {
+      alert('👥 All Staff Overview\n\n📊 Current Status:\n• Total Doctors: 48\n• Total Nurses: 156\n• Support Staff: 89\n• On Duty: 67\n• On Break: 12\n• Emergency Response: 8\n\n🔄 Status updates every minute automatically');
     }
 
     function updateEquipmentStatus() {
@@ -1022,98 +1091,5 @@
       setInterval(updateEquipmentStatus, 45000); // Update every 45 seconds
     });
   </script>
-</body>
-</html>
-      justify-content:center;
-      font-weight:700;
-      box-shadow:0 0 20px rgba(16, 185, 129, 0.5);
-      animation:float3d 6s ease-in-out infinite 1s;
-    }
-    @media (max-width:900px){ .sidebar{display:none} .app-container{flex-direction:column} .top-bar{position:relative} }
-  </style>
-</head>
-<body>
-  <!-- Animated particles background -->
-  <div class="particles">
-    <div class="particle" style="left: 15%; animation-delay: 0s;"></div>
-    <div class="particle" style="left: 25%; animation-delay: 2s;"></div>
-    <div class="particle" style="left: 35%; animation-delay: 4s;"></div>
-    <div class="particle" style="left: 45%; animation-delay: 1s;"></div>
-    <div class="particle" style="left: 55%; animation-delay: 3s;"></div>
-    <div class="particle" style="left: 65%; animation-delay: 5s;"></div>
-    <div class="particle" style="left: 75%; animation-delay: 1.5s;"></div>
-    <div class="particle" style="left: 85%; animation-delay: 3.5s;"></div>
-  </div>
-  
-  <!-- 3D floating elements -->
-  <div class="fixed top-20 left-20 w-32 h-32 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 float-3d z-0"></div>
-  <div class="fixed bottom-20 right-20 w-24 h-24 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full opacity-20 float-3d-delayed z-0"></div>
-  <div class="fixed top-1/2 left-10 w-16 h-16 bg-gradient-to-r from-sky-400 to-blue-500 rounded-full opacity-20 float-3d z-0"></div>
-  <div class="app-container">
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <a class="brand" href="#">
-          <div class="brand-logo">MV</div>
-          <div>MediVerse AI</div>
-        </a>
-        <p style="color:var(--muted);margin-top:.5rem;font-size:.9rem">🏥 Hospital Management</p>
-      </div>
-
-      <nav>
-        <ul class="nav-menu">
-          <li><a href="#" class="nav-link active" onclick="showOverview(); return false;"><i class="fas fa-gauge"></i> Overview</a></li>
-          <li><a href="#" class="nav-link" onclick="showBeds(); return false;"><i class="fas fa-bed"></i> Beds & ICU</a></li>
-          <li><a href="#" class="nav-link" onclick="showDepartments(); return false;"><i class="fas fa-building"></i> Departments</a></li>
-          <li><a href="#" class="nav-link" onclick="showDoctors(); return false;"><i class="fas fa-user-md"></i> Doctor Roster</a></li>
-          <li><a href="#" class="nav-link" onclick="showProfile(); return false;"><i class="fas fa-hospital"></i> Profile</a></li>
-          <li><a href="#" class="nav-link" onclick="showSettings(); return false;"><i class="fas fa-cog"></i> Settings</a></li>
-        </ul>
-      </nav>
-    </aside>
-
-    <!-- Main -->
-    <main class="main-content">
-      <!-- Top bar -->
-      <header class="top-bar">
-        <div style="flex:1;max-width:720px">
-          <input id="globalSearch" class="search-input" placeholder="Search beds, departments, doctors..." oninput="applyFilter()" />
-        </div>
-
-        <div style="display:flex;align-items:center;gap:1rem">
-          <div style="position:relative">
-            <button class="btn-outline" onclick="showNotifications()"> <i class="fas fa-bell"></i> <span id="notifCount" style="margin-left:.4rem;color:var(--muted)">0</span></button>
-          </div>
-
-          <div style="position:relative">
-            <div onclick="toggleUserMenu()" style="display:flex;align-items:center;gap:.6rem;cursor:pointer">
-              <div id="userAvatar" class="avatar">H</div>
-              <div style="text-align:left">
-                <div id="userName" style="font-weight:700;color:#ffffff">Hospital Admin</div>
-                <div style="font-size:.85rem;color:var(--muted)" id="userEmail">admin@hospital.com</div>
-              </div>
-            </div>
-            <div id="userDropdown" style="display:none;position:absolute;right:0;top:56px;background:rgba(255, 255, 255, 0.1);backdrop-filter:blur(20px);box-shadow:0 0 20px rgba(16, 185, 129, 0.3);border-radius:8px;overflow:hidden;min-width:180px;border:1px solid rgba(255, 255, 255, 0.2)">
-              <a href="#" class="card-list-item" onclick="showSettings(); return false;">Settings</a>
-              <a href="#" class="card-list-item" onclick="logout(); return false;" style="color:var(--danger)">Logout</a>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <!-- Content -->
-      <section class="dashboard-content" id="contentArea">
-        <!-- content loaded by JS -->
-      </section>
-    </main>
-  </div>
-
-  <!-- scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/config.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/toast.js"></script>
-  <script src="js/loader.js"></script>
-  <script src="js/hospital-dashboard.js"></script>
 </body>
 </html>
