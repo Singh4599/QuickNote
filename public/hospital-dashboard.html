@@ -493,43 +493,97 @@
 
         <!-- Bed Availability -->
         <div class="content-card">
-          <h2 class="card-title">🛏️ Bed Availability</h2>
+          <h2 class="card-title">🛏️ Real-time Bed Availability</h2>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-            <div class="hospital-card">
+            <div class="hospital-card" id="generalWards">
               <h3 style="color: white; margin-bottom: 10px;">General Wards</h3>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <span style="color: rgba(255,255,255,0.8);">Available</span>
-                <span style="color: #43e97b; font-weight: bold;">45/60</span>
+                <span style="color: #43e97b; font-weight: bold;" id="generalCount">45/60</span>
               </div>
               <div class="progress-bar">
-                <div class="progress-fill" style="width: 75%;"></div>
+                <div class="progress-fill" id="generalProgress" style="width: 75%;"></div>
+              </div>
+              <div style="margin-top: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.6);">
+                <span id="generalStatus">🟢 Normal Capacity</span>
               </div>
             </div>
-            <div class="hospital-card">
+            <div class="hospital-card" id="icuWards">
               <h3 style="color: white; margin-bottom: 10px;">ICU</h3>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <span style="color: rgba(255,255,255,0.8);">Available</span>
-                <span style="color: #fa709a; font-weight: bold;">18/20</span>
+                <span style="color: #fa709a; font-weight: bold;" id="icuCount">18/20</span>
               </div>
               <div class="progress-bar">
-                <div class="progress-fill" style="width: 90%; background: linear-gradient(45deg, #fa709a, #ff6b9d);"></div>
+                <div class="progress-fill" id="icuProgress" style="width: 90%; background: linear-gradient(45deg, #fa709a, #ff6b9d);"></div>
+              </div>
+              <div style="margin-top: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.6);">
+                <span id="icuStatus">🔴 Near Capacity</span>
               </div>
             </div>
-            <div class="hospital-card">
+            <div class="hospital-card" id="pediatricWards">
               <h3 style="color: white; margin-bottom: 10px;">Pediatric</h3>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <span style="color: rgba(255,255,255,0.8);">Available</span>
-                <span style="color: #4facfe; font-weight: bold;">12/15</span>
+                <span style="color: #4facfe; font-weight: bold;" id="pediatricCount">12/15</span>
               </div>
               <div class="progress-bar">
-                <div class="progress-fill" style="width: 80%;"></div>
+                <div class="progress-fill" id="pediatricProgress" style="width: 80%;"></div>
+              </div>
+              <div style="margin-top: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.6);">
+                <span id="pediatricStatus">🟡 Moderate Load</span>
               </div>
             </div>
           </div>
-          <div style="margin-top: 20px;">
+          <div style="margin-top: 20px; display: flex; gap: 10px;">
             <button class="cyber-btn" onclick="showSection('beds')">
-              <i class="fas fa-eye"></i> View All
+              <i class="fas fa-eye"></i> View All Beds
             </button>
+            <button class="cyber-btn" onclick="updateBedStatus()" style="background: linear-gradient(45deg, #43e97b, #4facfe);">
+              <i class="fas fa-sync"></i> Refresh Status
+            </button>
+          </div>
+        </div>
+
+        <!-- Equipment Status -->
+        <div class="content-card">
+          <h2 class="card-title">🏥 Medical Equipment Status</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            <div class="hospital-card" id="ventilators">
+              <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #4facfe, #43e97b); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem;">🫁</div>
+                <div>
+                  <h3 style="color: white; margin: 0;">Ventilators</h3>
+                  <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">Critical Care Equipment</p>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: rgba(255,255,255,0.8);">Available:</span>
+                <span style="color: #43e97b; font-weight: bold;" id="ventilatorCount">8/12</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: rgba(255,255,255,0.8);">Status:</span>
+                <span style="color: #43e97b; font-weight: bold;" id="ventilatorStatus">🟢 Operational</span>
+              </div>
+            </div>
+
+            <div class="hospital-card" id="xrayMachines">
+              <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #ff6b9d, #fa709a); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem;">📷</div>
+                <div>
+                  <h3 style="color: white; margin: 0;">X-Ray Machines</h3>
+                  <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">Diagnostic Imaging</p>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: rgba(255,255,255,0.8);">Available:</span>
+                <span style="color: #4facfe; font-weight: bold;" id="xrayCount">3/4</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: rgba(255,255,255,0.8);">Status:</span>
+                <span style="color: #4facfe; font-weight: bold;" id="xrayStatus">🟢 Active</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -881,26 +935,59 @@
 
     // Real-time updates simulation
     function updateBedStatus() {
-      // Simulate bed status changes
-      const bedCards = document.querySelectorAll('.hospital-card');
-      bedCards.forEach(card => {
-        const progressBar = card.querySelector('.progress-fill');
-        if (progressBar) {
-          const currentWidth = parseInt(progressBar.style.width);
-          const newWidth = Math.max(60, Math.min(95, currentWidth + Math.random() * 10 - 5));
-          progressBar.style.width = newWidth + '%';
-        }
-      });
+      // Update General Wards
+      const generalAvailable = Math.floor(Math.random() * 20) + 40; // 40-59
+      const generalTotal = 60;
+      const generalPercent = Math.floor((generalAvailable / generalTotal) * 100);
+      document.getElementById('generalCount').textContent = `${generalAvailable}/${generalTotal}`;
+      document.getElementById('generalProgress').style.width = generalPercent + '%';
+      document.getElementById('generalStatus').textContent = generalPercent > 80 ? '🟢 Normal Capacity' : generalPercent > 60 ? '🟡 Moderate Load' : '🔴 High Demand';
+
+      // Update ICU
+      const icuAvailable = Math.floor(Math.random() * 5) + 15; // 15-19
+      const icuTotal = 20;
+      const icuPercent = Math.floor((icuAvailable / icuTotal) * 100);
+      document.getElementById('icuCount').textContent = `${icuAvailable}/${icuTotal}`;
+      document.getElementById('icuProgress').style.width = icuPercent + '%';
+      document.getElementById('icuStatus').textContent = icuPercent > 85 ? '🟢 Available' : icuPercent > 70 ? '🟡 Limited' : '🔴 Near Capacity';
+
+      // Update Pediatric
+      const pediatricAvailable = Math.floor(Math.random() * 8) + 8; // 8-15
+      const pediatricTotal = 15;
+      const pediatricPercent = Math.floor((pediatricAvailable / pediatricTotal) * 100);
+      document.getElementById('pediatricCount').textContent = `${pediatricAvailable}/${pediatricTotal}`;
+      document.getElementById('pediatricProgress').style.width = pediatricPercent + '%';
+      document.getElementById('pediatricStatus').textContent = pediatricPercent > 75 ? '🟢 Good Availability' : '🟡 Moderate Load';
+
+      console.log('🛏️ Bed status updated - General:', generalAvailable, 'ICU:', icuAvailable, 'Pediatric:', pediatricAvailable);
     }
 
     function updateStaffStatus() {
       // Simulate staff updates
-      console.log('Staff status updated');
+      const staffCount = Math.floor(Math.random() * 10) + 40; // 40-49
+      console.log('👨‍⚕️ Staff status updated - Active staff:', staffCount);
+      
+      // Update staff card if exists
+      const staffCard = document.querySelector('#staff-section .stat-value');
+      if (staffCard) {
+        staffCard.textContent = staffCount;
+      }
     }
 
     function updateEquipmentStatus() {
-      // Simulate equipment updates
-      console.log('Equipment status updated');
+      // Update Ventilators
+      const ventilatorAvailable = Math.floor(Math.random() * 4) + 8; // 8-11
+      const ventilatorTotal = 12;
+      document.getElementById('ventilatorCount').textContent = `${ventilatorAvailable}/${ventilatorTotal}`;
+      document.getElementById('ventilatorStatus').textContent = ventilatorAvailable > 9 ? '🟢 Operational' : ventilatorAvailable > 6 ? '🟡 Limited' : '🔴 Critical';
+
+      // Update X-Ray Machines
+      const xrayAvailable = Math.floor(Math.random() * 2) + 3; // 3-4
+      const xrayTotal = 4;
+      document.getElementById('xrayCount').textContent = `${xrayAvailable}/${xrayTotal}`;
+      document.getElementById('xrayStatus').textContent = xrayAvailable === xrayTotal ? '🟢 All Active' : '🟡 Maintenance';
+
+      console.log('🏥 Equipment status updated - Ventilators:', ventilatorAvailable, 'X-Ray:', xrayAvailable);
     }
 
     // Logout function
