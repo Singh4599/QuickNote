@@ -664,6 +664,16 @@
       });
     });
   </script>
+  <script>
+    // Clear any old AI diagnostics instances
+    if (window.AIDiagnostics) {
+      delete window.AIDiagnostics;
+    }
+    if (window.AIDiagnosticsFixed) {
+      delete window.AIDiagnosticsFixed;
+    }
+    console.log('🧹 Cleared old AI diagnostics instances');
+  </script>
   <script src="js/patient-dashboard.js"></script>
   <script src="js/gemini-ai-medical.js"></script>
   <script src="js/ai-diagnostics-simple.js"></script>
