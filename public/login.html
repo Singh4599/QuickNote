@@ -338,7 +338,7 @@
     </div>
 
     <!-- Login Form -->
-    <form id="loginForm">
+    <form id="loginForm" novalidate>
       <!-- Patient Form -->
       <div id="patientForm" class="role-form">
         <div class="form-group">
@@ -457,15 +457,42 @@
         card.classList.add('active');
         selectedRole = card.dataset.role;
         
-        // Show appropriate form
-        document.querySelectorAll('.role-form').forEach(form => form.classList.add('hidden'));
-        document.getElementById(selectedRole + 'Form').classList.remove('hidden');
+        // Show appropriate form and manage required attributes
+        document.querySelectorAll('.role-form').forEach(form => {
+          form.classList.add('hidden');
+          // Remove required from hidden forms
+          form.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+        });
+        
+        const activeForm = document.getElementById(selectedRole + 'Form');
+        activeForm.classList.remove('hidden');
+        // Add required to active form
+        activeForm.querySelectorAll('input').forEach(input => {
+          if (input.type !== 'button') {
+            input.setAttribute('required', 'required');
+          }
+        });
       });
     });
     
     // Initialize default selection
     document.addEventListener('DOMContentLoaded', () => {
-      document.querySelector('[data-role="patient"]').classList.add('active');
+      const patientCard = document.querySelector('[data-role="patient"]');
+      patientCard.classList.add('active');
+      
+      // Initialize patient form as active
+      document.querySelectorAll('.role-form').forEach(form => {
+        form.classList.add('hidden');
+        form.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+      });
+      
+      const patientForm = document.getElementById('patientForm');
+      patientForm.classList.remove('hidden');
+      patientForm.querySelectorAll('input').forEach(input => {
+        if (input.type !== 'button') {
+          input.setAttribute('required', 'required');
+        }
+      });
     });
 
     // Password toggle
@@ -485,6 +512,7 @@
     // Form submission
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      e.stopPropagation();
       
       let email, password, additionalData = {};
       
