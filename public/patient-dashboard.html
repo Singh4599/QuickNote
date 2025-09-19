@@ -145,7 +145,7 @@
           <div class="content-card">
             <h2 class="card-title">🤖 AI Health Assistant</h2>
             <p style="margin-bottom: 20px; color: rgba(255,255,255,0.7);">Upload medical images, reports, or describe symptoms for instant AI analysis</p>
-            <button class="cyber-btn" onclick="showSection('ai-diagnostics')">
+            <button class="cyber-btn" onclick="showSection('ai-diagnostics'); return false;">
               <i class="fas fa-rocket"></i> Start AI Analysis
             </button>
           </div>
@@ -161,12 +161,13 @@
             <div style="text-align: center; padding: 40px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 16px; margin: 20px 0;">
               <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; margin-bottom: 16px; color: #4facfe;"></i>
               <p style="margin-bottom: 16px; color: rgba(255,255,255,0.7);">Drag & drop files here or click to browse</p>
-              <button class="cyber-btn">Choose Files</button>
+              <input type="file" id="fileInput" style="display: none;" accept=".jpg,.jpeg,.png,.pdf,.txt" multiple>
+            <button class="cyber-btn" onclick="document.getElementById('fileInput').click()">Choose Files</button>
             </div>
             
             <h3 style="margin: 24px 0 16px 0; color: white;">Or describe your symptoms:</h3>
-            <textarea style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Describe your symptoms, medical history, or paste lab results here..."></textarea>
-            <button class="cyber-btn" style="margin-top: 16px;">
+            <textarea id="symptomsText" style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Describe your symptoms, medical history, or paste lab results here..."></textarea>
+            <button class="cyber-btn" style="margin-top: 16px;" onclick="analyzeSymptoms()">
               <i class="fas fa-brain"></i> Analyze Symptoms
             </button>
           </div>
@@ -259,16 +260,82 @@
 
     // Section navigation
     function showSection(sectionName) {
+      // Hide all sections
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      
+      // Remove active class from all nav links
       document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
       
-      document.getElementById(sectionName + '-section').classList.add('active');
-      event.target.classList.add('active');
+      // Show target section
+      const targetSection = document.getElementById(sectionName + '-section');
+      if (targetSection) {
+        targetSection.classList.add('active');
+      }
+      
+      // Find and activate corresponding nav link
+      const navLink = document.querySelector(`[onclick*="${sectionName}"]`);
+      if (navLink && navLink.classList.contains('nav-link')) {
+        navLink.classList.add('active');
+      }
     }
 
     // Mobile sidebar toggle
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    // Analyze symptoms function
+    function analyzeSymptoms() {
+      const symptomsText = document.getElementById('symptomsText').value.trim();
+      
+      if (!symptomsText) {
+        alert('Please describe your symptoms first.');
+        return;
+      }
+      
+      // Show loading state
+      const button = event.target;
+      const originalText = button.innerHTML;
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+      button.disabled = true;
+      
+      // Simulate AI analysis
+      setTimeout(() => {
+        button.innerHTML = originalText;
+        button.disabled = false;
+        
+        // Show results
+        showAnalysisResults(symptomsText);
+      }, 2000);
+    }
+    
+    // Show analysis results
+    function showAnalysisResults(symptoms) {
+      const resultsHtml = `
+        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(67,233,123,0.3); border-radius: 16px; padding: 24px; margin-top: 20px;">
+          <h3 style="color: #43e97b; margin-bottom: 16px;"><i class="fas fa-check-circle"></i> AI Analysis Complete</h3>
+          <div style="color: rgba(255,255,255,0.9); line-height: 1.6;">
+            <p><strong>Symptoms Analyzed:</strong> ${symptoms.substring(0, 100)}${symptoms.length > 100 ? '...' : ''}</p>
+            <p style="margin-top: 12px;"><strong>AI Assessment:</strong> Based on the symptoms described, this appears to be a common condition that may benefit from professional medical consultation.</p>
+            <p style="margin-top: 12px;"><strong>Recommendation:</strong> Please consult with a healthcare professional for proper diagnosis and treatment.</p>
+            <div style="margin-top: 16px; padding: 12px; background: rgba(255,107,157,0.1); border-radius: 8px;">
+              <small><i class="fas fa-info-circle"></i> This AI analysis is for informational purposes only and should not replace professional medical advice.</small>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Add results to the AI diagnostics section
+      const diagnosticsSection = document.querySelector('#ai-diagnostics-section .content-card');
+      const existingResults = diagnosticsSection.querySelector('.ai-results');
+      if (existingResults) {
+        existingResults.remove();
+      }
+      
+      const resultsDiv = document.createElement('div');
+      resultsDiv.className = 'ai-results';
+      resultsDiv.innerHTML = resultsHtml;
+      diagnosticsSection.appendChild(resultsDiv);
     }
 
     // Logout function
