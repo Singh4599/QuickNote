@@ -752,22 +752,58 @@
       signupBtn.disabled = true;
 
       try {
-        // Simulate account creation
-        setTimeout(() => {
-          if (window.Toast) {
-            Toast.show(`${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} account created successfully!`, 'success');
+        // Use real Supabase authentication
+        if (window.SimpleAuth) {
+          // Prepare user data based on role
+          const userData = {
+            role: selectedRole,
+            fullName: `${firstName} ${lastName}`,
+            phone: phone
+          };
+          
+          // Add role-specific data
+          if (selectedRole === 'doctor') {
+            userData.licenseNo = document.getElementById('doctorLicense')?.value || '';
+            userData.specialization = document.getElementById('doctorSpecialization')?.value || '';
+          } else if (selectedRole === 'hospital') {
+            userData.hospitalName = document.getElementById('hospitalName')?.value || '';
+            userData.registrationId = document.getElementById('hospitalRegId')?.value || '';
+            userData.address = document.getElementById('hospitalAddress')?.value || '';
+          }
+          
+          const result = await window.SimpleAuth.signUp(email, password, userData);
+          
+          if (result && result.success) {
+            if (window.Toast) {
+              Toast.show(`${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} account created successfully! Please check your email to confirm your account.`, 'success');
+            } else {
+              alert(`${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} account created successfully! Please check your email to confirm your account.`);
+            }
+            
+            // Reset button state
+            signupBtn.innerHTML = originalText;
+            signupBtn.disabled = false;
+            
+            setTimeout(() => {
+              window.location.href = 'login.html';
+            }, 2000);
           } else {
-            alert(`${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} account created successfully!`);
+            // Reset button state on error
+            signupBtn.innerHTML = originalText;
+            signupBtn.disabled = false;
+          }
+        } else {
+          // Fallback if SimpleAuth is not available
+          if (window.Toast) {
+            Toast.show('Authentication system not available. Please refresh the page.', 'error');
+          } else {
+            alert('Authentication system not available. Please refresh the page.');
           }
           
           // Reset button state
           signupBtn.innerHTML = originalText;
           signupBtn.disabled = false;
-          
-          setTimeout(() => {
-            window.location.href = 'login.html';
-          }, 1500);
-        }, 1500);
+        }
       } catch (error) {
         console.error('Signup error:', error);
         if (window.Toast) {

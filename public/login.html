@@ -551,28 +551,60 @@
         loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
         loginBtn.disabled = true;
 
-        // Simulate login process
-        setTimeout(() => {
-          const dashboards = {
-            patient: 'patient-dashboard.html',
-            doctor: 'doctor-dashboard.html',
-            hospital: 'hospital-dashboard.html'
-          };
-          
+        // Use real Supabase authentication
+        if (window.SimpleAuth) {
+          try {
+            const result = await window.SimpleAuth.signIn(email, password, selectedRole);
+            
+            if (result && result.success) {
+              const dashboards = {
+                patient: 'patient-dashboard.html',
+                doctor: 'doctor-dashboard.html',
+                hospital: 'hospital-dashboard.html'
+              };
+              
+              if (window.Toast) {
+                Toast.show(`Login successful! Redirecting to ${selectedRole} dashboard...`, 'success');
+              } else {
+                alert(`Login successful! Redirecting to ${selectedRole} dashboard...`);
+              }
+              
+              // Reset button state
+              loginBtn.innerHTML = originalText;
+              loginBtn.disabled = false;
+              
+              setTimeout(() => {
+                window.location.href = dashboards[selectedRole] || 'patient-dashboard.html';
+              }, 1000);
+            } else {
+              // Reset button state on error
+              loginBtn.innerHTML = originalText;
+              loginBtn.disabled = false;
+            }
+          } catch (error) {
+            console.error('Login error:', error);
+            if (window.Toast) {
+              Toast.show(error.message || 'Login failed. Please try again.', 'error');
+            } else {
+              alert(error.message || 'Login failed. Please try again.');
+            }
+            
+            // Reset button state
+            loginBtn.innerHTML = originalText;
+            loginBtn.disabled = false;
+          }
+        } else {
+          // Fallback if SimpleAuth is not available
           if (window.Toast) {
-            Toast.show(`Login successful! Redirecting to ${selectedRole} dashboard...`, 'success');
+            Toast.show('Authentication system not available. Please refresh the page.', 'error');
           } else {
-            alert(`Login successful! Redirecting to ${selectedRole} dashboard...`);
+            alert('Authentication system not available. Please refresh the page.');
           }
           
           // Reset button state
           loginBtn.innerHTML = originalText;
           loginBtn.disabled = false;
-          
-          setTimeout(() => {
-            window.location.href = dashboards[selectedRole] || 'patient-dashboard.html';
-          }, 1000);
-        }, 1000);
+        }
       } catch (error) {
         console.error('Login error:', error);
         if (window.Toast) {

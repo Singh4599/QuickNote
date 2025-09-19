@@ -427,11 +427,26 @@
 
     // Section navigation
     function showSection(sectionName) {
+      // Remove active class from all sections and nav links
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
       
-      document.getElementById(sectionName + '-section').classList.add('active');
-      event.target.classList.add('active');
+      // Show the selected section
+      const targetSection = document.getElementById(sectionName + '-section');
+      if (targetSection) {
+        targetSection.classList.add('active');
+      }
+      
+      // Add active class to clicked nav link
+      if (event && event.target) {
+        event.target.classList.add('active');
+      } else {
+        // Fallback: find nav link by section name
+        const navLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+        if (navLink) {
+          navLink.classList.add('active');
+        }
+      }
     }
 
     // Mobile sidebar toggle
@@ -543,6 +558,9 @@
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       createParticles();
+      
+      // Show dashboard section by default
+      showSection('dashboard');
       
       // Check authentication
       if (window.SimpleAuth) {
