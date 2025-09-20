@@ -55,7 +55,8 @@
       background: linear-gradient(45deg, #ff6b9d, #4facfe, #43e97b);
       border-radius: 50%;
       animation: float 25s infinite linear;
-      opacity: 0.6;
+      opacity: 0.8;
+      box-shadow: 0 0 10px currentColor;
     }
 
     @keyframes float {
@@ -221,12 +222,14 @@
       transition: all 0.4s ease;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
 
     .stat-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(255, 107, 157, 0.3), 0 0 40px rgba(79, 172, 254, 0.2);
       border-color: #ff6b9d;
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .stat-icon {
@@ -258,12 +261,14 @@
       padding: 28px;
       margin-bottom: 24px;
       transition: all 0.4s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
 
     .content-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 20px 60px rgba(255, 107, 157, 0.2), 0 0 30px rgba(79, 172, 254, 0.15);
       border-color: #ff6b9d;
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .card-title {
@@ -288,11 +293,15 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+      position: relative;
+      overflow: hidden;
     }
 
     .cyber-btn:hover {
       transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 15px 35px rgba(255,107,157,0.4);
+      box-shadow: 0 15px 35px rgba(255,107,157,0.5), 0 0 25px rgba(79, 172, 254, 0.3);
+      background: linear-gradient(45deg, #ff6b9d, #4facfe, #43e97b);
     }
 
     /* Sections */
@@ -308,15 +317,18 @@
     .hospital-card {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 20px;
       margin-bottom: 15px;
-      transition: all 0.3s ease;
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .hospital-card:hover {
-      background: rgba(255, 255, 255, 0.08);
-      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 15px 40px rgba(255, 107, 157, 0.2), 0 0 20px rgba(79, 172, 254, 0.1);
+      border-color: #ff6b9d;
     }
 
     /* Progress Bars */
@@ -934,10 +946,11 @@
   </div>
 
   <script>
-    // Create particles
+    // Create enhanced particles
     function createParticles() {
       const particleBg = document.getElementById('particleBg');
-      const particleCount = 30;
+      const particleCount = 50;
+      const colors = ['#ff6b9d', '#4facfe', '#43e97b', '#fa709a', '#8b5cf6'];
       
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
@@ -945,6 +958,10 @@
         particle.style.left = Math.random() * 100 + '%';
         particle.style.animationDelay = Math.random() * 25 + 's';
         particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.width = (Math.random() * 4 + 2) + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.boxShadow = `0 0 ${Math.random() * 15 + 5}px ${colors[Math.floor(Math.random() * colors.length)]}`;
         particleBg.appendChild(particle);
       }
     }
