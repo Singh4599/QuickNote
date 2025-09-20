@@ -330,56 +330,53 @@ class AIDiagnosticsSimple {
   }
 
   displayAnalysisResult(report) {
-    const resultsContainer = document.getElementById('analysisResults');
-    if (!resultsContainer) return;
+    const resultsDiv = document.getElementById('analysisResults');
+    const resultContent = document.getElementById('resultContent');
+    
+    if (!resultsDiv || !resultContent) {
+      console.error('Analysis results containers not found');
+      return;
+    }
 
-    const resultHtml = `
-      <div class="bg-white rounded-xl shadow-lg p-6 mb-6 border-l-4 border-blue-500">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-xl font-bold text-slate-800">
-            📊 ${report.file_name}
-          </h3>
-          <div class="flex items-center gap-2">
-            <span class="px-3 py-1 rounded-full text-sm font-medium ${
-              report.risk_level === 'high' ? 'bg-red-100 text-red-700' :
-              report.risk_level === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-              'bg-green-100 text-green-700'
-            }">
-              ${report.risk_level.toUpperCase()} Risk
-            </span>
-            <span class="text-sm text-slate-500">${new Date(report.created_at).toLocaleString()}</span>
-          </div>
+    const riskColor = report.risk_level === 'high' ? '#ff6b9d' : 
+                     report.risk_level === 'medium' ? '#fa709a' : '#43e97b';
+
+    resultContent.innerHTML = `
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+          <h4 style="color: white; margin: 0;">${report.file_name}</h4>
+          <span style="background: ${riskColor}20; color: ${riskColor}; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
+            ${report.risk_level.toUpperCase()} RISK
+          </span>
         </div>
-
-        <div class="space-y-4">
-          <div>
-            <h4 class="font-semibold text-slate-700 mb-2">📋 Summary</h4>
-            <p class="text-slate-600 bg-slate-50 p-3 rounded-lg">${report.ai_summary}</p>
-          </div>
-
-          <div>
-            <h4 class="font-semibold text-slate-700 mb-2">🔍 Key Findings</h4>
-            <ul class="list-disc list-inside space-y-1 text-slate-600 bg-slate-50 p-3 rounded-lg">
-              ${report.key_findings.map(finding => `<li>${finding}</li>`).join('')}
-            </ul>
-          </div>
-
-          <div>
-            <h4 class="font-semibold text-slate-700 mb-2">📝 Recommended Follow-ups</h4>
-            <ul class="list-disc list-inside space-y-1 text-slate-600 bg-slate-50 p-3 rounded-lg">
-              ${report.follow_ups.map(followup => `<li>${followup}</li>`).join('')}
-            </ul>
-          </div>
-
-          <div>
-            <h4 class="font-semibold text-slate-700 mb-2">👤 Patient-Friendly Explanation</h4>
-            <p class="text-slate-600 bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">${report.patient_friendly_explainer}</p>
-          </div>
+        
+        <div style="margin-bottom: 15px;">
+          <h5 style="color: white; margin-bottom: 8px;">📋 Summary:</h5>
+          <p style="color: rgba(255,255,255,0.8); line-height: 1.5;">${report.ai_summary}</p>
         </div>
-
-        <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p class="text-sm text-yellow-800">
-            <strong>⚠️ Important Medical Disclaimer:</strong> This AI analysis is for informational purposes only and should not replace professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare providers for medical decisions.
+        
+        <div style="margin-bottom: 15px;">
+          <h5 style="color: white; margin-bottom: 8px;">🔍 Key Findings:</h5>
+          <ul style="color: rgba(255,255,255,0.8); padding-left: 20px;">
+            ${report.key_findings.map(finding => `<li style="margin-bottom: 4px;">${finding}</li>`).join('')}
+          </ul>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+          <h5 style="color: white; margin-bottom: 8px;">📝 Recommended Follow-ups:</h5>
+          <ul style="color: rgba(255,255,255,0.8); padding-left: 20px;">
+            ${report.follow_ups.map(followup => `<li style="margin-bottom: 4px;">${followup}</li>`).join('')}
+          </ul>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border-left: 4px solid ${riskColor};">
+          <h5 style="color: white; margin-bottom: 8px;">💡 Patient-Friendly Explanation:</h5>
+          <p style="color: rgba(255,255,255,0.8); line-height: 1.5; font-size: 0.9rem;">${report.patient_friendly_explainer}</p>
+        </div>
+        
+        <div style="margin-top: 15px; padding: 10px; background: rgba(255, 107, 157, 0.1); border-radius: 8px;">
+          <p style="color: #ff6b9d; font-size: 0.8rem; text-align: center;">
+            ⚠️ This AI analysis is for informational purposes only. Always consult with qualified healthcare professionals for medical decisions.
           </p>
         </div>
       </div>
