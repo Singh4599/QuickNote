@@ -385,25 +385,30 @@ class AIDiagnosticsSimple {
       </div>
     `;
 
-    resultsContainer.innerHTML = resultHtml + resultsContainer.innerHTML;
+    resultsDiv.style.display = 'block';
+    resultsDiv.scrollIntoView({ behavior: 'smooth' });
   }
 
-  async loadReports() {
-    const reportsContainer = document.getElementById('reportsContainer');
+  loadReports() {
+    const reportsContainer = document.getElementById('reportsList');
     if (!reportsContainer) return;
 
     if (this.reports.length === 0) {
       reportsContainer.innerHTML = `
-        <div class="text-center py-8 text-slate-500">
-          <div class="text-6xl mb-4">📊</div>
-          <p class="text-lg">No AI reports yet</p>
-          <p class="text-sm">Upload a medical file or describe symptoms to get started</p>
+        <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.5);">
+          <i class="fas fa-file-medical" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.5;"></i>
+          <p>No reports yet. Upload a medical file or describe symptoms to get started.</p>
         </div>
       `;
       return;
     }
 
     const reportsHtml = this.reports.map(report => `
+      <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <h4 style="color: white; margin: 0;">${report.file_name}</h4>
+          <span style="background: ${report.risk_level === 'high' ? '#ff6b9d' : report.risk_level === 'medium' ? '#fa709a' : '#43e97b'}20; color: ${report.risk_level === 'high' ? '#ff6b9d' : report.risk_level === 'medium' ? '#fa709a' : '#43e97b'}; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
+            ${report.risk_level.toUpperCase()} RISK
       <div class="bg-white rounded-lg shadow-md p-4 mb-4 hover:shadow-lg transition-shadow">
         <div class="flex items-center justify-between mb-2">
           <h4 class="font-semibold text-slate-800">${report.file_name}</h4>
@@ -450,11 +455,8 @@ class AIDiagnosticsSimple {
   }
 }
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('🚀 Initializing Simple AI Diagnostics...');
-  window.AIDiagnosticsSimple = new AIDiagnosticsSimple();
-});
+// Make class available globally
+window.AIDiagnosticsSimple = AIDiagnosticsSimple;
 
 // Export for module usage
 if (typeof module !== 'undefined' && module.exports) {

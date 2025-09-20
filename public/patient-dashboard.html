@@ -88,6 +88,17 @@
     .doctor-card:hover, .hospital-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); border-color: #ff6b9d; }
     .doctor-info h3, .hospital-info h3 { color: white; font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
     .doctor-info p, .hospital-info p { color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+    /* AI Diagnostics Styles */
+    .drop-zone.drag-over {
+      border-color: #4facfe;
+      background: rgba(79, 172, 254, 0.1);
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
     @media (max-width: 768px) {
       .sidebar { position: fixed; left: -280px; z-index: 1000; transition: left 0.3s ease; }
       .sidebar.open { left: 0; }
@@ -185,19 +196,48 @@
           <p class="page-subtitle">Upload medical files or describe symptoms for AI-powered analysis</p>
           
           <div class="content-card">
-            <h2 class="card-title">Upload Medical Files</h2>
-            <div style="text-align: center; padding: 40px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 16px; margin: 20px 0;">
+            <h2 class="card-title">🔬 AI Medical Analysis</h2>
+            <p style="margin-bottom: 20px; color: rgba(255,255,255,0.7);">Upload medical files or describe symptoms for AI-powered diagnostic insights</p>
+            
+            <!-- File Upload Section -->
+            <div class="drop-zone" id="dropZone" style="text-align: center; padding: 40px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 16px; margin: 20px 0; transition: all 0.3s ease; cursor: pointer;">
               <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; margin-bottom: 16px; color: #4facfe;"></i>
-              <p style="margin-bottom: 16px; color: rgba(255,255,255,0.7);">Drag & drop files here or click to browse</p>
-              <input type="file" id="fileInput" style="display: none;" accept=".jpg,.jpeg,.png,.pdf,.txt" multiple>
-            <button class="cyber-btn" onclick="document.getElementById('fileInput').click()">Choose Files</button>
+              <p style="margin-bottom: 16px; color: rgba(255,255,255,0.7);">Drag & drop medical files here or click to browse</p>
+              <p style="margin-bottom: 16px; font-size: 0.9rem; color: rgba(255,255,255,0.5);">Supports: JPG, PNG, PDF files (Max 10MB)</p>
+              <input type="file" id="fileInput" style="display: none;" accept=".jpg,.jpeg,.png,.pdf" multiple>
+              <button class="cyber-btn" id="chooseFileBtn">
+                <i class="fas fa-file-upload"></i> Choose Files
+              </button>
             </div>
             
+            <!-- Processing Status -->
+            <div id="processingStatus" style="display: none; text-align: center; margin: 20px 0;">
+              <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid #4facfe; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+              <p style="margin-top: 10px; color: #4facfe;">Processing your medical data...</p>
+            </div>
+            
+            <!-- Text Analysis Section -->
             <h3 style="margin: 24px 0 16px 0; color: white;">Or describe your symptoms:</h3>
-            <textarea id="symptomsText" style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Describe your symptoms, medical history, or paste lab results here..."></textarea>
-            <button class="cyber-btn" style="margin-top: 16px;" onclick="analyzeSymptoms()">
+            <textarea id="symptomText" style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Describe your symptoms, medical history, or paste lab results here..."></textarea>
+            <button class="cyber-btn" id="analyzeBtn" style="margin-top: 16px;">
               <i class="fas fa-brain"></i> Analyze Symptoms
             </button>
+            
+            <!-- Analysis Results -->
+            <div id="analysisResults" style="margin-top: 30px; display: none;">
+              <h3 style="color: white; margin-bottom: 15px;">📋 Analysis Results</h3>
+              <div id="resultContent" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                <!-- Results will be populated here -->
+              </div>
+            </div>
+            
+            <!-- Recent Reports -->
+            <div id="recentReports" style="margin-top: 30px;">
+              <h3 style="color: white; margin-bottom: 15px;">📊 Recent Reports</h3>
+              <div id="reportsList">
+                <!-- Reports will be populated here -->
+              </div>
+            </div>
           </div>
         </div>
 
@@ -393,6 +433,7 @@
   <script src="js/config.js"></script>
   <script src="js/auth-simple.js"></script>
   <script src="js/toast.js"></script>
+  <script src="js/ai-diagnostics-simple.js"></script>
   
   <script>
     // Create particles
@@ -576,6 +617,12 @@
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       createParticles();
+      
+      // Initialize AI Diagnostics
+      if (window.AIDiagnosticsSimple) {
+        window.aiDiagnostics = new AIDiagnosticsSimple();
+        console.log('✅ AI Diagnostics initialized successfully');
+      }
       
       // Check authentication
       if (window.SimpleAuth) {
