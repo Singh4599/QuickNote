@@ -23,7 +23,7 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 25%, #0f3460 50%, #1a1a3e 75%, #0f0f23 100%);
+      background: linear-gradient(-45deg, #0f0f23, #1a1a2e, #16213e, #0f3460);
       background-size: 400% 400%;
       animation: gradientShift 15s ease infinite;
       color: white;
@@ -337,14 +337,31 @@
     }
 
     /* Mobile Responsive */
+    .mobile-btn {
+      display: none;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 12px;
+      color: white;
+      cursor: pointer;
+      margin-right: 16px;
+    }
+    
     @media (max-width: 768px) {
       .sidebar {
-        transform: translateX(-100%);
+        position: fixed;
+        left: -280px;
         z-index: 1000;
+        transition: left 0.3s ease;
       }
       
       .sidebar.open {
-        transform: translateX(0);
+        left: 0;
+      }
+      
+      .mobile-btn {
+        display: block;
       }
       
       .main {
@@ -354,6 +371,10 @@
       
       .stats-grid {
         grid-template-columns: 1fr;
+      }
+      
+      .page-title {
+        font-size: 1.2rem;
       }
     }
   </style>
@@ -365,8 +386,10 @@
   <div class="dashboard-container">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-      <a href="#" class="logo">
-        <i class="fas fa-hospital"></i>
+      <a href="#" class="logo" style="display: flex; align-items: center; gap: 12px; color: white; text-decoration: none; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;">
+        <div style="width: 48px; height: 48px; background: linear-gradient(45deg, #ff6b9d, #4facfe); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 0 20px rgba(255,107,157,0.3);">
+          <i class="fas fa-hospital"></i>
+        </div>
         <span class="brand-text">MediVerse AI</span>
       </a>
       
@@ -1062,6 +1085,12 @@
       document.getElementById('xrayStatus').textContent = xrayAvailable === xrayTotal ? '🟢 All Active' : '🟡 Maintenance';
 
       console.log('🏥 Equipment status updated - Ventilators:', ventilatorAvailable, 'X-Ray:', xrayAvailable);
+    }
+
+    // Mobile sidebar toggle
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('open');
     }
 
     // Logout function
