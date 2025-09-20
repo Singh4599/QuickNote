@@ -236,8 +236,35 @@ class AIDiagnosticsWorking {
 
   async callAIAnalysis(report, fileContent = null, text = null) {
     try {
-      // Simulate AI analysis
-      return await this.simulateAIAnalysis(fileContent, report.file_type, text);
+      let analysisResult;
+
+      // Use enhanced Gemini Medical AI if available
+      if (window.GeminiMedicalAI) {
+        const geminiAI = new window.GeminiMedicalAI();
+        console.log('🧠 Using Enhanced Medical AI Analysis...');
+        
+        try {
+          if (text) {
+            // Text-based analysis with Gemini
+            analysisResult = await geminiAI.analyzeMedicalText(text);
+          } else if (fileContent) {
+            // File-based analysis with Gemini
+            analysisResult = await geminiAI.analyzeMedicalImage(fileContent, report.file_type);
+          }
+        } catch (geminiError) {
+          console.log('⚠️ Gemini AI not available, using enhanced simulation...');
+          // Fallback to enhanced simulation
+          analysisResult = await geminiAI.simulateDetailedMedicalAnalysis(fileContent, report.file_type, text);
+        }
+      } else {
+        console.log('⚠️ Enhanced Medical AI not loaded, using basic simulation...');
+        // Fallback to basic simulation
+        analysisResult = await this.simulateAIAnalysis(fileContent, report.file_type, text);
+      }
+      
+      console.log('✅ Medical AI Analysis Result:', analysisResult);
+      return analysisResult;
+
     } catch (error) {
       console.error('AI Analysis Error:', error);
       throw error;
