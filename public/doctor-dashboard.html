@@ -370,33 +370,40 @@
             </div>
           </div>
 
-          <!-- Upload Section -->
-          <div class="content-card">
-            <h2 class="card-title">📁 Upload Patient Data</h2>
-            <div style="text-align: center; padding: 40px; border: 2px dashed rgba(255,255,255,0.3); border-radius: 16px; margin: 20px 0; background: rgba(255,255,255,0.02);">
-              <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; margin-bottom: 16px; color: #4facfe;"></i>
-              <p style="margin-bottom: 16px; color: rgba(255,255,255,0.7);">Upload medical images, lab results, X-rays, or patient records</p>
-              <p style="margin-bottom: 20px; color: rgba(255,255,255,0.5); font-size: 0.9rem;">Supported: JPG, PNG, PDF, DICOM • Max 10MB</p>
-              <button class="cyber-btn" onclick="uploadFile()">
-                <i class="fas fa-upload"></i> Choose Files
-              </button>
-            </div>
-          </div>
-
           <!-- Symptom Analysis -->
           <div class="content-card">
-            <h2 class="card-title">🩺 Symptom Analysis</h2>
+            <h2 class="card-title">🩺 Patient Symptom Analysis</h2>
             <div style="margin-bottom: 20px;">
               <label style="color: white; margin-bottom: 8px; display: block;">Patient Symptoms & Medical History:</label>
-              <textarea id="symptomInput" style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Enter patient symptoms, medical history, or clinical observations...
+              <textarea id="symptomText" style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Enter patient symptoms, medical history, or clinical observations...
 Example: Patient complains of chest pain, shortness of breath, fatigue. History of hypertension. Age: 45, Male."></textarea>
             </div>
-            <button class="cyber-btn" onclick="analyzeSymptoms()" style="margin-right: 10px;">
+            <button class="cyber-btn" id="analyzeBtn" style="margin-right: 10px;">
               <i class="fas fa-brain"></i> Generate AI Analysis
             </button>
             <button class="cyber-btn" onclick="clearAnalysis()" style="background: linear-gradient(45deg, #ff6b9d, #fa709a);">
               <i class="fas fa-eraser"></i> Clear
             </button>
+          </div>
+
+          <!-- Analysis Results -->
+          <div id="analysisResults" style="margin-top: 30px; display: none;">
+            <div class="content-card">
+              <h2 class="card-title">📋 AI Analysis Results</h2>
+              <div id="resultContent">
+                <!-- Results will be populated here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Reports -->
+          <div id="recentReports" style="margin-top: 30px;">
+            <div class="content-card">
+              <h2 class="card-title">📊 Recent AI Reports</h2>
+              <div id="reportsList">
+                <!-- Reports will be populated here -->
+              </div>
+            </div>
           </div>
 
           <!-- Analysis Results -->
@@ -675,6 +682,8 @@ Example: Patient complains of chest pain, shortness of breath, fatigue. History 
   <script src="js/config.js"></script>
   <script src="js/auth-simple.js"></script>
   <script src="js/toast.js"></script>
+  <script src="js/gemini-medical-ai.js"></script>
+  <script src="js/ai-diagnostics-working.js"></script>
   
   <script>
     // Create particles
@@ -892,8 +901,11 @@ Example: Patient complains of chest pain, shortness of breath, fatigue. History 
     document.addEventListener('DOMContentLoaded', () => {
       createParticles();
       
-      // Show dashboard section by default
-      showSection('dashboard');
+      // Initialize AI Diagnostics for Doctor Dashboard
+      if (window.AIDiagnosticsWorking) {
+        window.aiDiagnostics = new AIDiagnosticsWorking();
+        console.log('✅ AI Diagnostics initialized for Doctor Dashboard');
+      }
       
       // Check authentication
       if (window.SimpleAuth) {
