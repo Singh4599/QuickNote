@@ -575,12 +575,18 @@
               </div>
             </div>
           </div>
-          <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
             <button class="cyber-btn" onclick="showSection('beds')">
               <i class="fas fa-eye"></i> View All Beds
             </button>
             <button class="cyber-btn" onclick="updateBedStatus()" style="background: linear-gradient(45deg, #43e97b, #4facfe);">
               <i class="fas fa-sync"></i> Refresh Status
+            </button>
+            <button class="cyber-btn" onclick="manualBedUpdate()" style="background: linear-gradient(45deg, #ff6b9d, #fa709a);">
+              <i class="fas fa-edit"></i> Manual Update
+            </button>
+            <button class="cyber-btn" onclick="toggleAutoUpdate()" id="autoUpdateBtn" style="background: linear-gradient(45deg, #43e97b, #4facfe);">
+              <i class="fas fa-play"></i> Auto: ON
             </button>
           </div>
         </div>
@@ -1088,6 +1094,76 @@
       alert('👥 All Staff Overview\n\n📊 Current Status:\n• Total Doctors: 48\n• Total Nurses: 156\n• Support Staff: 89\n• On Duty: 67\n• On Break: 12\n• Emergency Response: 8\n\n🔄 Status updates every minute automatically');
     }
 
+    // Manual Bed Update Function
+    function manualBedUpdate() {
+      const generalInput = prompt('Enter General Wards availability (current: ' + document.getElementById('generalCount').textContent + '):\nFormat: available/total (e.g., 45/60)');
+      if (generalInput && generalInput.includes('/')) {
+        const [available, total] = generalInput.split('/').map(n => parseInt(n.trim()));
+        if (!isNaN(available) && !isNaN(total) && available <= total) {
+          const percent = Math.floor((available / total) * 100);
+          document.getElementById('generalCount').textContent = `${available}/${total}`;
+          document.getElementById('generalProgress').style.width = percent + '%';
+          document.getElementById('generalStatus').textContent = percent > 80 ? '🟢 Normal Capacity' : percent > 60 ? '🟡 Moderate Load' : '🔴 High Demand';
+        }
+      }
+
+      const icuInput = prompt('Enter ICU availability (current: ' + document.getElementById('icuCount').textContent + '):\nFormat: available/total (e.g., 18/20)');
+      if (icuInput && icuInput.includes('/')) {
+        const [available, total] = icuInput.split('/').map(n => parseInt(n.trim()));
+        if (!isNaN(available) && !isNaN(total) && available <= total) {
+          const percent = Math.floor((available / total) * 100);
+          document.getElementById('icuCount').textContent = `${available}/${total}`;
+          document.getElementById('icuProgress').style.width = percent + '%';
+          document.getElementById('icuStatus').textContent = percent > 85 ? '🟢 Available' : percent > 70 ? '🟡 Limited' : '🔴 Near Capacity';
+        }
+      }
+
+      const pediatricInput = prompt('Enter Pediatric availability (current: ' + document.getElementById('pediatricCount').textContent + '):\nFormat: available/total (e.g., 12/15)');
+      if (pediatricInput && pediatricInput.includes('/')) {
+        const [available, total] = pediatricInput.split('/').map(n => parseInt(n.trim()));
+        if (!isNaN(available) && !isNaN(total) && available <= total) {
+          const percent = Math.floor((available / total) * 100);
+          document.getElementById('pediatricCount').textContent = `${available}/${total}`;
+          document.getElementById('pediatricProgress').style.width = percent + '%';
+          document.getElementById('pediatricStatus').textContent = percent > 75 ? '🟢 Good Availability' : '🟡 Moderate Load';
+        }
+      }
+
+      alert('✅ Manual bed update completed!\n\nBed availability has been updated based on your input.');
+    }
+
+    // Auto Update Toggle
+    let autoUpdateEnabled = true;
+    let bedUpdateInterval, staffUpdateInterval, equipmentUpdateInterval;
+
+    function toggleAutoUpdate() {
+      const btn = document.getElementById('autoUpdateBtn');
+      
+      if (autoUpdateEnabled) {
+        // Disable auto updates
+        clearInterval(bedUpdateInterval);
+        clearInterval(staffUpdateInterval);
+        clearInterval(equipmentUpdateInterval);
+        
+        btn.innerHTML = '<i class="fas fa-pause"></i> Auto: OFF';
+        btn.style.background = 'linear-gradient(45deg, #ff6b9d, #fa709a)';
+        autoUpdateEnabled = false;
+        
+        alert('⏸️ Auto-updates disabled\n\nBed, staff, and equipment status will no longer update automatically.\nUse manual update buttons to refresh data.');
+      } else {
+        // Enable auto updates
+        bedUpdateInterval = setInterval(updateBedStatus, 30000);
+        staffUpdateInterval = setInterval(updateStaffStatus, 60000);
+        equipmentUpdateInterval = setInterval(updateEquipmentStatus, 45000);
+        
+        btn.innerHTML = '<i class="fas fa-play"></i> Auto: ON';
+        btn.style.background = 'linear-gradient(45deg, #43e97b, #4facfe)';
+        autoUpdateEnabled = true;
+        
+        alert('▶️ Auto-updates enabled\n\nBed, staff, and equipment status will update automatically:\n• Beds: every 30 seconds\n• Staff: every 60 seconds\n• Equipment: every 45 seconds');
+      }
+    }
+
     function updateEquipmentStatus() {
       // Update Ventilators
       const ventilatorAvailable = Math.floor(Math.random() * 4) + 8; // 8-11
@@ -1136,10 +1212,10 @@
         document.getElementById('mobileBtn').style.display = 'block';
       }
 
-      // Start real-time updates
-      setInterval(updateBedStatus, 30000); // Update every 30 seconds
-      setInterval(updateStaffStatus, 60000); // Update every minute
-      setInterval(updateEquipmentStatus, 45000); // Update every 45 seconds
+      // Start real-time updates with proper interval variables
+      bedUpdateInterval = setInterval(updateBedStatus, 30000); // Update every 30 seconds
+      staffUpdateInterval = setInterval(updateStaffStatus, 60000); // Update every minute
+      equipmentUpdateInterval = setInterval(updateEquipmentStatus, 45000); // Update every 45 seconds
     });
   </script>
 </body>
