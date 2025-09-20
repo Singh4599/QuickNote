@@ -216,17 +216,17 @@
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 25px;
-      transition: all 0.3s ease;
+      border-radius: 20px;
+      padding: 24px;
+      transition: all 0.4s ease;
       position: relative;
       overflow: hidden;
     }
 
     .stat-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 107, 157, 0.3);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      border-color: #ff6b9d;
     }
 
     .stat-icon {
@@ -254,15 +254,16 @@
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 25px;
-      margin-bottom: 25px;
-      transition: all 0.3s ease;
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 24px;
+      transition: all 0.4s ease;
     }
 
     .content-card:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 107, 157, 0.2);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      border-color: #ff6b9d;
     }
 
     .card-title {
@@ -276,12 +277,13 @@
     .cyber-btn {
       background: linear-gradient(45deg, #ff6b9d, #4facfe);
       border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
+      border-radius: 16px;
+      padding: 16px 32px;
       color: white;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s ease;
+      text-transform: uppercase;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -289,8 +291,8 @@
     }
 
     .cyber-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(255, 107, 157, 0.3);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(255,107,157,0.4);
     }
 
     /* Sections */
@@ -398,18 +400,21 @@
 
     <main class="main">
       <header class="header">
-        <div>
-          <h1 class="page-title">🏥 Hospital Management</h1>
-          <p class="page-subtitle">Comprehensive hospital operations and resource management</p>
+        <button class="mobile-btn" id="mobileBtn" style="display: none;" onclick="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="search" style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px 20px; flex: 1; max-width: 500px;">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search beds, departments, doctors..." style="border: none; outline: none; background: transparent; width: 100%; color: white;">
         </div>
-        <div class="user-info">
-          <div class="user-avatar">HA</div>
-          <div>
-            <div style="font-weight: 600;">Hospital Admin</div>
-            <div style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">MediVerse General Hospital</div>
-          </div>
-        </div>
+        
+        <div class="user-avatar" style="width: 48px; height: 48px; background: linear-gradient(45deg, #4facfe, #43e97b); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: white;">HA</div>
       </header>
+
+      <div class="content" style="padding: 32px; flex: 1;">
+        <h1 class="page-title">🏥 Hospital Management Dashboard</h1>
+        <p class="page-subtitle">Comprehensive hospital operations and resource management</p>
 
       <!-- Dashboard Section -->
       <div id="dashboard-section" class="section active">
