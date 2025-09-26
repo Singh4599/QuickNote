@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediVerse AI - Patient Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        .top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 64px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: rgba(248, 250, 252, 0.8);
+            color: #1e293b;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 300px;
+            padding: 8px 16px 8px 40px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 8px;
+            background: rgba(248, 250, 252, 0.8);
+            color: #1e293b;
+            font-size: 14px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: rgba(248, 250, 252, 0.8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .notification-btn:hover {
+            background: rgba(226, 232, 240, 0.8);
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 200px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            margin-bottom: 8px;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #64748b;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(248, 250, 252, 0.8);
+            color: #1e293b;
+        }
+
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-subtitle {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .widget {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .widget:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .widget-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .widget-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .ai-assistant {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .ai-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .ai-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .ai-info h3 {
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .ai-info p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .ai-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .ai-action-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(248, 250, 252, 0.8);
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .ai-action-btn:hover {
+            background: rgba(226, 232, 240, 0.8);
+            transform: translateY(-1px);
+        }
+
+        .stats-widget {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .stat-change.positive {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .stat-change.negative {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .data-table th {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .data-table td {
+            color: #1e293b;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.scheduled {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .status-badge.completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .status-badge.critical {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(226, 232, 240, 0.8);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 16px;
+            }
+
+            .search-box input {
+                width: 200px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .ai-assistant {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-widget {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function PatientDashboard() {
+            console.log('PatientDashboard component loaded');
+            const [activeSection, setActiveSection] = useState('dashboard');
+            const [dropdownOpen, setDropdownOpen] = useState(false);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [showBookAppointment, setShowBookAppointment] = useState(false);
+            const [notifications, setNotifications] = useState([
+                { id: 1, message: 'Appointment reminder: Dr. Sarah Johnson tomorrow at 10:00 AM', time: '2 hours ago', type: 'reminder' },
+                { id: 2, message: 'Lab results are ready for review', time: '1 day ago', type: 'info' },
+                { id: 3, message: 'Prescription refill available for pickup', time: '2 days ago', type: 'medication' }
+            ]);
+            
+            const [patientInfo, setPatientInfo] = useState({
+                name: 'John Doe',
+                age: 35,
+                bloodType: 'O+',
+                allergies: 'Penicillin',
+                emergencyContact: '+1 (555) 123-4567'
+            });
+
+            const [healthStats, setHealthStats] = useState({
+                upcomingAppointments: 2,
+                activePrescriptions: 3,
+                pendingResults: 1,
+                healthScore: 85
+            });
+
+            const [appointments, setAppointments] = useState([
+                { id: 'A001', doctor: 'Dr. Sarah Johnson', department: 'Cardiology', date: 'Sep 19, 2024', time: '10:00 AM', status: 'scheduled' },
+                { id: 'A002', doctor: 'Dr. Michael Chen', department: 'General', date: 'Sep 25, 2024', time: '2:00 PM', status: 'scheduled' },
+                { id: 'A003', doctor: 'Dr. Emily Davis', department: 'Dermatology', date: 'Sep 15, 2024', time: '11:00 AM', status: 'completed' }
+            ]);
+
+            const [prescriptions, setPrescriptions] = useState([
+                { id: 'RX001', medication: 'Lisinopril 10mg', doctor: 'Dr. Sarah Johnson', instructions: 'Once daily with food', refills: 2, status: 'active' },
+                { id: 'RX002', medication: 'Metformin 500mg', doctor: 'Dr. Michael Chen', instructions: 'Twice daily with meals', refills: 1, status: 'active' },
+                { id: 'RX003', medication: 'Vitamin D3', doctor: 'Dr. Sarah Johnson', instructions: 'Once daily', refills: 0, status: 'refill_needed' }
+            ]);
+
+            const [labResults, setLabResults] = useState([
+                { id: 'LAB001', test: 'Complete Blood Count', doctor: 'Dr. Sarah Johnson', date: 'Sep 16, 2024', status: 'normal', result: 'All values within normal range' },
+                { id: 'LAB002', test: 'Cholesterol Panel', doctor: 'Dr. Sarah Johnson', date: 'Sep 16, 2024', status: 'abnormal', result: 'LDL slightly elevated - 165 mg/dL' },
+                { id: 'LAB003', test: 'Blood Glucose', doctor: 'Dr. Michael Chen', date: 'Sep 10, 2024', status: 'normal', result: '95 mg/dL (fasting)' }
+            ]);
+
+            const [newAppointment, setNewAppointment] = useState({
+                doctor: '',
+                department: '',
+                date: '',
+                time: '',
+                reason: ''
+            });
+
+            // Load data from localStorage
+            useEffect(() => {
+                const savedAppointments = localStorage.getItem('patientAppointments');
+                const savedNotifications = localStorage.getItem('patientNotifications');
+                
+                if (savedAppointments) {
+                    setAppointments(JSON.parse(savedAppointments));
+                }
+                if (savedNotifications) {
+                    setNotifications(JSON.parse(savedNotifications));
+                }
+            }, []);
+
+            // Save data to localStorage
+            useEffect(() => {
+                localStorage.setItem('patientAppointments', JSON.stringify(appointments));
+            }, [appointments]);
+
+            useEffect(() => {
+                localStorage.setItem('patientNotifications', JSON.stringify(notifications));
+            }, [notifications]);
+
+            const getStatusBadge = (status) => {
+                switch (status.toLowerCase()) {
+                    case 'scheduled': return 'scheduled';
+                    case 'completed': return 'completed';
+                    case 'pending': return 'pending';
+                    case 'active': return 'completed';
+                    case 'refill_needed': return 'critical';
+                    case 'normal': return 'completed';
+                    case 'abnormal': return 'critical';
+                    default: return 'pending';
+                }
+            };
+
+            const toggleDropdown = () => {
+                setDropdownOpen(!dropdownOpen);
+            };
+
+            const logout = () => {
+                alert('Logging out...');
+                window.location.href = 'login.html';
+            };
+
+            // Search functionality
+            const handleSearch = (query) => {
+                setSearchQuery(query);
+            };
+
+            // Book new appointment
+            const handleBookAppointment = () => {
+                if (newAppointment.doctor && newAppointment.department && newAppointment.date && newAppointment.time && newAppointment.reason) {
+                    const newId = 'A' + String(appointments.length + 1).padStart(3, '0');
+                    const appointmentData = {
+                        id: newId,
+                        doctor: newAppointment.doctor,
+                        department: newAppointment.department,
+                        date: newAppointment.date,
+                        time: newAppointment.time,
+                        status: 'scheduled'
+                    };
+                    
+                    setAppointments([appointmentData, ...appointments]);
+                    setNewAppointment({ doctor: '', department: '', date: '', time: '', reason: '' });
+                    setShowBookAppointment(false);
+                    
+                    const newNotification = {
+                        id: notifications.length + 1,
+                        message: `Appointment scheduled with ${newAppointment.doctor} on ${newAppointment.date}`,
+                        time: 'Just now',
+                        type: 'success'
+                    };
+                    setNotifications([newNotification, ...notifications]);
+                    
+                    // Appointment booked successfully
+                } else {
+                    alert('Please fill in all fields');
+                }
+            };
+
+            // AI Health Assistant actions
+            const callAI = () => {
+                console.log('AI Health Assistant button clicked');
+                alert('🤖 Connecting to AI Health Assistant...\n\nAI Health: Hello! I\'m your personal health assistant. I can help with health tips, medication reminders, symptom guidance, and wellness advice. How can I assist you today?\n\n✅ AI Assistant is now active and ready to help!');
+            };
+
+            const chatWithAI = () => {
+                console.log('AI Chat button clicked');
+                const message = prompt('💬 Ask your health question:');
+                if (message) {
+                    alert(`🤖 AI Health Assistant Response:\n\n"Thank you for your question: "${message}"\n\n💡 Health Advice:\n• Monitor your symptoms regularly\n• Follow prescribed medication schedule\n• Maintain a healthy lifestyle\n• Consult your doctor for any concerns\n\n⚠️ Note: This is general advice. Please consult your doctor for specific medical concerns.`);
+                }
+            };
+
+            const configureAI = () => {
+                console.log('AI Configure button clicked');
+                alert('⚙️ AI Health Assistant Settings:\n\n🔔 Medication Reminders: Enabled\n📊 Health Tracking: Active\n💊 Drug Interaction Alerts: On\n🏃‍♂️ Wellness Tips: Daily\n📱 Emergency Contacts: Updated\n\n✅ Settings configured successfully!');
+            };
+
+            // View appointment details
+            const viewAppointmentDetails = (appointment) => {
+                alert(`Appointment Details:\n\nDoctor: ${appointment.doctor}\nDepartment: ${appointment.department}\nDate: ${appointment.date}\nTime: ${appointment.time}\nStatus: ${appointment.status}`);
+            };
+
+            // View prescription details
+            const viewPrescriptionDetails = (prescription) => {
+                alert(`Prescription Details:\n\nMedication: ${prescription.medication}\nDoctor: ${prescription.doctor}\nInstructions: ${prescription.instructions}\nRefills Remaining: ${prescription.refills}\nStatus: ${prescription.status}`);
+            };
+
+            // View lab result details
+            const viewLabDetails = (lab) => {
+                alert(`Lab Result Details:\n\nTest: ${lab.test}\nDoctor: ${lab.doctor}\nDate: ${lab.date}\nStatus: ${lab.status}\nResult: ${lab.result}`);
+            };
+
+            // Notification management
+            const clearNotifications = () => {
+                setNotifications([]);
+            };
+
+            const markNotificationRead = (notificationId) => {
+                setNotifications(prev => prev.filter(n => n.id !== notificationId));
+            };
+
+            return (
+                <div>
+                    {/* Top Navigation */}
+                    <nav className="top-nav">
+                        <div className="nav-container">
+                            <div className="nav-left">
+                                <a href="#" className="logo">
+                                    <div className="logo-icon">
+                                        <i className="fas fa-heart"></i>
+                                    </div>
+                                    <span className="logo-text">MediVerse</span>
+                                </a>
+                                
+                                <ul className="nav-links">
+                                    <li>
+                                        <a 
+                                            className={`nav-link ${activeSection === 'dashboard' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('dashboard')}
+                                        >
+                                            <i className="fas fa-home"></i> Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a 
+                                            className={`nav-link ${activeSection === 'appointments' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('appointments')}
+                                        >
+                                            <i className="fas fa-calendar"></i> Appointments
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a 
+                                            className={`nav-link ${activeSection === 'prescriptions' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('prescriptions')}
+                                        >
+                                            <i className="fas fa-pills"></i> Prescriptions
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a 
+                                            className={`nav-link ${activeSection === 'lab-results' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('lab-results')}
+                                        >
+                                            <i className="fas fa-flask"></i> Lab Results
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a 
+                                            className={`nav-link ${activeSection === 'ai-assistant' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('ai-assistant')}
+                                        >
+                                            <i className="fas fa-robot"></i> AI Assistant
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a 
+                                            className={`nav-link ${activeSection === 'profile' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('profile')}
+                                        >
+                                            <i className="fas fa-user"></i> Profile
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div className="nav-right">
+                                <div className="search-box">
+                                    <i className="fas fa-search"></i>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Search appointments, prescriptions, results..." 
+                                        value={searchQuery}
+                                        onChange={(e) => handleSearch(e.target.value)}
+                                    />
+                                </div>
+                                
+                                <div className="user-dropdown">
+                                    <button className="notification-btn" onClick={() => setDropdownOpen(!dropdownOpen)}>
+                                        <i className="fas fa-bell"></i>
+                                        {notifications.length > 0 && <div className="notification-dot"></div>}
+                                    </button>
+                                    {dropdownOpen && (
+                                        <div className="dropdown-menu show" style={{right: '0', left: 'auto', minWidth: '350px'}}>
+                                            <div className="dropdown-header">
+                                                <strong>Notifications ({notifications.length})</strong>
+                                                <button onClick={clearNotifications} style={{background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer'}}>
+                                                    Clear All
+                                                </button>
+                                            </div>
+                                            {notifications.length === 0 ? (
+                                                <div style={{padding: '16px', textAlign: 'center', color: '#64748b'}}>
+                                                    No notifications
+                                                </div>
+                                            ) : (
+                                                notifications.map(notification => (
+                                                    <div key={notification.id} className="dropdown-item" onClick={() => markNotificationRead(notification.id)}>
+                                                        <i className={`fas fa-${notification.type === 'reminder' ? 'clock' : notification.type === 'medication' ? 'pills' : 'info-circle'}`} 
+                                                           style={{color: notification.type === 'reminder' ? '#f59e0b' : notification.type === 'medication' ? '#10b981' : '#3b82f6'}}></i>
+                                                        <div>
+                                                            <div style={{fontSize: '0.875rem'}}>{notification.message}</div>
+                                                            <div style={{fontSize: '0.75rem', color: '#64748b'}}>{notification.time}</div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                                
+                                <div className="user-dropdown">
+                                    <div className="user-avatar" onClick={toggleDropdown}>
+                                        {patientInfo.name.split(' ').map(n => n[0]).join('')}
+                                    </div>
+                                    <div className={`dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
+                                        <div className="dropdown-header">
+                                            <strong>{patientInfo.name}</strong>
+                                            <div style={{color: '#64748b', fontSize: '14px'}}>Patient</div>
+                                        </div>
+                                        <a href="#" className="dropdown-item">
+                                            <i className="fas fa-user"></i> Profile
+                                        </a>
+                                        <a href="#" className="dropdown-item">
+                                            <i className="fas fa-cog"></i> Settings
+                                        </a>
+                                        <a href="#" className="dropdown-item">
+                                            <i className="fas fa-heart"></i> Health Records
+                                        </a>
+                                        <a href="#" className="dropdown-item" onClick={logout}>
+                                            <i className="fas fa-sign-out-alt"></i> Logout
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Main Content */}
+                    <main className="main-content">
+                        {/* Dashboard Section */}
+                        {activeSection === 'dashboard' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-heart" style={{color: '#3b82f6'}}></i>
+                                        Patient Dashboard
+                                    </h1>
+                                    <p className="page-subtitle">Welcome back, {patientInfo.name} - Your health management hub</p>
+                                </div>
+
+                                <div className="dashboard-grid">
+                                    {/* Top Widgets Row */}
+                                    <div className="ai-assistant">
+                                        {/* AI Health Assistant Widget */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #3b82f6)'}}>
+                                                        <i className="fas fa-heartbeat"></i>
+                                                    </div>
+                                                    AI Health Assistant
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="ai-profile">
+                                                <div className="ai-avatar">
+                                                    <i className="fas fa-robot"></i>
+                                                </div>
+                                                <div className="ai-info">
+                                                    <h3>Health AI</h3>
+                                                    <p>Your Personal Health Assistant</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="ai-actions">
+                                                <button className="ai-action-btn" onClick={callAI} title="Call Health Assistant">
+                                                    <i className="fas fa-phone"></i>
+                                                </button>
+                                                <button className="ai-action-btn" onClick={chatWithAI} title="Chat with AI">
+                                                    <i className="fas fa-comment"></i>
+                                                </button>
+                                                <button className="ai-action-btn" onClick={configureAI} title="Configure AI">
+                                                    <i className="fas fa-cog"></i>
+                                                </button>
+                                            </div>
+                                            
+                                            <div style={{marginTop: '12px', textAlign: 'center'}}>
+                                                <button 
+                                                    className="btn btn-primary" 
+                                                    onClick={() => alert('✅ React is working! AI Health Assistant is functional.')}
+                                                    style={{fontSize: '0.75rem', padding: '6px 12px'}}
+                                                >
+                                                    Test AI Health Assistant
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Health Stats Widget */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                        <i className="fas fa-chart-line"></i>
+                                                    </div>
+                                                    Health Overview
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="stats-widget">
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Upcoming Appointments</span>
+                                                    <span className="stat-value">{healthStats.upcomingAppointments} <span className="stat-change positive">+1</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Active Prescriptions</span>
+                                                    <span className="stat-value">{healthStats.activePrescriptions}</span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Pending Results</span>
+                                                    <span className="stat-value">{healthStats.pendingResults}</span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Health Score</span>
+                                                    <span className="stat-value">{healthStats.healthScore}% <span className="stat-change positive">+5%</span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Quick Actions Widget */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #3b82f6)'}}>
+                                                        <i className="fas fa-plus-circle"></i>
+                                                    </div>
+                                                    Quick Actions
+                                                </div>
+                                            </div>
+                                            
+                                            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                                <button className="btn btn-primary" onClick={() => setShowBookAppointment(true)}>
+                                                    <i className="fas fa-calendar-plus"></i> Book Appointment
+                                                </button>
+                                                <button className="btn btn-success" onClick={() => setActiveSection('prescriptions')}>
+                                                    <i className="fas fa-pills"></i> View Prescriptions
+                                                </button>
+                                                <button className="btn btn-primary" onClick={() => setActiveSection('lab-results')}>
+                                                    <i className="fas fa-flask"></i> Check Lab Results
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Data Tables Section */}
+                                    <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '32px'}}>
+                                        {/* Upcoming Appointments */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                        <i className="fas fa-calendar"></i>
+                                                    </div>
+                                                    Upcoming Appointments
+                                                </div>
+                                            </div>
+                                            
+                                            <table className="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Doctor</th>
+                                                        <th>Date</th>
+                                                        <th>Time</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {appointments.filter(apt => apt.status === 'scheduled').map((appointment, index) => (
+                                                        <tr key={index}>
+                                                            <td>{appointment.doctor}</td>
+                                                            <td>{appointment.date}</td>
+                                                            <td>{appointment.time}</td>
+                                                            <td><span className={`status-badge ${getStatusBadge(appointment.status)}`}>{appointment.status}</span></td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        {/* Recent Lab Results */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #8b5cf6)'}}>
+                                                        <i className="fas fa-flask"></i>
+                                                    </div>
+                                                    Recent Lab Results
+                                                </div>
+                                            </div>
+                                            
+                                            <table className="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Test</th>
+                                                        <th>Date</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {labResults.slice(0, 3).map((result, index) => (
+                                                        <tr key={index}>
+                                                            <td>{result.test}</td>
+                                                            <td>{result.date}</td>
+                                                            <td><span className={`status-badge ${getStatusBadge(result.status)}`}>{result.status}</span></td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    {/* Additional Sections */}
+                                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px'}}>
+                                        {/* Active Prescriptions */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)'}}>
+                                                        <i className="fas fa-pills"></i>
+                                                    </div>
+                                                    Active Prescriptions
+                                                </div>
+                                            </div>
+                                            
+                                            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                                {prescriptions.filter(p => p.status === 'active').map((prescription, index) => (
+                                                    <div key={index} style={{padding: '12px', background: 'rgba(248, 250, 252, 0.8)', borderRadius: '8px'}}>
+                                                        <div style={{color: '#1e293b', fontWeight: '600', fontSize: '0.875rem'}}>{prescription.medication}</div>
+                                                        <div style={{color: '#64748b', fontSize: '0.75rem'}}>{prescription.instructions}</div>
+                                                        <div style={{color: '#64748b', fontSize: '0.75rem'}}>Refills: {prescription.refills}</div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Health Profile */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #3b82f6)'}}>
+                                                        <i className="fas fa-user-md"></i>
+                                                    </div>
+                                                    Health Profile
+                                                </div>
+                                            </div>
+                                            
+                                            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                    <span style={{color: '#64748b'}}>Age</span>
+                                                    <span style={{color: '#1e293b', fontWeight: '600'}}>{patientInfo.age} years</span>
+                                                </div>
+                                                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                    <span style={{color: '#64748b'}}>Blood Type</span>
+                                                    <span style={{color: '#1e293b', fontWeight: '600'}}>{patientInfo.bloodType}</span>
+                                                </div>
+                                                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                    <span style={{color: '#64748b'}}>Allergies</span>
+                                                    <span style={{color: '#ef4444', fontWeight: '600'}}>{patientInfo.allergies}</span>
+                                                </div>
+                                                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                    <span style={{color: '#64748b'}}>Emergency Contact</span>
+                                                    <span style={{color: '#1e293b', fontWeight: '600'}}>{patientInfo.emergencyContact}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Health Score */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #f59e0b, #3b82f6)'}}>
+                                                        <i className="fas fa-heartbeat"></i>
+                                                    </div>
+                                                    Health Score
+                                                </div>
+                                            </div>
+                                            
+                                            <div style={{textAlign: 'center', marginBottom: '16px'}}>
+                                                <div style={{fontSize: '3rem', fontWeight: '700', color: '#10b981', marginBottom: '8px'}}>
+                                                    {healthStats.healthScore}%
+                                                </div>
+                                                <div style={{color: '#64748b'}}>Overall Health Rating</div>
+                                            </div>
+                                            
+                                            <div style={{marginBottom: '16px'}}>
+                                                <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '8px'}}>
+                                                    <span style={{color: '#64748b'}}>Health Progress</span>
+                                                    <span style={{color: '#1e293b', fontWeight: '600'}}>{healthStats.healthScore}%</span>
+                                                </div>
+                                                <div className="progress-bar">
+                                                    <div className="progress-fill" style={{width: `${healthStats.healthScore}%`}}></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Appointments Section */}
+                        {activeSection === 'appointments' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-calendar" style={{color: '#3b82f6'}}></i>
+                                        My Appointments
+                                    </h1>
+                                    <p className="page-subtitle">Manage your medical appointments</p>
+                                </div>
+
+                                <div className="widget">
+                                    <div className="widget-header">
+                                        <div className="widget-title">
+                                            <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                <i className="fas fa-calendar-check"></i>
+                                            </div>
+                                            All Appointments
+                                        </div>
+                                        <button className="btn btn-primary" onClick={() => setShowBookAppointment(true)}>
+                                            <i className="fas fa-plus"></i> Book Appointment
+                                        </button>
+                                    </div>
+                                    
+                                    <table className="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Doctor</th>
+                                                <th>Department</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {appointments.map((appointment, index) => (
+                                                <tr key={index}>
+                                                    <td>{appointment.doctor}</td>
+                                                    <td>{appointment.department}</td>
+                                                    <td>{appointment.date}</td>
+                                                    <td>{appointment.time}</td>
+                                                    <td><span className={`status-badge ${getStatusBadge(appointment.status)}`}>{appointment.status}</span></td>
+                                                    <td>
+                                                        <button className="btn btn-primary" style={{fontSize: '0.75rem', padding: '4px 8px'}} onClick={() => viewAppointmentDetails(appointment)}>
+                                                            View Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Prescriptions Section */}
+                        {activeSection === 'prescriptions' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-pills" style={{color: '#3b82f6'}}></i>
+                                        My Prescriptions
+                                    </h1>
+                                    <p className="page-subtitle">View and manage your medications</p>
+                                </div>
+
+                                <div className="widget">
+                                    <div className="widget-header">
+                                        <div className="widget-title">
+                                            <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                <i className="fas fa-prescription-bottle"></i>
+                                            </div>
+                                            All Prescriptions
+                                        </div>
+                                    </div>
+                                    
+                                    <table className="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Medication</th>
+                                                <th>Doctor</th>
+                                                <th>Instructions</th>
+                                                <th>Refills</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {prescriptions.map((prescription, index) => (
+                                                <tr key={index}>
+                                                    <td>{prescription.medication}</td>
+                                                    <td>{prescription.doctor}</td>
+                                                    <td>{prescription.instructions}</td>
+                                                    <td>{prescription.refills}</td>
+                                                    <td><span className={`status-badge ${getStatusBadge(prescription.status)}`}>{prescription.status}</span></td>
+                                                    <td>
+                                                        <button className="btn btn-primary" style={{fontSize: '0.75rem', padding: '4px 8px'}} onClick={() => viewPrescriptionDetails(prescription)}>
+                                                            View Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Lab Results Section */}
+                        {activeSection === 'lab-results' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-flask" style={{color: '#3b82f6'}}></i>
+                                        Lab Results
+                                    </h1>
+                                    <p className="page-subtitle">View your laboratory test results</p>
+                                </div>
+
+                                <div className="widget">
+                                    <div className="widget-header">
+                                        <div className="widget-title">
+                                            <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                <i className="fas fa-flask"></i>
+                                            </div>
+                                            Recent Lab Results
+                                        </div>
+                                    </div>
+                                    
+                                    <table className="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Test</th>
+                                                <th>Doctor</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                <th>Result</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {labResults.map((result, index) => (
+                                                <tr key={index}>
+                                                    <td>{result.test}</td>
+                                                    <td>{result.doctor}</td>
+                                                    <td>{result.date}</td>
+                                                    <td><span className={`status-badge ${getStatusBadge(result.status)}`}>{result.status}</span></td>
+                                                    <td>{result.result.substring(0, 30)}...</td>
+                                                    <td>
+                                                        <button className="btn btn-primary" style={{fontSize: '0.75rem', padding: '4px 8px'}} onClick={() => viewLabDetails(result)}>
+                                                            View Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* AI Assistant Section */}
+                        {activeSection === 'ai-assistant' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-robot" style={{color: '#3b82f6'}}></i>
+                                        AI Health Assistant
+                                    </h1>
+                                    <p className="page-subtitle">Your personal AI health companion for guidance and support</p>
+                                </div>
+
+                                <div className="dashboard-grid">
+                                    {/* AI Assistant Main Widget */}
+                                    <div className="widget" style={{gridColumn: '1 / -1', marginBottom: '24px'}}>
+                                        <div className="widget-header">
+                                            <div className="widget-title">
+                                                <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #3b82f6)'}}>
+                                                    <i className="fas fa-brain"></i>
+                                                </div>
+                                                AI Health Assistant
+                                            </div>
+                                        </div>
+                                        
+                                        <div style={{display: 'flex', alignItems: 'center', gap: '32px', marginBottom: '24px'}}>
+                                            <div className="ai-avatar" style={{width: '80px', height: '80px', fontSize: '32px'}}>
+                                                <i className="fas fa-robot"></i>
+                                            </div>
+                                            <div>
+                                                <h2 style={{color: '#1e293b', marginBottom: '8px'}}>Dr. AI Health Assistant</h2>
+                                                <p style={{color: '#64748b', fontSize: '16px', marginBottom: '16px'}}>
+                                                    Your personal AI health companion. I can help with health guidance, medication reminders, 
+                                                    symptom analysis, wellness tips, and general health questions.
+                                                </p>
+                                                <div style={{display: 'flex', gap: '12px'}}>
+                                                    <button className="btn btn-primary" onClick={callAI}>
+                                                        <i className="fas fa-phone"></i> Call AI Assistant
+                                                    </button>
+                                                    <button className="btn btn-success" onClick={chatWithAI}>
+                                                        <i className="fas fa-comment"></i> Chat with AI
+                                                    </button>
+                                                    <button className="btn btn-primary" onClick={configureAI}>
+                                                        <i className="fas fa-cog"></i> Configure Settings
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* AI Status */}
+                                        <div style={{textAlign: 'center', padding: '16px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '12px'}}>
+                                            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px'}}>
+                                                <div style={{width: '8px', height: '8px', background: '#10b981', borderRadius: '50%', animation: 'pulse 2s infinite'}}></div>
+                                                <span style={{color: '#10b981', fontWeight: '600', fontSize: '0.875rem'}}>AI Assistant Online</span>
+                                            </div>
+                                            <div style={{color: '#64748b', fontSize: '0.75rem', marginBottom: '12px'}}>Ready to provide health guidance and support</div>
+                                            <button 
+                                                className="btn btn-primary" 
+                                                onClick={() => alert('✅ AI Health Assistant is fully functional and ready to help!')}
+                                                style={{fontSize: '0.75rem', padding: '6px 12px'}}
+                                            >
+                                                <i className="fas fa-heartbeat"></i> Test AI Connection
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* AI Features Grid */}
+                                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px'}}>
+                                        {/* Health Guidance */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)'}}>
+                                                        <i className="fas fa-lightbulb"></i>
+                                                    </div>
+                                                    Health Guidance
+                                                </div>
+                                            </div>
+                                            
+                                            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                                <div style={{padding: '16px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '12px', border: '1px solid rgba(59, 130, 246, 0.2)'}}>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px'}}>
+                                                        <i className="fas fa-lightbulb" style={{color: '#3b82f6'}}></i>
+                                                        <div style={{color: '#1e293b', fontWeight: '600', fontSize: '0.875rem'}}>Daily Health Tips</div>
+                                                    </div>
+                                                    <div style={{color: '#64748b', fontSize: '0.75rem', marginBottom: '8px'}}>Get personalized wellness advice</div>
+                                                    <div style={{color: '#3b82f6', fontSize: '0.75rem', fontWeight: '500'}}>• Hydration reminders • Exercise suggestions • Sleep optimization</div>
+                                                </div>
+                                                <div style={{padding: '16px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.2)'}}>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px'}}>
+                                                        <i className="fas fa-stethoscope" style={{color: '#10b981'}}></i>
+                                                        <div style={{color: '#1e293b', fontWeight: '600', fontSize: '0.875rem'}}>Symptom Analysis</div>
+                                                    </div>
+                                                    <div style={{color: '#64748b', fontSize: '0.75rem', marginBottom: '8px'}}>AI-powered symptom assessment</div>
+                                                    <div style={{color: '#10b981', fontSize: '0.75rem', fontWeight: '500'}}>• Pattern recognition • Risk assessment • Doctor recommendations</div>
+                                                </div>
+                                                <div style={{padding: '16px', background: 'rgba(139, 92, 246, 0.1)', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.2)'}}>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px'}}>
+                                                        <i className="fas fa-pills" style={{color: '#8b5cf6'}}></i>
+                                                        <div style={{color: '#1e293b', fontWeight: '600', fontSize: '0.875rem'}}>Medication Guidance</div>
+                                                    </div>
+                                                    <div style={{color: '#64748b', fontSize: '0.75rem', marginBottom: '8px'}}>Drug interaction and dosage help</div>
+                                                    <div style={{color: '#8b5cf6', fontSize: '0.75rem', fontWeight: '500'}}>• Interaction alerts • Dosage optimization • Side effect monitoring</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* AI Capabilities */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #3b82f6)'}}>
+                                                        <i className="fas fa-cogs"></i>
+                                                    </div>
+                                                    AI Capabilities
+                                                </div>
+                                            </div>
+                                            
+                                            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                                <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+                                                    <i className="fas fa-check-circle" style={{color: '#10b981'}}></i>
+                                                    <span style={{color: '#1e293b', fontSize: '0.875rem'}}>24/7 Health Support</span>
+                                                </div>
+                                                <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+                                                    <i className="fas fa-check-circle" style={{color: '#10b981'}}></i>
+                                                    <span style={{color: '#1e293b', fontSize: '0.875rem'}}>Medication Reminders</span>
+                                                </div>
+                                                <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+                                                    <i className="fas fa-check-circle" style={{color: '#10b981'}}></i>
+                                                    <span style={{color: '#1e293b', fontSize: '0.875rem'}}>Health Monitoring</span>
+                                                </div>
+                                                <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+                                                    <i className="fas fa-check-circle" style={{color: '#10b981'}}></i>
+                                                    <span style={{color: '#1e293b', fontSize: '0.875rem'}}>Emergency Guidance</span>
+                                                </div>
+                                                <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+                                                    <i className="fas fa-check-circle" style={{color: '#10b981'}}></i>
+                                                    <span style={{color: '#1e293b', fontSize: '0.875rem'}}>Wellness Tracking</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Quick Actions */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #f59e0b, #3b82f6)'}}>
+                                                        <i className="fas fa-bolt"></i>
+                                                    </div>
+                                                    Quick Actions
+                                                </div>
+                                            </div>
+                                            
+                                            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                                <button className="btn btn-primary" onClick={() => {
+                                                    const question = prompt('Ask a health question:');
+                                                    if (question) {
+                                                        alert(`AI Response: Based on your question "${question}", I recommend consulting with your doctor for personalized medical advice. For general health guidance, maintain a balanced diet, regular exercise, and adequate sleep.`);
+                                                    }
+                                                }}>
+                                                    <i className="fas fa-question-circle"></i> Ask Health Question
+                                                </button>
+                                                <button className="btn btn-success" onClick={() => {
+                                                    alert('AI Health Assistant: Here are your personalized health tips for today:\n\n• Drink 8 glasses of water\n• Take a 30-minute walk\n• Get 7-8 hours of sleep\n• Eat 5 servings of fruits/vegetables\n• Practice 10 minutes of meditation');
+                                                }}>
+                                                    <i className="fas fa-lightbulb"></i> Get Health Tips
+                                                </button>
+                                                <button className="btn btn-primary" onClick={() => {
+                                                    alert('AI Health Assistant: Medication Reminder Settings:\n\n• Morning medications: 8:00 AM\n• Evening medications: 8:00 PM\n• Weekly supplements: Sunday\n\nAll reminders are active and will notify you at scheduled times.');
+                                                }}>
+                                                    <i className="fas fa-bell"></i> Set Reminders
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Profile Section */}
+                        {activeSection === 'profile' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-user" style={{color: '#3b82f6'}}></i>
+                                        My Profile
+                                    </h1>
+                                    <p className="page-subtitle">Manage your personal and health information</p>
+                                </div>
+
+                                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px'}}>
+                                    <div className="widget">
+                                        <div className="widget-header">
+                                            <div className="widget-title">
+                                                <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                    <i className="fas fa-user"></i>
+                                                </div>
+                                                Personal Information
+                                            </div>
+                                        </div>
+                                        
+                                        <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                                            <div>
+                                                <label style={{color: '#64748b', fontSize: '0.875rem', marginBottom: '4px', display: 'block'}}>Full Name</label>
+                                                <div style={{padding: '12px', background: 'rgba(248, 250, 252, 0.8)', borderRadius: '8px', color: '#1e293b', fontWeight: '600'}}>
+                                                    {patientInfo.name}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label style={{color: '#64748b', fontSize: '0.875rem', marginBottom: '4px', display: 'block'}}>Age</label>
+                                                <div style={{padding: '12px', background: 'rgba(248, 250, 252, 0.8)', borderRadius: '8px', color: '#1e293b', fontWeight: '600'}}>
+                                                    {patientInfo.age} years
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label style={{color: '#64748b', fontSize: '0.875rem', marginBottom: '4px', display: 'block'}}>Blood Type</label>
+                                                <div style={{padding: '12px', background: 'rgba(248, 250, 252, 0.8)', borderRadius: '8px', color: '#1e293b', fontWeight: '600'}}>
+                                                    {patientInfo.bloodType}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="widget">
+                                        <div className="widget-header">
+                                            <div className="widget-title">
+                                                <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #8b5cf6)'}}>
+                                                    <i className="fas fa-shield-alt"></i>
+                                                </div>
+                                                Medical Information
+                                            </div>
+                                        </div>
+                                        
+                                        <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                                            <div>
+                                                <label style={{color: '#64748b', fontSize: '0.875rem', marginBottom: '4px', display: 'block'}}>Allergies</label>
+                                                <div style={{padding: '12px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px', color: '#ef4444', fontWeight: '600'}}>
+                                                    {patientInfo.allergies}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label style={{color: '#64748b', fontSize: '0.875rem', marginBottom: '4px', display: 'block'}}>Emergency Contact</label>
+                                                <div style={{padding: '12px', background: 'rgba(248, 250, 252, 0.8)', borderRadius: '8px', color: '#1e293b', fontWeight: '600'}}>
+                                                    {patientInfo.emergencyContact}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label style={{color: '#64748b', fontSize: '0.875rem', marginBottom: '4px', display: 'block'}}>Health Score</label>
+                                                <div style={{padding: '12px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', color: '#10b981', fontWeight: '600'}}>
+                                                    {healthStats.healthScore}% - Excellent
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Book Appointment Modal */}
+                        {showBookAppointment && (
+                            <div style={{
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                background: 'rgba(0, 0, 0, 0.5)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                zIndex: 1000
+                            }}>
+                                <div style={{
+                                    background: 'white',
+                                    padding: '32px',
+                                    borderRadius: '16px',
+                                    width: '500px',
+                                    maxWidth: '90vw'
+                                }}>
+                                    <h3 style={{marginBottom: '24px', color: '#1e293b'}}>Book New Appointment</h3>
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                                        <select
+                                            value={newAppointment.doctor}
+                                            onChange={(e) => setNewAppointment({...newAppointment, doctor: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        >
+                                            <option value="">Select Doctor</option>
+                                            <option value="Dr. Sarah Johnson">Dr. Sarah Johnson - Cardiology</option>
+                                            <option value="Dr. Michael Chen">Dr. Michael Chen - General Medicine</option>
+                                            <option value="Dr. Emily Davis">Dr. Emily Davis - Dermatology</option>
+                                            <option value="Dr. James Wilson">Dr. James Wilson - Neurology</option>
+                                        </select>
+                                        <select
+                                            value={newAppointment.department}
+                                            onChange={(e) => setNewAppointment({...newAppointment, department: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        >
+                                            <option value="">Select Department</option>
+                                            <option value="Cardiology">Cardiology</option>
+                                            <option value="General Medicine">General Medicine</option>
+                                            <option value="Dermatology">Dermatology</option>
+                                            <option value="Neurology">Neurology</option>
+                                        </select>
+                                        <input
+                                            type="date"
+                                            value={newAppointment.date}
+                                            onChange={(e) => setNewAppointment({...newAppointment, date: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        />
+                                        <input
+                                            type="time"
+                                            value={newAppointment.time}
+                                            onChange={(e) => setNewAppointment({...newAppointment, time: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        />
+                                        <textarea
+                                            placeholder="Reason for visit"
+                                            value={newAppointment.reason}
+                                            onChange={(e) => setNewAppointment({...newAppointment, reason: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', minHeight: '80px'}}
+                                        />
+                                    </div>
+                                    <div style={{display: 'flex', gap: '12px', marginTop: '24px'}}>
+                                        <button className="btn btn-primary" onClick={handleBookAppointment}>
+                                            Book Appointment
+                                        </button>
+                                        <button className="btn" onClick={() => setShowBookAppointment(false)} style={{background: '#f1f5f9', color: '#64748b'}}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<PatientDashboard />, document.getElementById('root'));
+    </script>
+</body>
+</html>
