@@ -923,8 +923,16 @@
             };
 
             const logout = () => {
-                alert('Logging out...');
-                window.location.href = 'login.html';
+                const logoutNotification = {
+                    id: notifications.length + 1,
+                    message: 'Logging out... Redirecting to login page',
+                    time: 'Just now',
+                    type: 'info'
+                };
+                setNotifications([logoutNotification, ...notifications]);
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
             };
 
             // Search functionality
@@ -959,42 +967,76 @@
                     
                     // Appointment booked successfully
                 } else {
-                    alert('Please fill in all fields');
+                    const errorNotification = {
+                        id: notifications.length + 1,
+                        message: 'Please fill in all fields to book appointment',
+                        time: 'Just now',
+                        type: 'error'
+                    };
+                    setNotifications([errorNotification, ...notifications]);
                 }
             };
 
             // AI Health Assistant actions
-            const callAI = () => {
-                console.log('AI Health Assistant button clicked');
-                alert('🤖 Connecting to AI Health Assistant...\n\nAI Health: Hello! I\'m your personal health assistant. I can help with health tips, medication reminders, symptom guidance, and wellness advice. How can I assist you today?\n\n✅ AI Assistant is now active and ready to help!');
-            };
+
+            const [showAIChat, setShowAIChat] = useState(false);
+            const [aiMessages, setAiMessages] = useState([]);
+            const [currentMessage, setCurrentMessage] = useState('');
 
             const chatWithAI = () => {
                 console.log('AI Chat button clicked');
-                const message = prompt('💬 Ask your health question:');
-                if (message) {
-                    alert(`🤖 AI Health Assistant Response:\n\n"Thank you for your question: "${message}"\n\n💡 Health Advice:\n• Monitor your symptoms regularly\n• Follow prescribed medication schedule\n• Maintain a healthy lifestyle\n• Consult your doctor for any concerns\n\n⚠️ Note: This is general advice. Please consult your doctor for specific medical concerns.`);
+                setShowAIChat(true);
+            };
+
+            const sendAIMessage = () => {
+                if (currentMessage.trim()) {
+                    const newMessages = [
+                        ...aiMessages,
+                        { type: 'user', message: currentMessage, time: new Date().toLocaleTimeString() },
+                        { 
+                            type: 'ai', 
+                            message: `Thank you for your question. Based on "${currentMessage}", I recommend:\n\n• Monitor your symptoms regularly\n• Follow prescribed medication schedule\n• Maintain a healthy lifestyle\n• Consult your doctor for any concerns\n\n⚠️ Note: This is general advice. Please consult your doctor for specific medical concerns.`,
+                            time: new Date().toLocaleTimeString()
+                        }
+                    ];
+                    setAiMessages(newMessages);
+                    setCurrentMessage('');
                 }
             };
 
+            const [showAISettings, setShowAISettings] = useState(false);
+            const [aiSettings, setAiSettings] = useState({
+                medicationReminders: true,
+                healthTracking: true,
+                drugInteractionAlerts: true,
+                wellnessTips: true,
+                emergencyContacts: true
+            });
+
             const configureAI = () => {
                 console.log('AI Configure button clicked');
-                alert('⚙️ AI Health Assistant Settings:\n\n🔔 Medication Reminders: Enabled\n📊 Health Tracking: Active\n💊 Drug Interaction Alerts: On\n🏃‍♂️ Wellness Tips: Daily\n📱 Emergency Contacts: Updated\n\n✅ Settings configured successfully!');
+                setShowAISettings(true);
             };
 
             // View appointment details
+            const [selectedAppointment, setSelectedAppointment] = useState(null);
+
             const viewAppointmentDetails = (appointment) => {
-                alert(`Appointment Details:\n\nDoctor: ${appointment.doctor}\nDepartment: ${appointment.department}\nDate: ${appointment.date}\nTime: ${appointment.time}\nStatus: ${appointment.status}`);
+                setSelectedAppointment(appointment);
             };
 
             // View prescription details
+            const [selectedPrescription, setSelectedPrescription] = useState(null);
+
             const viewPrescriptionDetails = (prescription) => {
-                alert(`Prescription Details:\n\nMedication: ${prescription.medication}\nDoctor: ${prescription.doctor}\nInstructions: ${prescription.instructions}\nRefills Remaining: ${prescription.refills}\nStatus: ${prescription.status}`);
+                setSelectedPrescription(prescription);
             };
 
             // View lab result details
+            const [selectedLabResult, setSelectedLabResult] = useState(null);
+
             const viewLabDetails = (lab) => {
-                alert(`Lab Result Details:\n\nTest: ${lab.test}\nDoctor: ${lab.doctor}\nDate: ${lab.date}\nStatus: ${lab.status}\nResult: ${lab.result}`);
+                setSelectedLabResult(lab);
             };
 
             // Notification management
@@ -1275,9 +1317,6 @@
                                             </div>
                                             
                                             <div className="ai-actions">
-                                                <button className="ai-action-btn" onClick={callAI} title="Call Health Assistant">
-                                                    <i className="fas fa-phone"></i>
-                                                </button>
                                                 <button className="ai-action-btn" onClick={chatWithAI} title="Chat with AI">
                                                     <i className="fas fa-comment"></i>
                                                 </button>
@@ -1289,7 +1328,15 @@
                                             <div style={{marginTop: '12px', textAlign: 'center'}}>
                                                 <button 
                                                     className="btn btn-primary" 
-                                                    onClick={() => alert('✅ React is working! AI Health Assistant is functional.')}
+                                                    onClick={() => {
+                                                        const testNotification = {
+                                                            id: notifications.length + 1,
+                                                            message: '✅ AI Health Assistant is functional and ready to help!',
+                                                            time: 'Just now',
+                                                            type: 'success'
+                                                        };
+                                                        setNotifications([testNotification, ...notifications]);
+                                                    }}
                                                     style={{fontSize: '0.75rem', padding: '6px 12px'}}
                                                 >
                                                     Test AI Health Assistant
@@ -1704,9 +1751,6 @@
                                                     symptom analysis, wellness tips, and general health questions.
                                                 </p>
                                                 <div style={{display: 'flex', gap: '12px'}}>
-                                                    <button className="btn btn-primary" onClick={callAI}>
-                                                        <i className="fas fa-phone"></i> Call AI Assistant
-                                                    </button>
                                                     <button className="btn btn-success" onClick={chatWithAI}>
                                                         <i className="fas fa-comment"></i> Chat with AI
                                                     </button>
@@ -1726,7 +1770,15 @@
                                             <div style={{color: '#64748b', fontSize: '0.75rem', marginBottom: '12px'}}>Ready to provide health guidance and support</div>
                                             <button 
                                                 className="btn btn-primary" 
-                                                onClick={() => alert('✅ AI Health Assistant is fully functional and ready to help!')}
+                                                onClick={() => {
+                                                    const connectionNotification = {
+                                                        id: notifications.length + 1,
+                                                        message: '✅ AI Health Assistant connection successful!',
+                                                        time: 'Just now',
+                                                        type: 'success'
+                                                    };
+                                                    setNotifications([connectionNotification, ...notifications]);
+                                                }}
                                                 style={{fontSize: '0.75rem', padding: '6px 12px'}}
                                             >
                                                 <i className="fas fa-heartbeat"></i> Test AI Connection
@@ -1823,20 +1875,29 @@
                                             
                                             <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
                                                 <button className="btn btn-primary" onClick={() => {
-                                                    const question = prompt('Ask a health question:');
-                                                    if (question) {
-                                                        alert(`AI Response: Based on your question "${question}", I recommend consulting with your doctor for personalized medical advice. For general health guidance, maintain a balanced diet, regular exercise, and adequate sleep.`);
-                                                    }
+                                                    setShowAIChat(true);
                                                 }}>
                                                     <i className="fas fa-question-circle"></i> Ask Health Question
                                                 </button>
                                                 <button className="btn btn-success" onClick={() => {
-                                                    alert('AI Health Assistant: Here are your personalized health tips for today:\n\n• Drink 8 glasses of water\n• Take a 30-minute walk\n• Get 7-8 hours of sleep\n• Eat 5 servings of fruits/vegetables\n• Practice 10 minutes of meditation');
+                                                    const tipsNotification = {
+                                                        id: notifications.length + 1,
+                                                        message: '💡 Daily Health Tips: Drink 8 glasses of water, take a 30-minute walk, get 7-8 hours of sleep, eat 5 servings of fruits/vegetables, practice 10 minutes of meditation',
+                                                        time: 'Just now',
+                                                        type: 'info'
+                                                    };
+                                                    setNotifications([tipsNotification, ...notifications]);
                                                 }}>
                                                     <i className="fas fa-lightbulb"></i> Get Health Tips
                                                 </button>
                                                 <button className="btn btn-primary" onClick={() => {
-                                                    alert('AI Health Assistant: Medication Reminder Settings:\n\n• Morning medications: 8:00 AM\n• Evening medications: 8:00 PM\n• Weekly supplements: Sunday\n\nAll reminders are active and will notify you at scheduled times.');
+                                                    const reminderNotification = {
+                                                        id: notifications.length + 1,
+                                                        message: '🔔 Medication Reminders Set: Morning 8:00 AM, Evening 8:00 PM, Weekly supplements on Sunday. All reminders are now active!',
+                                                        time: 'Just now',
+                                                        type: 'success'
+                                                    };
+                                                    setNotifications([reminderNotification, ...notifications]);
                                                 }}>
                                                     <i className="fas fa-bell"></i> Set Reminders
                                                 </button>
@@ -1997,6 +2058,181 @@
                                         <button className="btn" onClick={() => setShowBookAppointment(false)} style={{background: '#f1f5f9', color: '#64748b'}}>
                                             Cancel
                                         </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* AI Chat Modal */}
+                        {showAIChat && (
+                            <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0, 0, 0, 0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                <div style={{background: 'white', borderRadius: '16px', padding: '24px', maxWidth: '500px', width: '90%', maxHeight: '600px', display: 'flex', flexDirection: 'column'}}>
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px'}}>
+                                        <h3 style={{color: '#1e293b', margin: 0}}>💬 AI Health Assistant</h3>
+                                        <button onClick={() => setShowAIChat(false)} style={{background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#64748b'}}>×</button>
+                                    </div>
+                                    
+                                    <div style={{flex: 1, overflowY: 'auto', marginBottom: '16px', minHeight: '300px', maxHeight: '400px', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px'}}>
+                                        {aiMessages.length === 0 ? (
+                                            <div style={{textAlign: 'center', color: '#64748b', padding: '40px 20px'}}>
+                                                <i className="fas fa-robot" style={{fontSize: '48px', marginBottom: '16px', color: '#8b5cf6'}}></i>
+                                                <p>Hello! I'm your AI Health Assistant. Ask me any health-related questions!</p>
+                                            </div>
+                                        ) : (
+                                            aiMessages.map((msg, index) => (
+                                                <div key={index} style={{marginBottom: '16px'}}>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px'}}>
+                                                        <div style={{width: '24px', height: '24px', borderRadius: '50%', background: msg.type === 'user' ? '#3b82f6' : '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '12px'}}>
+                                                            {msg.type === 'user' ? 'U' : 'AI'}
+                                                        </div>
+                                                        <span style={{fontSize: '12px', color: '#64748b'}}>{msg.time}</span>
+                                                    </div>
+                                                    <div style={{marginLeft: '32px', padding: '12px', background: msg.type === 'user' ? '#f1f5f9' : '#f0fdf4', borderRadius: '8px', whiteSpace: 'pre-line'}}>
+                                                        {msg.message}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                    
+                                    <div style={{display: 'flex', gap: '8px'}}>
+                                        <input
+                                            type="text"
+                                            value={currentMessage}
+                                            onChange={(e) => setCurrentMessage(e.target.value)}
+                                            onKeyPress={(e) => e.key === 'Enter' && sendAIMessage()}
+                                            placeholder="Ask your health question..."
+                                            style={{flex: 1, padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        />
+                                        <button onClick={sendAIMessage} className="btn btn-primary">
+                                            <i className="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* AI Settings Modal */}
+                        {showAISettings && (
+                            <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0, 0, 0, 0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                <div style={{background: 'white', borderRadius: '16px', padding: '24px', maxWidth: '400px', width: '90%'}}>
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px'}}>
+                                        <h3 style={{color: '#1e293b', margin: 0}}>⚙️ AI Settings</h3>
+                                        <button onClick={() => setShowAISettings(false)} style={{background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#64748b'}}>×</button>
+                                    </div>
+                                    
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                                        {Object.entries(aiSettings).map(([key, value]) => (
+                                            <div key={key} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: '#f8fafc', borderRadius: '8px'}}>
+                                                <span style={{color: '#1e293b', textTransform: 'capitalize'}}>{key.replace(/([A-Z])/g, ' $1')}</span>
+                                                <label style={{position: 'relative', display: 'inline-block', width: '48px', height: '24px'}}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={value}
+                                                        onChange={(e) => setAiSettings({...aiSettings, [key]: e.target.checked})}
+                                                        style={{opacity: 0, width: 0, height: 0}}
+                                                    />
+                                                    <span style={{
+                                                        position: 'absolute',
+                                                        cursor: 'pointer',
+                                                        top: 0,
+                                                        left: 0,
+                                                        right: 0,
+                                                        bottom: 0,
+                                                        background: value ? '#10b981' : '#ccc',
+                                                        transition: '0.4s',
+                                                        borderRadius: '24px'
+                                                    }}>
+                                                        <span style={{
+                                                            position: 'absolute',
+                                                            content: '',
+                                                            height: '18px',
+                                                            width: '18px',
+                                                            left: value ? '27px' : '3px',
+                                                            bottom: '3px',
+                                                            background: 'white',
+                                                            transition: '0.4s',
+                                                            borderRadius: '50%'
+                                                        }}></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    
+                                    <div style={{marginTop: '24px', textAlign: 'center'}}>
+                                        <button onClick={() => {
+                                            setShowAISettings(false);
+                                            const settingsNotification = {
+                                                id: notifications.length + 1,
+                                                message: '✅ AI Settings updated successfully!',
+                                                time: 'Just now',
+                                                type: 'success'
+                                            };
+                                            setNotifications([settingsNotification, ...notifications]);
+                                        }} className="btn btn-primary">
+                                            Save Settings
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Appointment Details Modal */}
+                        {selectedAppointment && (
+                            <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0, 0, 0, 0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                <div style={{background: 'white', borderRadius: '16px', padding: '24px', maxWidth: '400px', width: '90%'}}>
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px'}}>
+                                        <h3 style={{color: '#1e293b', margin: 0}}>📅 Appointment Details</h3>
+                                        <button onClick={() => setSelectedAppointment(null)} style={{background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#64748b'}}>×</button>
+                                    </div>
+                                    
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                        <div><strong>Doctor:</strong> {selectedAppointment.doctor}</div>
+                                        <div><strong>Department:</strong> {selectedAppointment.department}</div>
+                                        <div><strong>Date:</strong> {selectedAppointment.date}</div>
+                                        <div><strong>Time:</strong> {selectedAppointment.time}</div>
+                                        <div><strong>Status:</strong> <span className={`status-badge ${getStatusBadge(selectedAppointment.status)}`}>{selectedAppointment.status}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Prescription Details Modal */}
+                        {selectedPrescription && (
+                            <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0, 0, 0, 0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                <div style={{background: 'white', borderRadius: '16px', padding: '24px', maxWidth: '400px', width: '90%'}}>
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px'}}>
+                                        <h3 style={{color: '#1e293b', margin: 0}}>💊 Prescription Details</h3>
+                                        <button onClick={() => setSelectedPrescription(null)} style={{background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#64748b'}}>×</button>
+                                    </div>
+                                    
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                        <div><strong>Medication:</strong> {selectedPrescription.medication}</div>
+                                        <div><strong>Doctor:</strong> {selectedPrescription.doctor}</div>
+                                        <div><strong>Instructions:</strong> {selectedPrescription.instructions}</div>
+                                        <div><strong>Refills Remaining:</strong> {selectedPrescription.refills}</div>
+                                        <div><strong>Status:</strong> <span className={`status-badge ${getStatusBadge(selectedPrescription.status)}`}>{selectedPrescription.status}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Lab Result Details Modal */}
+                        {selectedLabResult && (
+                            <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0, 0, 0, 0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                <div style={{background: 'white', borderRadius: '16px', padding: '24px', maxWidth: '400px', width: '90%'}}>
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px'}}>
+                                        <h3 style={{color: '#1e293b', margin: 0}}>🧪 Lab Result Details</h3>
+                                        <button onClick={() => setSelectedLabResult(null)} style={{background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#64748b'}}>×</button>
+                                    </div>
+                                    
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                        <div><strong>Test:</strong> {selectedLabResult.test}</div>
+                                        <div><strong>Doctor:</strong> {selectedLabResult.doctor}</div>
+                                        <div><strong>Date:</strong> {selectedLabResult.date}</div>
+                                        <div><strong>Status:</strong> <span className={`status-badge ${getStatusBadge(selectedLabResult.status)}`}>{selectedLabResult.status}</span></div>
+                                        <div><strong>Result:</strong> {selectedLabResult.result}</div>
                                     </div>
                                 </div>
                             </div>

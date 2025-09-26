@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Test</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        function TestComponent() {
+            const [count, setCount] = useState(0);
+            
+            return (
+                <div style={{padding: '20px', fontFamily: 'Arial, sans-serif'}}>
+                    <h1>React Test Component</h1>
+                    <p>Count: {count}</p>
+                    <button onClick={() => setCount(count + 1)}>Increment</button>
+                    <p>If you can see this and the button works, React is loading properly!</p>
+                </div>
+            );
+        }
+
+        try {
+            console.log('React:', typeof React);
+            console.log('ReactDOM:', typeof ReactDOM);
+            ReactDOM.render(<TestComponent />, document.getElementById('root'));
+            console.log('Test component rendered successfully!');
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('root').innerHTML = '<div style="padding: 20px; color: red;">Error: ' + error.message + '</div>';
+        }
+    </script>
+</body>
+</html>

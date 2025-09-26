@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediVerse Dashboard Status</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .dashboard-card h3 {
+            color: #2d3748;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dashboard-card .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+        
+        .patient .icon { background: linear-gradient(45deg, #4facfe, #00f2fe); }
+        .doctor .icon { background: linear-gradient(45deg, #43e97b, #38f9d7); }
+        .hospital .icon { background: linear-gradient(45deg, #fa709a, #fee140); }
+        
+        .dashboard-card p {
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .test-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 1rem;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .status.loading {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .react-test {
+            background: linear-gradient(45deg, #8b5cf6, #a855f7);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .react-test h2 {
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .react-test button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .react-test button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .logs {
+            background: #1a202c;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .logs h4 {
+            color: #63b3ed;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 MediVerse Dashboard Status</h1>
+            <p>Test all dashboards and verify React functionality</p>
+        </div>
+        
+        <div class="react-test">
+            <h2>React CDN Test</h2>
+            <p>React Status: <span id="react-status">Checking...</span></p>
+            <button onclick="testReact()">Test React Components</button>
+            <div id="react-result" style="margin-top: 15px;"></div>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="dashboard-card patient">
+                <h3>
+                    <div class="icon">👤</div>
+                    Patient Dashboard
+                </h3>
+                <p>Comprehensive patient interface with AI diagnostics, appointment booking, and health tracking.</p>
+                <button class="test-btn" onclick="testDashboard('patient-dashboard.html', 'patient')">
+                    Test Patient Dashboard
+                </button>
+                <div id="patient-status" class="status loading" style="display: none;">Testing...</div>
+            </div>
+            
+            <div class="dashboard-card doctor">
+                <h3>
+                    <div class="icon">👨‍⚕️</div>
+                    Doctor Dashboard
+                </h3>
+                <p>Professional medical interface with patient management, AI assistance, and appointment scheduling.</p>
+                <button class="test-btn" onclick="testDashboard('doctor-dashboard.html', 'doctor')">
+                    Test Doctor Dashboard
+                </button>
+                <div id="doctor-status" class="status loading" style="display: none;">Testing...</div>
+            </div>
+            
+            <div class="dashboard-card hospital">
+                <h3>
+                    <div class="icon">🏥</div>
+                    Hospital Dashboard
+                </h3>
+                <p>Administrative hospital management with bed tracking, staff management, and analytics.</p>
+                <button class="test-btn" onclick="testDashboard('hospital-dashboard.html', 'hospital')">
+                    Test Hospital Dashboard
+                </button>
+                <div id="hospital-status" class="status loading" style="display: none;">Testing...</div>
+            </div>
+        </div>
+        
+        <div class="logs">
+            <h4>📋 Test Logs</h4>
+            <div id="logs"></div>
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            const logs = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            logs.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            logs.scrollTop = logs.scrollHeight;
+        }
+        
+        function testReact() {
+            log('Testing React CDN availability...');
+            
+            if (typeof React !== 'undefined' && typeof ReactDOM !== 'undefined') {
+                document.getElementById('react-status').textContent = '✅ Available';
+                document.getElementById('react-result').innerHTML = '<div style="color: #10b981; font-weight: 600;">✅ React and ReactDOM loaded successfully!</div>';
+                log('✅ React CDN test passed');
+            } else {
+                document.getElementById('react-status').textContent = '❌ Not Available';
+                document.getElementById('react-result').innerHTML = '<div style="color: #ef4444; font-weight: 600;">❌ React CDN failed to load</div>';
+                log('❌ React CDN test failed');
+            }
+        }
+        
+        function testDashboard(url, type) {
+            const statusEl = document.getElementById(type + '-status');
+            statusEl.style.display = 'block';
+            statusEl.className = 'status loading';
+            statusEl.textContent = 'Testing...';
+            
+            log(`Testing ${type} dashboard: ${url}`);
+            
+            // Create iframe to test dashboard loading
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = url;
+            
+            iframe.onload = function() {
+                setTimeout(() => {
+                    try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        const rootEl = iframeDoc.getElementById('root');
+                        
+                        if (rootEl && rootEl.innerHTML.trim() !== '') {
+                            if (rootEl.innerHTML.includes('Error loading dashboard')) {
+                                statusEl.className = 'status error';
+                                statusEl.textContent = '❌ Dashboard has errors';
+                                log(`❌ ${type} dashboard has errors`);
+                            } else {
+                                statusEl.className = 'status success';
+                                statusEl.textContent = '✅ Dashboard loaded successfully';
+                                log(`✅ ${type} dashboard loaded successfully`);
+                            }
+                        } else {
+                            statusEl.className = 'status error';
+                            statusEl.textContent = '❌ Dashboard is blank';
+                            log(`❌ ${type} dashboard is blank`);
+                        }
+                    } catch (e) {
+                        statusEl.className = 'status error';
+                        statusEl.textContent = '❌ Cross-origin access blocked';
+                        log(`❌ ${type} dashboard: Cross-origin access blocked`);
+                    }
+                    
+                    document.body.removeChild(iframe);
+                }, 2000);
+            };
+            
+            iframe.onerror = function() {
+                statusEl.className = 'status error';
+                statusEl.textContent = '❌ Failed to load';
+                log(`❌ ${type} dashboard failed to load`);
+                document.body.removeChild(iframe);
+            };
+            
+            document.body.appendChild(iframe);
+        }
+        
+        // Auto-test React on page load
+        window.onload = function() {
+            log('Dashboard Status Page loaded');
+            
+            // Load React CDN for testing
+            const reactScript = document.createElement('script');
+            reactScript.src = 'https://unpkg.com/react@18/umd/react.development.js';
+            reactScript.onload = function() {
+                const reactDOMScript = document.createElement('script');
+                reactDOMScript.src = 'https://unpkg.com/react-dom@18/umd/react-dom.development.js';
+                reactDOMScript.onload = function() {
+                    testReact();
+                };
+                document.head.appendChild(reactDOMScript);
+            };
+            document.head.appendChild(reactScript);
+        };
+    </script>
+</body>
+</html>

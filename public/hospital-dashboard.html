@@ -802,6 +802,7 @@
         const { useState, useEffect } = React;
 
         function HospitalDashboard() {
+            console.log('HospitalDashboard component loaded');
             const [activeSection, setActiveSection] = useState('dashboard');
             const [dropdownOpen, setDropdownOpen] = useState(false);
             const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -972,8 +973,16 @@
             };
 
             const logout = () => {
-                alert('Logging out...');
-                window.location.href = 'login.html';
+                const logoutNotification = {
+                    id: notifications.length + 1,
+                    message: 'Logging out... Redirecting to login page',
+                    time: 'Just now',
+                    type: 'info'
+                };
+                setNotifications([logoutNotification, ...notifications]);
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
             };
 
             // Search functionality
@@ -1017,17 +1026,21 @@
                     }));
                     
                     // Add notification
-                    const newNotification = {
+                    const successNotification = {
                         id: notifications.length + 1,
-                        message: `New patient ${newPatient.name} admitted to ${newPatient.department}`,
+                        message: `Patient ${newPatient.name} added successfully to ${newPatient.department}!`,
                         time: 'Just now',
                         type: 'success'
                     };
-                    setNotifications([newNotification, ...notifications]);
-                    
-                    alert(`Patient ${newPatient.name} added successfully!`);
+                    setNotifications([successNotification, ...notifications]);
                 } else {
-                    alert('Please fill in all fields');
+                    const errorNotification = {
+                        id: notifications.length + 1,
+                        message: 'Please fill in all fields to add patient',
+                        time: 'Just now',
+                        type: 'error'
+                    };
+                    setNotifications([errorNotification, ...notifications]);
                 }
             };
 
@@ -1098,17 +1111,27 @@
                 };
                 setNotifications([newNotification, ...notifications]);
                 
-                alert(`Medical report generated successfully for ${randomPatient.name}`);
+                const reportNotification = {
+                    id: notifications.length + 1,
+                    message: `Medical report generated successfully for ${randomPatient.name}`,
+                    time: 'Just now',
+                    type: 'success'
+                };
+                setNotifications([reportNotification, ...notifications]);
             };
 
             // View patient details
+            const [selectedPatient, setSelectedPatient] = useState(null);
+            
             const viewPatientDetails = (patient) => {
-                alert(`Patient Details:\n\nName: ${patient.name}\nDepartment: ${patient.department}\nAge: ${patient.age}\nGender: ${patient.gender}\nPhone: ${patient.phone}\nStatus: ${patient.status}\nAdmission Date: ${patient.date}`);
+                setSelectedPatient(patient);
             };
 
             // View medical report
+            const [selectedReport, setSelectedReport] = useState(null);
+            
             const viewReport = (report) => {
-                alert(`Medical Report Details:\n\nReport ID: ${report.id}\nPatient: ${report.patientName}\nType: ${report.type}\nDoctor: ${report.doctor}\nDate: ${report.date}\nStatus: ${report.status}`);
+                setSelectedReport(report);
             };
 
             // Update staff status
@@ -1144,19 +1167,41 @@
             };
 
             // AI Assistant actions
-            const callAI = () => {
-                alert('Connecting to AI Assistant...\n\nDr. AI: Hello! I\'m your AI medical assistant. How can I help you today?');
-            };
+            const [showAIChat, setShowAIChat] = useState(false);
+            const [aiMessages, setAiMessages] = useState([]);
+            const [currentMessage, setCurrentMessage] = useState('');
 
             const chatWithAI = () => {
-                const message = prompt('Enter your message for the AI Assistant:');
-                if (message) {
-                    alert(`AI Assistant Response:\n\n"Thank you for your message: "${message}"\n\nI'm analyzing your request and will provide medical insights shortly. Please consult with a human doctor for critical decisions."`);
+                setShowAIChat(true);
+            };
+
+            const sendAIMessage = () => {
+                if (currentMessage.trim()) {
+                    const newMessages = [
+                        ...aiMessages,
+                        { type: 'user', message: currentMessage, time: new Date().toLocaleTimeString() },
+                        { 
+                            type: 'ai', 
+                            message: `Thank you for your message. Based on "${currentMessage}", I'm analyzing hospital data and will provide insights shortly. For critical decisions, please consult with medical staff.\n\n• Hospital capacity optimization\n• Patient flow analysis\n• Resource allocation recommendations\n\n⚠️ Note: This is AI-generated hospital management advice.`,
+                            time: new Date().toLocaleTimeString()
+                        }
+                    ];
+                    setAiMessages(newMessages);
+                    setCurrentMessage('');
                 }
             };
 
+            const [showAISettings, setShowAISettings] = useState(false);
+            const [aiSettings, setAiSettings] = useState({
+                hospitalAnalytics: true,
+                patientFlowOptimization: true,
+                resourceManagement: true,
+                emergencyAlerts: true,
+                staffScheduling: true
+            });
+
             const configureAI = () => {
-                alert('AI Assistant Configuration:\n\n• Medical Knowledge: Advanced\n• Response Time: < 2 seconds\n• Specializations: All departments\n• Availability: 24/7\n\nSettings updated successfully!');
+                setShowAISettings(true);
             };
 
             // Notification management
@@ -1426,7 +1471,7 @@
                                             </div>
                                             
                                             <div className="ai-actions">
-                                                <button className="ai-action-btn" onClick={callAI} title="Call AI Assistant">
+                                                <button className="ai-action-btn" onClick={chatWithAI} title="Chat with AI Assistant">
                                                     <i className="fas fa-phone"></i>
                                                 </button>
                                                 <button className="ai-action-btn" onClick={chatWithAI} title="Chat with AI">
@@ -2145,12 +2190,177 @@
                                 </div>
                             </div>
                         )}
+
+                        {/* AI Chat Modal */}
+                        {showAIChat && (
+                            <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0, 0, 0, 0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                <div style={{background: 'white', borderRadius: '16px', padding: '24px', maxWidth: '500px', width: '90%', maxHeight: '600px', display: 'flex', flexDirection: 'column'}}>
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px'}}>
+                                        <h3 style={{color: '#1e293b', margin: 0}}>🏥 AI Hospital Assistant</h3>
+                                        <button onClick={() => setShowAIChat(false)} style={{background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#64748b'}}>×</button>
+                                    </div>
+                                    
+                                    <div style={{flex: 1, overflowY: 'auto', marginBottom: '16px', minHeight: '300px', maxHeight: '400px', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px'}}>
+                                        {aiMessages.length === 0 ? (
+                                            <div style={{textAlign: 'center', color: '#64748b', padding: '40px 20px'}}>
+                                                <i className="fas fa-hospital" style={{fontSize: '48px', marginBottom: '16px', color: '#8b5cf6'}}></i>
+                                                <p>Hello! I'm your AI Hospital Assistant. Ask me about hospital management, analytics, or operations!</p>
+                                            </div>
+                                        ) : (
+                                            aiMessages.map((msg, index) => (
+                                                <div key={index} style={{marginBottom: '16px'}}>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px'}}>
+                                                        <div style={{width: '24px', height: '24px', borderRadius: '50%', background: msg.type === 'user' ? '#3b82f6' : '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '12px'}}>
+                                                            {msg.type === 'user' ? 'HA' : 'AI'}
+                                                        </div>
+                                                        <span style={{fontSize: '12px', color: '#64748b'}}>{msg.time}</span>
+                                                    </div>
+                                                    <div style={{marginLeft: '32px', padding: '12px', background: msg.type === 'user' ? '#f1f5f9' : '#f0fdf4', borderRadius: '8px', whiteSpace: 'pre-line'}}>
+                                                        {msg.message}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                    
+                                    <div style={{display: 'flex', gap: '8px'}}>
+                                        <input
+                                            type="text"
+                                            value={currentMessage}
+                                            onChange={(e) => setCurrentMessage(e.target.value)}
+                                            onKeyPress={(e) => e.key === 'Enter' && sendAIMessage()}
+                                            placeholder="Ask about hospital operations..."
+                                            style={{flex: 1, padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        />
+                                        <button onClick={sendAIMessage} className="btn btn-primary">
+                                            <i className="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Patient Details Modal */}
+                        {selectedPatient && (
+                            <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0, 0, 0, 0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                <div style={{background: 'white', borderRadius: '16px', padding: '24px', maxWidth: '400px', width: '90%'}}>
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px'}}>
+                                        <h3 style={{color: '#1e293b', margin: 0}}>👤 Patient Details</h3>
+                                        <button onClick={() => setSelectedPatient(null)} style={{background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#64748b'}}>×</button>
+                                    </div>
+                                    
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                        <div><strong>Name:</strong> {selectedPatient.name}</div>
+                                        <div><strong>Department:</strong> {selectedPatient.department}</div>
+                                        <div><strong>Age:</strong> {selectedPatient.age}</div>
+                                        <div><strong>Gender:</strong> {selectedPatient.gender}</div>
+                                        <div><strong>Phone:</strong> {selectedPatient.phone}</div>
+                                        <div><strong>Status:</strong> <span className={`status-badge ${getStatusBadge(selectedPatient.status)}`}>{selectedPatient.status}</span></div>
+                                        <div><strong>Admission Date:</strong> {selectedPatient.date}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Medical Report Details Modal */}
+                        {selectedReport && (
+                            <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0, 0, 0, 0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                <div style={{background: 'white', borderRadius: '16px', padding: '24px', maxWidth: '400px', width: '90%'}}>
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px'}}>
+                                        <h3 style={{color: '#1e293b', margin: 0}}>📋 Medical Report Details</h3>
+                                        <button onClick={() => setSelectedReport(null)} style={{background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#64748b'}}>×</button>
+                                    </div>
+                                    
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                        <div><strong>Report ID:</strong> {selectedReport.id}</div>
+                                        <div><strong>Patient:</strong> {selectedReport.patientName}</div>
+                                        <div><strong>Type:</strong> {selectedReport.type}</div>
+                                        <div><strong>Doctor:</strong> {selectedReport.doctor}</div>
+                                        <div><strong>Date:</strong> {selectedReport.date}</div>
+                                        <div><strong>Status:</strong> <span className={`status-badge ${selectedReport.status === 'Complete' ? 'active' : 'in-treatment'}`}>{selectedReport.status}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* AI Settings Modal */}
+                        {showAISettings && (
+                            <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0, 0, 0, 0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                <div style={{background: 'white', borderRadius: '16px', padding: '24px', maxWidth: '400px', width: '90%'}}>
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px'}}>
+                                        <h3 style={{color: '#1e293b', margin: 0}}>⚙️ AI Hospital Settings</h3>
+                                        <button onClick={() => setShowAISettings(false)} style={{background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#64748b'}}>×</button>
+                                    </div>
+                                    
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                                        {Object.entries(aiSettings).map(([key, value]) => (
+                                            <div key={key} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: '#f8fafc', borderRadius: '8px'}}>
+                                                <span style={{color: '#1e293b', textTransform: 'capitalize'}}>{key.replace(/([A-Z])/g, ' $1')}</span>
+                                                <label style={{position: 'relative', display: 'inline-block', width: '48px', height: '24px'}}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={value}
+                                                        onChange={(e) => setAiSettings({...aiSettings, [key]: e.target.checked})}
+                                                        style={{opacity: 0, width: 0, height: 0}}
+                                                    />
+                                                    <span style={{
+                                                        position: 'absolute',
+                                                        cursor: 'pointer',
+                                                        top: 0,
+                                                        left: 0,
+                                                        right: 0,
+                                                        bottom: 0,
+                                                        background: value ? '#10b981' : '#ccc',
+                                                        transition: '0.4s',
+                                                        borderRadius: '24px'
+                                                    }}>
+                                                        <span style={{
+                                                            position: 'absolute',
+                                                            content: '',
+                                                            height: '18px',
+                                                            width: '18px',
+                                                            left: value ? '27px' : '3px',
+                                                            bottom: '3px',
+                                                            background: 'white',
+                                                            transition: '0.4s',
+                                                            borderRadius: '50%'
+                                                        }}></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    
+                                    <div style={{marginTop: '24px', textAlign: 'center'}}>
+                                        <button onClick={() => {
+                                            setShowAISettings(false);
+                                            const settingsNotification = {
+                                                id: notifications.length + 1,
+                                                message: '✅ AI Hospital Settings updated successfully!',
+                                                time: 'Just now',
+                                                type: 'success'
+                                            };
+                                            setNotifications([settingsNotification, ...notifications]);
+                                        }} className="btn btn-primary">
+                                            Save Settings
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </main>
                 </div>
             );
         }
 
-        ReactDOM.render(<HospitalDashboard />, document.getElementById('root'));
+        try {
+            console.log('Attempting to render HospitalDashboard...');
+            ReactDOM.render(<HospitalDashboard />, document.getElementById('root'));
+            console.log('HospitalDashboard rendered successfully!');
+        } catch (error) {
+            console.error('Error rendering HospitalDashboard:', error);
+            document.getElementById('root').innerHTML = '<div style="padding: 20px; color: red;">Error loading dashboard: ' + error.message + '</div>';
+        }
     </script>
 </body>
 </html>
