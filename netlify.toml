@@ -1,0 +1,26 @@
+[build]
+  publish = "public"
+  command = "echo 'No build step required'"
+
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/doctor-dashboard"
+  to = "/doctor-dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/patient-dashboard"
+  to = "/patient-dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/hospital-dashboard"
+  to = "/hospital-dashboard.html"
+  status = 200
+
+[build.environment]
+  NODE_VERSION = "18"

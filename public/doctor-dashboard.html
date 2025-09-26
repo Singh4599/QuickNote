@@ -778,8 +778,8 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        function HospitalDashboard() {
-            console.log('HospitalDashboard component loaded');
+        function DoctorDashboard() {
+            console.log('DoctorDashboard component loaded');
             const [activeSection, setActiveSection] = useState('dashboard');
             const [dropdownOpen, setDropdownOpen] = useState(false);
             const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -792,15 +792,15 @@
                 { id: 3, message: 'Appointment scheduled with Michael Brown', time: '1 hour ago', type: 'success' }
             ]);
             
-            // Hospital Data States
-            const [hospitalStats, setHospitalStats] = useState({
-                totalPatients: 245,
-                availableBeds: 45,
-                totalStaff: 120,
-                emergencyCases: 12
+            // Doctor Data States
+            const [doctorStats, setDoctorStats] = useState({
+                todayAppointments: 12,
+                pendingConsultations: 5,
+                completedToday: 7,
+                prescriptionsIssued: 15
             });
 
-            const [hospitalPatients, setHospitalPatients] = useState([
+            const [myPatients, setMyPatients] = useState([
                 { id: 'P001', name: 'John Doe', condition: 'Hypertension', lastVisit: 'Sep 18, 2024', status: 'active', urgency: 'high' },
                 { id: 'P002', name: 'Sarah Johnson', condition: 'Diabetes', lastVisit: 'Sep 17, 2024', status: 'stable', urgency: 'medium' },
                 { id: 'P003', name: 'Michael Brown', condition: 'Arthritis', lastVisit: 'Sep 16, 2024', status: 'improving', urgency: 'low' },
@@ -913,7 +913,7 @@
                 setSearchQuery(query);
             };
 
-            const filteredPatients = hospitalPatients.filter(patient => 
+            const filteredPatients = myPatients.filter(patient => 
                 patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 patient.condition.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 patient.id.toLowerCase().includes(searchQuery.toLowerCase())
@@ -1320,20 +1320,20 @@
                                             
                                             <div className="stats-widget">
                                                 <div className="stat-item">
-                                                    <span className="stat-label">Total Patients</span>
-                                                    <span className="stat-value">{hospitalStats.totalPatients} <span className="stat-change positive">+12</span></span>
+                                                    <span className="stat-label">Today's Appointments</span>
+                                                    <span className="stat-value">{doctorStats.todayAppointments} <span className="stat-change positive">+2</span></span>
                                                 </div>
                                                 <div className="stat-item">
-                                                    <span className="stat-label">Available Beds</span>
-                                                    <span className="stat-value">{hospitalStats.availableBeds} <span className="stat-change negative">-5</span></span>
+                                                    <span className="stat-label">Pending Consultations</span>
+                                                    <span className="stat-value">{doctorStats.pendingConsultations} <span className="stat-change negative">-1</span></span>
                                                 </div>
                                                 <div className="stat-item">
-                                                    <span className="stat-label">Total Staff</span>
-                                                    <span className="stat-value">{hospitalStats.totalStaff} <span className="stat-change positive">+3</span></span>
+                                                    <span className="stat-label">Completed Today</span>
+                                                    <span className="stat-value">{doctorStats.completedToday} <span className="stat-change positive">+3</span></span>
                                                 </div>
                                                 <div className="stat-item">
-                                                    <span className="stat-label">Emergency Cases</span>
-                                                    <span className="stat-value">{hospitalStats.emergencyCases} <span className="stat-change positive">+2</span></span>
+                                                    <span className="stat-label">Prescriptions Issued</span>
+                                                    <span className="stat-value">{doctorStats.prescriptionsIssued} <span className="stat-change positive">+5</span></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1554,7 +1554,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {(searchQuery ? filteredPatients : hospitalPatients).map((patient, index) => (
+                                            {(searchQuery ? filteredPatients : myPatients).map((patient, index) => (
                                                 <tr key={index}>
                                                     <td>{patient.id}</td>
                                                     <td>{patient.name}</td>
@@ -2172,7 +2172,7 @@
             );
         }
 
-        ReactDOM.render(<HospitalDashboard />, document.getElementById('root'));
+        ReactDOM.render(<DoctorDashboard />, document.getElementById('root'));
     </script>
 </body>
 </html>
