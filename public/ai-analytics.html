@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Medical Analytics - MediVerse</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(79, 172, 254, 0.2);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .analysis-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .analysis-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .analysis-card h3 {
+            color: #4facfe;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .file-upload-area:hover {
+            border-color: #4facfe;
+            background: rgba(79, 172, 254, 0.1);
+        }
+
+        .upload-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .symptom-input {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 15px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .symptom-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .symptom-input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+        }
+
+        .analyze-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .reports-section {
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .processing-status {
+            display: none;
+            background: linear-gradient(45deg, #fa709a, #fee140);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .ai-assistant-card {
+            background: linear-gradient(145deg, rgba(79, 172, 254, 0.1), rgba(0, 242, 254, 0.05));
+            border: 1px solid rgba(79, 172, 254, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .ai-avatar {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .ai-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(67, 233, 123, 0.2);
+            color: #43e97b;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #43e97b;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        @media (max-width: 768px) {
+            .analysis-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🧠 AI Medical Analytics</h1>
+            <p>Advanced AI-powered medical analysis using Google Gemini for accurate health insights and diagnostics</p>
+        </div>
+
+        <!-- AI Assistant Status -->
+        <div class="ai-assistant-card">
+            <div class="ai-avatar">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h3 style="color: white; margin-bottom: 5px;">Dr. AI Medical Assistant</h3>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 10px;">Your personal AI health companion for guidance and support</p>
+            <div class="ai-status">
+                <div class="status-dot"></div>
+                AI Assistant Online
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-file-medical"></i>
+                </div>
+                <div class="stat-number" id="total-reports">0</div>
+                <div class="stat-label">Total Reports</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-number" id="high-risk-reports">0</div>
+                <div class="stat-label">High Risk Cases</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number" id="recent-reports">0</div>
+                <div class="stat-label">Recent Reports</div>
+            </div>
+        </div>
+
+        <!-- Analysis Section -->
+        <div class="analysis-section">
+            <!-- File Upload -->
+            <div class="analysis-card">
+                <h3>
+                    <i class="fas fa-upload"></i>
+                    AI Medical Analysis
+                </h3>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">
+                    Upload medical files or images for AI-powered diagnostic analysis
+                </p>
+                <div class="file-upload-area" id="file-upload-area">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h4 style="color: white; margin-bottom: 8px;">Drag & drop medical files here</h4>
+                    <p style="color: rgba(255,255,255,0.6); margin-bottom: 15px;">
+                        Supports JPG, PNG, PDF files (Max 10MB)
+                    </p>
+                    <button class="analyze-btn" style="width: auto; padding: 10px 20px;">
+                        <i class="fas fa-folder-open"></i> Choose File
+                    </button>
+                </div>
+                <input type="file" id="medical-file-input" class="hidden" accept=".jpg,.jpeg,.png,.pdf,.txt">
+            </div>
+
+            <!-- Symptom Analysis -->
+            <div class="analysis-card">
+                <h3>
+                    <i class="fas fa-stethoscope"></i>
+                    Describe Your Symptoms
+                </h3>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">
+                    Describe your symptoms for AI-powered health analysis
+                </p>
+                <textarea 
+                    class="symptom-input" 
+                    id="symptom-input"
+                    placeholder="Describe your symptoms in detail... 
+
+For example:
+• I have been experiencing chest pain for 2 days
+• The pain is sharp and occurs when I breathe deeply
+• I also feel shortness of breath
+• No fever or other symptoms"
+                ></textarea>
+                <button class="analyze-btn" id="analyze-symptoms-btn">
+                    <i class="fas fa-brain"></i> Analyze Symptoms
+                </button>
+            </div>
+        </div>
+
+        <!-- Processing Status -->
+        <div class="processing-status" id="processing-status">
+            <i class="fas fa-spinner fa-spin"></i>
+            AI is analyzing your medical data... Please wait
+        </div>
+
+        <!-- Reports Section -->
+        <div class="reports-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                Recent Reports
+            </h2>
+            <div id="ai-reports-container">
+                <!-- Reports will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/ai-analytics-gemini.js"></script>
+</body>
+</html>
