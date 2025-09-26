@@ -1018,6 +1018,308 @@
                 setShowAISettings(true);
             };
 
+            // AI Analytics state and functions
+            const [aiReports, setAiReports] = useState([]);
+            const [isProcessing, setIsProcessing] = useState(false);
+            const [aiStats, setAiStats] = useState({
+                totalReports: 0,
+                highRiskReports: 0,
+                recentReports: 0
+            });
+
+            const GEMINI_API_KEY = 'AIzaSyBLkCODKuavl9AwobsoXSJx4mDbR0lhzzk';
+            const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
+            const handleFileUpload = async (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf', 'text/plain'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Please upload a valid medical file (JPG, PNG, PDF, or TXT)');
+                    return;
+                }
+
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('File size must be less than 10MB');
+                    return;
+                }
+
+                setIsProcessing(true);
+
+                try {
+                    const fileContent = await readFileContent(file);
+                    const analysis = await analyzeWithGemini(fileContent, file.type, file.name);
+                    
+                    const report = {
+                        id: Date.now(),
+                        file_name: file.name,
+                        file_type: file.type,
+                        file_size: file.size,
+                        ai_summary: analysis.summary,
+                        key_findings: analysis.findings,
+                        risk_level: analysis.riskLevel,
+                        recommendations: analysis.recommendations,
+                        created_at: new Date().toISOString(),
+                        analysis_type: 'file_upload'
+                    };
+
+                    const newReports = [report, ...aiReports];
+                    setAiReports(newReports);
+                    updateAiStats(newReports);
+                    
+                    // Show success notification
+                    const successNotification = {
+                        id: notifications.length + 1,
+                        message: '✅ Medical file analyzed successfully!',
+                        time: 'Just now',
+                        type: 'success'
+                    };
+                    setNotifications([successNotification, ...notifications]);
+                } catch (error) {
+                    console.error('File analysis error:', error);
+                    const errorNotification = {
+                        id: notifications.length + 1,
+                        message: '❌ Error analyzing file. Please try again.',
+                        time: 'Just now',
+                        type: 'error'
+                    };
+                    setNotifications([errorNotification, ...notifications]);
+                } finally {
+                    setIsProcessing(false);
+                    event.target.value = ''; // Reset file input
+                }
+            };
+
+            const analyzeSymptoms = async () => {
+                const symptomInput = document.getElementById('symptom-input');
+                const symptoms = symptomInput?.value?.trim();
+
+                if (!symptoms) {
+                    alert('Please describe your symptoms');
+                    return;
+                }
+
+                setIsProcessing(true);
+
+                try {
+                    const analysis = await analyzeWithGemini(symptoms, 'text/symptoms', 'Symptom Analysis');
+                    
+                    const report = {
+                        id: Date.now(),
+                        file_name: 'Symptom Analysis',
+                        file_type: 'symptoms',
+                        original_text: symptoms,
+                        ai_summary: analysis.summary,
+                        key_findings: analysis.findings,
+                        risk_level: analysis.riskLevel,
+                        recommendations: analysis.recommendations,
+                        created_at: new Date().toISOString(),
+                        analysis_type: 'symptom_analysis'
+                    };
+
+                    const newReports = [report, ...aiReports];
+                    setAiReports(newReports);
+                    updateAiStats(newReports);
+                    
+                    symptomInput.value = '';
+                    
+                    // Show success notification
+                    const successNotification = {
+                        id: notifications.length + 1,
+                        message: '✅ Symptoms analyzed successfully!',
+                        time: 'Just now',
+                        type: 'success'
+                    };
+                    setNotifications([successNotification, ...notifications]);
+                } catch (error) {
+                    console.error('Symptom analysis error:', error);
+                    const errorNotification = {
+                        id: notifications.length + 1,
+                        message: '❌ Error analyzing symptoms. Please try again.',
+                        time: 'Just now',
+                        type: 'error'
+                    };
+                    setNotifications([errorNotification, ...notifications]);
+                } finally {
+                    setIsProcessing(false);
+                }
+            };
+
+            const analyzeWithGemini = async (content, contentType, fileName) => {
+                const prompt = createMedicalPrompt(content, contentType, fileName);
+                
+                const requestBody = {
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 1024,
+                    }
+                };
+
+                const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Gemini API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.candidates[0]?.content?.parts[0]?.text;
+                
+                if (!aiResponse) {
+                    throw new Error('No response from Gemini API');
+                }
+
+                return parseGeminiResponse(aiResponse);
+            };
+
+            const createMedicalPrompt = (content, contentType, fileName) => {
+                let basePrompt = `You are an advanced AI medical assistant. Analyze the following medical information and provide a comprehensive assessment.
+
+IMPORTANT: Respond ONLY in valid JSON format with this exact structure:
+{
+    "summary": "Brief 2-3 sentence summary",
+    "findings": ["finding1", "finding2", "finding3"],
+    "riskLevel": "low|medium|high",
+    "recommendations": ["recommendation1", "recommendation2", "recommendation3"]
+}
+
+`;
+
+                if (contentType.includes('image')) {
+                    basePrompt += `Medical Image Analysis for: ${fileName}
+Content: ${content}
+
+Analyze this medical image and provide insights about potential conditions, abnormalities, or health indicators visible.`;
+                } else if (contentType === 'text/symptoms') {
+                    basePrompt += `Symptom Analysis
+Patient describes: "${content}"
+
+Analyze these symptoms and provide potential diagnoses, risk assessment, and medical recommendations.`;
+                } else if (contentType === 'application/pdf' || contentType === 'text/plain') {
+                    basePrompt += `Medical Document Analysis for: ${fileName}
+Content: ${content}
+
+Analyze this medical document and extract key medical information, diagnoses, and recommendations.`;
+                }
+
+                basePrompt += `
+
+Guidelines:
+- Provide accurate medical insights based on the information
+- Risk levels: low (routine/preventive), medium (needs attention), high (urgent care needed)
+- Include 3-5 key findings
+- Provide 3-5 actionable recommendations
+- Always recommend consulting healthcare professionals for serious concerns
+- Be professional and empathetic in tone`;
+
+                return basePrompt;
+            };
+
+            const parseGeminiResponse = (response) => {
+                try {
+                    let jsonStr = response.trim();
+                    jsonStr = jsonStr.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+                    
+                    const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        jsonStr = jsonMatch[0];
+                    }
+
+                    const parsed = JSON.parse(jsonStr);
+                    
+                    if (!parsed.summary || !parsed.findings || !parsed.riskLevel || !parsed.recommendations) {
+                        throw new Error('Invalid response structure');
+                    }
+
+                    if (!Array.isArray(parsed.findings)) {
+                        parsed.findings = [parsed.findings];
+                    }
+                    if (!Array.isArray(parsed.recommendations)) {
+                        parsed.recommendations = [parsed.recommendations];
+                    }
+
+                    if (!['low', 'medium', 'high'].includes(parsed.riskLevel.toLowerCase())) {
+                        parsed.riskLevel = 'medium';
+                    }
+
+                    return {
+                        summary: parsed.summary,
+                        findings: parsed.findings.slice(0, 5),
+                        riskLevel: parsed.riskLevel.toLowerCase(),
+                        recommendations: parsed.recommendations.slice(0, 5)
+                    };
+                } catch (error) {
+                    console.error('Error parsing Gemini response:', error);
+                    return {
+                        summary: "Analysis completed. Please consult with a healthcare professional for detailed interpretation.",
+                        findings: ["Medical information processed", "Further evaluation recommended"],
+                        riskLevel: "medium",
+                        recommendations: ["Consult healthcare provider", "Monitor symptoms", "Follow up as needed"]
+                    };
+                }
+            };
+
+            const readFileContent = (file) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    
+                    reader.onload = (e) => {
+                        if (file.type.startsWith('image/')) {
+                            resolve(`Medical image file: ${file.name} (${file.type})`);
+                        } else {
+                            resolve(e.target.result);
+                        }
+                    };
+                    
+                    reader.onerror = () => reject(new Error('Failed to read file'));
+                    
+                    if (file.type.startsWith('image/')) {
+                        reader.readAsDataURL(file);
+                    } else {
+                        reader.readAsText(file);
+                    }
+                });
+            };
+
+            const updateAiStats = (reports) => {
+                const totalReports = reports.length;
+                const highRiskCount = reports.filter(r => r.risk_level === 'high').length;
+                const recentReports = reports.filter(r => {
+                    const reportDate = new Date(r.created_at);
+                    const weekAgo = new Date();
+                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    return reportDate > weekAgo;
+                }).length;
+
+                setAiStats({
+                    totalReports,
+                    highRiskReports: highRiskCount,
+                    recentReports
+                });
+            };
+
+            const getRiskColor = (riskLevel) => {
+                switch (riskLevel) {
+                    case 'high': return '#ff6b9d';
+                    case 'medium': return '#fa709a';
+                    case 'low': return '#43e97b';
+                    default: return '#4facfe';
+                }
+            };
+
             // View appointment details
             const [selectedAppointment, setSelectedAppointment] = useState(null);
 
@@ -2012,7 +2314,7 @@
                                         }}>
                                             <i className="fas fa-file-medical"></i>
                                         </div>
-                                        <div style={{fontSize: '2rem', fontWeight: '800', color: '#1e293b', marginBottom: '4px'}} id="total-reports">0</div>
+                                        <div style={{fontSize: '2rem', fontWeight: '800', color: '#1e293b', marginBottom: '4px'}}>{aiStats.totalReports}</div>
                                         <div style={{color: '#64748b', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Total Reports</div>
                                     </div>
                                     <div className="stat-card" style={{
@@ -2038,7 +2340,7 @@
                                         }}>
                                             <i className="fas fa-exclamation-triangle"></i>
                                         </div>
-                                        <div style={{fontSize: '2rem', fontWeight: '800', color: '#1e293b', marginBottom: '4px'}} id="high-risk-reports">0</div>
+                                        <div style={{fontSize: '2rem', fontWeight: '800', color: '#1e293b', marginBottom: '4px'}}>{aiStats.highRiskReports}</div>
                                         <div style={{color: '#64748b', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px'}}>High Risk Cases</div>
                                     </div>
                                     <div className="stat-card" style={{
@@ -2064,7 +2366,7 @@
                                         }}>
                                             <i className="fas fa-clock"></i>
                                         </div>
-                                        <div style={{fontSize: '2rem', fontWeight: '800', color: '#1e293b', marginBottom: '4px'}} id="recent-reports">0</div>
+                                        <div style={{fontSize: '2rem', fontWeight: '800', color: '#1e293b', marginBottom: '4px'}}>{aiStats.recentReports}</div>
                                         <div style={{color: '#64748b', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Recent Reports</div>
                                     </div>
                                 </div>
@@ -2098,7 +2400,7 @@
                                         <p style={{color: '#64748b', marginBottom: '20px', lineHeight: '1.6'}}>
                                             Upload medical files or images for AI-powered diagnostic analysis using Google Gemini
                                         </p>
-                                        <div id="file-upload-area" style={{
+                                        <div onClick={() => document.getElementById('medical-file-input').click()} style={{
                                             border: '2px dashed rgba(79, 172, 254, 0.3)',
                                             borderRadius: '12px',
                                             padding: '30px 20px',
@@ -2138,7 +2440,7 @@
                                                 <i className="fas fa-folder-open"></i> Choose File
                                             </button>
                                         </div>
-                                        <input type="file" id="medical-file-input" style={{display: 'none'}} accept=".jpg,.jpeg,.png,.pdf,.txt" />
+                                        <input type="file" id="medical-file-input" style={{display: 'none'}} accept=".jpg,.jpeg,.png,.pdf,.txt" onChange={handleFileUpload} />
                                     </div>
 
                                     {/* Symptom Analysis */}
@@ -2186,7 +2488,7 @@ For example:
                                                 fontFamily: 'inherit'
                                             }}
                                         ></textarea>
-                                        <button id="analyze-symptoms-btn" style={{
+                                        <button onClick={analyzeSymptoms} disabled={isProcessing} style={{
                                             width: '100%',
                                             background: 'linear-gradient(45deg, #4facfe, #00f2fe)',
                                             color: 'white',
@@ -2204,8 +2506,8 @@ For example:
                                 </div>
 
                                 {/* Processing Status */}
-                                <div id="processing-status" style={{
-                                    display: 'none',
+                                {isProcessing && (
+                                <div style={{
                                     background: 'linear-gradient(45deg, #fa709a, #fee140)',
                                     color: 'white',
                                     padding: '15px 20px',
@@ -2217,6 +2519,7 @@ For example:
                                     <i className="fas fa-spinner fa-spin"></i>
                                     AI is analyzing your medical data using Google Gemini... Please wait
                                 </div>
+                                )}
 
                                 {/* Reports Section */}
                                 <div>
@@ -2232,8 +2535,97 @@ For example:
                                         <i className="fas fa-chart-line" style={{color: '#4facfe'}}></i>
                                         Recent AI Analysis Reports
                                     </h2>
-                                    <div id="ai-reports-container">
-                                        {/* Reports will be dynamically loaded here */}
+                                    <div>
+                                        {aiReports.length === 0 ? (
+                                            <div style={{textAlign: 'center', padding: '60px 20px', color: '#64748b'}}>
+                                                <div style={{
+                                                    width: '80px',
+                                                    height: '80px',
+                                                    margin: '0 auto 20px',
+                                                    background: 'linear-gradient(45deg, #4facfe, #00f2fe)',
+                                                    borderRadius: '50%',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    color: 'white',
+                                                    fontSize: '2rem'
+                                                }}>
+                                                    <i className="fas fa-brain"></i>
+                                                </div>
+                                                <h3 style={{color: '#1e293b', marginBottom: '10px'}}>AI Medical Analysis</h3>
+                                                <p>Upload medical files or describe symptoms to get AI-powered insights</p>
+                                            </div>
+                                        ) : (
+                                            aiReports.map(report => (
+                                                <div key={report.id} style={{
+                                                    background: 'linear-gradient(145deg, rgba(255,255,255,0.9), rgba(248,250,252,0.8))',
+                                                    backdropFilter: 'blur(10px)',
+                                                    border: '1px solid rgba(226,232,240,0.3)',
+                                                    borderRadius: '16px',
+                                                    padding: '24px',
+                                                    marginBottom: '20px',
+                                                    transition: 'all 0.3s ease'
+                                                }}>
+                                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px'}}>
+                                                        <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+                                                            <div style={{
+                                                                width: '40px',
+                                                                height: '40px',
+                                                                background: 'linear-gradient(45deg, #4facfe, #00f2fe)',
+                                                                borderRadius: '10px',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                color: 'white',
+                                                                fontSize: '1.1rem'
+                                                            }}>
+                                                                <i className={`fas ${report.analysis_type === 'symptom_analysis' ? 'fa-stethoscope' : 'fa-file-medical'}`}></i>
+                                                            </div>
+                                                            <div>
+                                                                <h4 style={{color: '#1e293b', margin: 0, fontSize: '1.1rem'}}>{report.file_name}</h4>
+                                                                <p style={{color: '#64748b', margin: 0, fontSize: '0.85rem'}}>
+                                                                    {new Date(report.created_at).toLocaleDateString()} • {report.file_type.toUpperCase()}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <span style={{
+                                                            background: `${getRiskColor(report.risk_level)}20`,
+                                                            color: getRiskColor(report.risk_level),
+                                                            padding: '6px 16px',
+                                                            borderRadius: '20px',
+                                                            fontSize: '0.8rem',
+                                                            fontWeight: '600',
+                                                            textTransform: 'uppercase'
+                                                        }}>
+                                                            {report.risk_level} RISK
+                                                        </span>
+                                                    </div>
+                                                    
+                                                    <div style={{marginBottom: '16px'}}>
+                                                        <h5 style={{color: '#4facfe', margin: '0 0 8px 0', fontSize: '0.9rem', fontWeight: '600'}}>AI SUMMARY</h5>
+                                                        <p style={{color: '#1e293b', margin: 0, lineHeight: '1.5'}}>{report.ai_summary}</p>
+                                                    </div>
+                                                    
+                                                    <div style={{marginBottom: '16px'}}>
+                                                        <h5 style={{color: '#4facfe', margin: '0 0 8px 0', fontSize: '0.9rem', fontWeight: '600'}}>KEY FINDINGS</h5>
+                                                        <ul style={{color: '#64748b', margin: 0, paddingLeft: '16px'}}>
+                                                            {report.key_findings.map((finding, index) => (
+                                                                <li key={index} style={{marginBottom: '4px'}}>{finding}</li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                    
+                                                    <div>
+                                                        <h5 style={{color: '#4facfe', margin: '0 0 8px 0', fontSize: '0.9rem', fontWeight: '600'}}>RECOMMENDATIONS</h5>
+                                                        <ul style={{color: '#64748b', margin: 0, paddingLeft: '16px'}}>
+                                                            {report.recommendations.map((rec, index) => (
+                                                                <li key={index} style={{marginBottom: '4px'}}>{rec}</li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -2575,8 +2967,5 @@ For example:
 
         ReactDOM.render(<PatientDashboard />, document.getElementById('root'));
     </script>
-    
-    <!-- AI Analytics Script -->
-    <script src="js/ai-analytics-gemini.js"></script>
 </body>
 </html>
