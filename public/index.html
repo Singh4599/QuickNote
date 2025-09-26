@@ -126,32 +126,137 @@
           </div>
         </div>
         
-        <!-- Hero Visual -->
+        <!-- Conditional Login/Signup Section -->
         <div class="relative">
-          <div class="relative z-10 animate-float">
-            <div class="bg-white rounded-3xl shadow-2xl p-8 card-3d">
-              <div class="flex items-center mb-6">
-                <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mr-4">
-                  <i class="fas fa-heartbeat text-white text-xl"></i>
+          <!-- User Type Selector -->
+          <div class="glass-effect rounded-3xl p-8 shadow-2xl mb-6">
+            <div class="text-center mb-6">
+              <h3 class="text-2xl font-bold text-gray-900 mb-2">Choose Your Role</h3>
+              <p class="text-gray-600">Select your role to access the appropriate dashboard</p>
+            </div>
+            
+            <!-- Role Selection Buttons -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+              <button onclick="selectUserType('patient')" class="user-type-btn p-4 rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all text-center" data-role="patient">
+                <i class="fas fa-user text-2xl text-blue-600 mb-2"></i>
+                <div class="font-semibold text-gray-900">Patient</div>
+                <div class="text-sm text-gray-600">Access your health data</div>
+              </button>
+              
+              <button onclick="selectUserType('doctor')" class="user-type-btn p-4 rounded-xl border-2 border-gray-200 hover:border-green-300 transition-all text-center" data-role="doctor">
+                <i class="fas fa-user-md text-2xl text-green-600 mb-2"></i>
+                <div class="font-semibold text-gray-900">Doctor</div>
+                <div class="text-sm text-gray-600">Manage patients & diagnostics</div>
+              </button>
+              
+              <button onclick="selectUserType('hospital')" class="user-type-btn p-4 rounded-xl border-2 border-gray-200 hover:border-purple-300 transition-all text-center" data-role="hospital">
+                <i class="fas fa-hospital text-2xl text-purple-600 mb-2"></i>
+                <div class="font-semibold text-gray-900">Hospital</div>
+                <div class="text-sm text-gray-600">Manage operations</div>
+              </button>
+            </div>
+            
+            <!-- Conditional Login/Signup Forms -->
+            <div id="authSection" class="hidden">
+              <!-- Patient Login/Signup -->
+              <div id="patientAuth" class="hidden">
+                <div class="text-center mb-6">
+                  <h4 class="text-xl font-bold text-gray-900 mb-2">Patient Access</h4>
+                  <p class="text-gray-600">Login to access your health dashboard</p>
                 </div>
-                <div>
-                  <h3 class="font-bold text-gray-900">AI Health Analysis</h3>
-                  <p class="text-gray-600 text-sm">Real-time diagnostics</p>
+                
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <input type="email" id="patientEmail" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your email">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="patientPassword" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your password">
+                  </div>
+                  
+                  <div class="flex gap-3">
+                    <button onclick="loginUser('patient')" class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
+                      <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+                    <button onclick="showSignupForm('patient')" class="flex-1 px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-xl font-semibold hover:bg-blue-50 transition-all">
+                      <i class="fas fa-user-plus mr-2"></i>Sign Up
+                    </button>
+                  </div>
                 </div>
               </div>
               
-              <div class="space-y-4">
-                <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                  <span class="text-green-800 font-medium">Heart Rate</span>
-                  <span class="text-green-600 font-bold">72 BPM</span>
+              <!-- Doctor Login/Signup -->
+              <div id="doctorAuth" class="hidden">
+                <div class="text-center mb-6">
+                  <h4 class="text-xl font-bold text-gray-900 mb-2">Doctor Access</h4>
+                  <p class="text-gray-600">Login to access your medical dashboard</p>
                 </div>
-                <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                  <span class="text-blue-800 font-medium">Blood Pressure</span>
-                  <span class="text-blue-600 font-bold">120/80</span>
+                
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <input type="email" id="doctorEmail" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Enter your email">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="doctorPassword" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Enter your password">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Medical License Number</label>
+                    <input type="text" id="doctorLicense" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Enter your license number">
+                  </div>
+                  
+                  <div class="flex gap-3">
+                    <button onclick="loginUser('doctor')" class="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
+                      <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+                    <button onclick="showSignupForm('doctor')" class="flex-1 px-6 py-3 bg-white text-green-600 border-2 border-green-600 rounded-xl font-semibold hover:bg-green-50 transition-all">
+                      <i class="fas fa-user-plus mr-2"></i>Sign Up
+                    </button>
+                  </div>
                 </div>
-                <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                  <span class="text-purple-800 font-medium">AI Risk Score</span>
-                  <span class="text-purple-600 font-bold">Low</span>
+              </div>
+              
+              <!-- Hospital Login/Signup -->
+              <div id="hospitalAuth" class="hidden">
+                <div class="text-center mb-6">
+                  <h4 class="text-xl font-bold text-gray-900 mb-2">Hospital Access</h4>
+                  <p class="text-gray-600">Login to access your hospital management dashboard</p>
+                </div>
+                
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <input type="email" id="hospitalEmail" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter your email">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="hospitalPassword" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter your password">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Hospital Registration ID</label>
+                    <input type="text" id="hospitalRegId" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter your registration ID">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Hospital Name</label>
+                    <input type="text" id="hospitalName" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter hospital name">
+                  </div>
+                  
+                  <div class="flex gap-3">
+                    <button onclick="loginUser('hospital')" class="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
+                      <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+                    <button onclick="showSignupForm('hospital')" class="flex-1 px-6 py-3 bg-white text-purple-600 border-2 border-purple-600 rounded-xl font-semibold hover:bg-purple-50 transition-all">
+                      <i class="fas fa-user-plus mr-2"></i>Sign Up
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -276,6 +381,98 @@
     // Prevent automatic auth initialization on landing page
     // Only initialize auth when user explicitly tries to login/signup
     console.log('Landing page loaded - Auth available but not auto-initialized');
+
+    // Conditional Login/Signup Functions
+    let selectedUserType = null;
+
+    function selectUserType(userType) {
+      selectedUserType = userType;
+      
+      // Update button styles
+      document.querySelectorAll('.user-type-btn').forEach(btn => {
+        btn.classList.remove('border-blue-500', 'border-green-500', 'border-purple-500', 'bg-blue-50', 'bg-green-50', 'bg-purple-50');
+        btn.classList.add('border-gray-200');
+      });
+      
+      const selectedBtn = document.querySelector(`[data-role="${userType}"]`);
+      if (userType === 'patient') {
+        selectedBtn.classList.add('border-blue-500', 'bg-blue-50');
+      } else if (userType === 'doctor') {
+        selectedBtn.classList.add('border-green-500', 'bg-green-50');
+      } else if (userType === 'hospital') {
+        selectedBtn.classList.add('border-purple-500', 'bg-purple-50');
+      }
+      
+      // Show auth section
+      document.getElementById('authSection').classList.remove('hidden');
+      
+      // Hide all auth forms
+      document.getElementById('patientAuth').classList.add('hidden');
+      document.getElementById('doctorAuth').classList.add('hidden');
+      document.getElementById('hospitalAuth').classList.add('hidden');
+      
+      // Show selected auth form
+      document.getElementById(`${userType}Auth`).classList.remove('hidden');
+    }
+
+    async function loginUser(userType) {
+      const email = document.getElementById(`${userType}Email`).value;
+      const password = document.getElementById(`${userType}Password`).value;
+      
+      if (!email || !password) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      try {
+        // Use existing auth system
+        if (window.Auth && window.Auth.signIn) {
+          const result = await window.Auth.signIn(email, password);
+          
+          if (result && result.success) {
+            // Redirect to appropriate dashboard
+            const dashboards = {
+              patient: 'patient-dashboard.html',
+              doctor: 'doctor-dashboard.html',
+              hospital: 'hospital-dashboard.html'
+            };
+            
+            alert(`Login successful! Redirecting to ${userType} dashboard...`);
+            window.location.href = dashboards[userType] || 'patient-dashboard.html';
+          } else {
+            alert(result?.error || 'Login failed. Please try again.');
+          }
+        } else {
+          // Fallback to SimpleAuth
+          if (window.SimpleAuth && window.SimpleAuth.signIn) {
+            const result = await window.SimpleAuth.signIn(email, password, userType);
+            
+            if (result && result.success) {
+              const dashboards = {
+                patient: 'patient-dashboard.html',
+                doctor: 'doctor-dashboard.html',
+                hospital: 'hospital-dashboard.html'
+              };
+              
+              alert(`Login successful! Redirecting to ${userType} dashboard...`);
+              window.location.href = dashboards[userType] || 'patient-dashboard.html';
+            } else {
+              alert(result?.error || 'Login failed. Please try again.');
+            }
+          } else {
+            alert('Authentication system not available. Please refresh the page.');
+          }
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        alert('Login failed. Please try again.');
+      }
+    }
+
+    function showSignupForm(userType) {
+      // Redirect to signup page with user type
+      window.location.href = `signup.html?type=${userType}`;
+    }
 
     // AI Diagnostics redirect function
     function redirectToAIDiagnostics() {
