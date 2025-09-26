@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediVerse AI - Doctor Dashboard</title>
+    <title>MediVerse AI - Hospital Dashboard</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -515,14 +515,168 @@
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
         }
 
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: rgba(248, 250, 252, 0.8);
+            border-radius: 8px;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-btn:hover {
+            background: rgba(226, 232, 240, 0.8);
+        }
+
+        /* Mobile Navigation Overlay */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .mobile-nav-overlay.show {
+            display: block;
+        }
+
+        .mobile-nav-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(226, 232, 240, 0.3);
+            z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .mobile-nav-menu.show {
+            left: 0;
+        }
+
+        .mobile-nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+        }
+
+        .mobile-nav-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 8px;
+        }
+
+        .mobile-nav-links .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .mobile-nav-links .nav-link:hover {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
+
+        .mobile-nav-links .nav-link.active {
+            background: linear-gradient(45deg, #8b5cf6, #a855f7);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
         /* Responsive Design */
-        @media (max-width: 768px) {
+        @media (max-width: 1200px) {
+            .nav-links {
+                gap: 4px;
+            }
+            
+            .nav-link {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+            
+            .search-box input {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .search-box input {
+                width: 160px;
+            }
+            
             .nav-container {
                 padding: 0 16px;
             }
+        }
 
-            .search-box input {
-                width: 200px;
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 12px;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+
+            .search-box {
+                display: none;
+            }
+
+            .nav-right {
+                gap: 8px;
             }
 
             .main-content {
@@ -536,6 +690,66 @@
             .stats-widget {
                 grid-template-columns: 1fr;
             }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .widget {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0 8px;
+                height: 56px;
+            }
+
+            .logo-text {
+                font-size: 18px;
+            }
+
+            .logo-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+
+            .main-content {
+                padding: 12px;
+            }
+
+            .page-title {
+                font-size: 20px;
+            }
+
+            .page-subtitle {
+                font-size: 14px;
+            }
+
+            .widget {
+                padding: 12px;
+            }
+
+            .data-table {
+                font-size: 12px;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 8px 4px;
+            }
+
+            .btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .dropdown-menu {
+                min-width: 180px;
+                right: -20px;
+            }
         }
     </style>
 </head>
@@ -545,10 +759,11 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        function DoctorDashboard() {
-            console.log('DoctorDashboard component loaded');
+        function HospitalDashboard() {
+            console.log('HospitalDashboard component loaded');
             const [activeSection, setActiveSection] = useState('dashboard');
             const [dropdownOpen, setDropdownOpen] = useState(false);
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
             const [searchQuery, setSearchQuery] = useState('');
             const [showAddAppointment, setShowAddAppointment] = useState(false);
             const [showCreatePrescription, setShowCreatePrescription] = useState(false);
@@ -558,15 +773,15 @@
                 { id: 3, message: 'Appointment scheduled with Michael Brown', time: '1 hour ago', type: 'success' }
             ]);
             
-            // Doctor Data States
-            const [doctorStats, setDoctorStats] = useState({
-                todayAppointments: 12,
-                pendingConsultations: 5,
-                completedToday: 7,
-                prescriptionsIssued: 15
+            // Hospital Data States
+            const [hospitalStats, setHospitalStats] = useState({
+                totalPatients: 245,
+                availableBeds: 45,
+                totalStaff: 120,
+                emergencyCases: 12
             });
 
-            const [myPatients, setMyPatients] = useState([
+            const [hospitalPatients, setHospitalPatients] = useState([
                 { id: 'P001', name: 'John Doe', condition: 'Hypertension', lastVisit: 'Sep 18, 2024', status: 'active', urgency: 'high' },
                 { id: 'P002', name: 'Sarah Johnson', condition: 'Diabetes', lastVisit: 'Sep 17, 2024', status: 'stable', urgency: 'medium' },
                 { id: 'P003', name: 'Michael Brown', condition: 'Arthritis', lastVisit: 'Sep 16, 2024', status: 'improving', urgency: 'low' },
@@ -612,9 +827,9 @@
 
             // Load data from localStorage on component mount
             useEffect(() => {
-                const savedAppointments = localStorage.getItem('doctorAppointments');
-                const savedPrescriptions = localStorage.getItem('doctorPrescriptions');
-                const savedNotifications = localStorage.getItem('doctorNotifications');
+                const savedAppointments = localStorage.getItem('hospitalAppointments');
+                const savedPrescriptions = localStorage.getItem('hospitalPrescriptions');
+                const savedNotifications = localStorage.getItem('hospitalNotifications');
                 
                 if (savedAppointments) {
                     setAppointments(JSON.parse(savedAppointments));
@@ -629,15 +844,15 @@
 
             // Save data to localStorage whenever it changes
             useEffect(() => {
-                localStorage.setItem('doctorAppointments', JSON.stringify(appointments));
+                localStorage.setItem('hospitalAppointments', JSON.stringify(appointments));
             }, [appointments]);
 
             useEffect(() => {
-                localStorage.setItem('doctorPrescriptions', JSON.stringify(prescriptions));
+                localStorage.setItem('hospitalPrescriptions', JSON.stringify(prescriptions));
             }, [prescriptions]);
 
             useEffect(() => {
-                localStorage.setItem('doctorNotifications', JSON.stringify(notifications));
+                localStorage.setItem('hospitalNotifications', JSON.stringify(notifications));
             }, [notifications]);
 
             const getStatusBadge = (status) => {
@@ -656,6 +871,19 @@
                 setDropdownOpen(!dropdownOpen);
             };
 
+            const toggleMobileMenu = () => {
+                setMobileMenuOpen(!mobileMenuOpen);
+            };
+
+            const closeMobileMenu = () => {
+                setMobileMenuOpen(false);
+            };
+
+            const handleMobileNavClick = (section) => {
+                setActiveSection(section);
+                setMobileMenuOpen(false);
+            };
+
             const logout = () => {
                 alert('Logging out...');
                 window.location.href = 'login.html';
@@ -666,7 +894,7 @@
                 setSearchQuery(query);
             };
 
-            const filteredPatients = myPatients.filter(patient => 
+            const filteredPatients = hospitalPatients.filter(patient => 
                 patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 patient.condition.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 patient.id.toLowerCase().includes(searchQuery.toLowerCase())
@@ -759,20 +987,20 @@
             // AI Assistant actions
             const callAI = () => {
                 console.log('AI Call button clicked');
-                alert('🤖 Connecting to AI Diagnostic Assistant...\n\nDr. AI: Hello Doctor! I\'m ready to assist with diagnosis, treatment recommendations, and medical insights. How can I help you today?\n\n✅ AI Assistant is now active and ready to help!');
+                alert('🤖 Connecting to Hospital AI Assistant...\n\nHospital AI: Hello Administrator! I\'m ready to assist with hospital management, patient analytics, and operational insights. How can I help you today?\n\n✅ AI Assistant is now active and ready to help!');
             };
 
             const chatWithAI = () => {
                 console.log('AI Chat button clicked');
-                const message = prompt('💬 Enter your medical query for the AI Assistant:');
+                const message = prompt('💬 Enter your hospital management query for the AI Assistant:');
                 if (message) {
-                    alert(`🤖 AI Diagnostic Assistant Response:\n\n"Thank you for your query: "${message}"\n\n📋 Based on current medical knowledge, I recommend:\n• Review patient symptoms and lab results\n• Consider differential diagnosis\n• Consult latest medical guidelines\n• Check drug interactions\n\n✅ AI analysis complete!`);
+                    alert(`🤖 Hospital AI Assistant Response:\n\n"Thank you for your query: "${message}"\n\n📋 Based on hospital analytics, I recommend:\n• Review bed occupancy rates\n• Monitor staff allocation\n• Check patient flow patterns\n• Optimize resource utilization\n\n✅ AI analysis complete!`);
                 }
             };
 
             const configureAI = () => {
                 console.log('AI Configure button clicked');
-                alert('⚙️ AI Diagnostic Assistant Configuration:\n\n📊 Medical Database: Latest 2024\n🏥 Specializations: All departments\n💊 Drug Interaction Checker: Enabled\n📚 Evidence-Based Recommendations: Active\n🔄 Real-time Updates: Enabled\n\n✅ Settings updated successfully!');
+                alert('⚙️ Hospital AI Assistant Configuration:\n\n📊 Hospital Database: Latest 2024\n🏥 Departments: All units connected\n🛏️ Bed Management: Real-time tracking\n📈 Analytics Engine: Advanced reporting\n🔄 Real-time Updates: Enabled\n\n✅ Settings updated successfully!');
             };
 
             // Notification management
@@ -790,6 +1018,10 @@
                     <nav className="top-nav">
                         <div className="nav-container">
                             <div className="nav-left">
+                                <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
+                                    <i className="fas fa-bars"></i>
+                                </button>
+                                
                                 <a href="#" className="logo">
                                     <div className="logo-icon">
                                         <i className="fas fa-stethoscope"></i>
@@ -803,7 +1035,7 @@
                                             className={`nav-link ${activeSection === 'dashboard' ? 'active' : ''}`}
                                             onClick={() => setActiveSection('dashboard')}
                                         >
-                                            <i className="fas fa-home"></i> Dashboard
+                                            <i className="fas fa-tachometer-alt"></i> Dashboard
                                         </a>
                                     </li>
                                     <li>
@@ -811,31 +1043,31 @@
                                             className={`nav-link ${activeSection === 'patients' ? 'active' : ''}`}
                                             onClick={() => setActiveSection('patients')}
                                         >
-                                            <i className="fas fa-users"></i> My Patients
+                                            <i className="fas fa-users"></i> Patients
                                         </a>
                                     </li>
                                     <li>
                                         <a 
-                                            className={`nav-link ${activeSection === 'appointments' ? 'active' : ''}`}
-                                            onClick={() => setActiveSection('appointments')}
+                                            className={`nav-link ${activeSection === 'analytics' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('analytics')}
                                         >
-                                            <i className="fas fa-calendar"></i> Appointments
+                                            <i className="fas fa-chart-line"></i> Analytics
                                         </a>
                                     </li>
                                     <li>
                                         <a 
-                                            className={`nav-link ${activeSection === 'prescriptions' ? 'active' : ''}`}
-                                            onClick={() => setActiveSection('prescriptions')}
+                                            className={`nav-link ${activeSection === 'bed-management' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('bed-management')}
                                         >
-                                            <i className="fas fa-prescription"></i> Prescriptions
+                                            <i className="fas fa-bed"></i> Bed Management
                                         </a>
                                     </li>
                                     <li>
                                         <a 
-                                            className={`nav-link ${activeSection === 'lab-results' ? 'active' : ''}`}
-                                            onClick={() => setActiveSection('lab-results')}
+                                            className={`nav-link ${activeSection === 'medical-reports' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('medical-reports')}
                                         >
-                                            <i className="fas fa-flask"></i> Lab Results
+                                            <i className="fas fa-file-medical"></i> Medical Reports
                                         </a>
                                     </li>
                                 </ul>
@@ -887,12 +1119,12 @@
                                 
                                 <div className="user-dropdown">
                                     <div className="user-avatar" onClick={toggleDropdown}>
-                                        Dr
+                                        HA
                                     </div>
                                     <div className={`dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
                                         <div className="dropdown-header">
-                                            <strong>Dr. Sarah Johnson</strong>
-                                            <div style={{color: '#64748b', fontSize: '14px'}}>Cardiologist</div>
+                                            <strong>Hospital Administrator</strong>
+                                            <div style={{color: '#64748b', fontSize: '14px'}}>System Admin</div>
                                         </div>
                                         <a href="#" className="dropdown-item">
                                             <i className="fas fa-user"></i> Profile
@@ -912,6 +1144,89 @@
                         </div>
                     </nav>
 
+                    {/* Mobile Navigation Overlay */}
+                    <div className={`mobile-nav-overlay ${mobileMenuOpen ? 'show' : ''}`} onClick={closeMobileMenu}></div>
+                    
+                    {/* Mobile Navigation Menu */}
+                    <div className={`mobile-nav-menu ${mobileMenuOpen ? 'show' : ''}`}>
+                        <div className="mobile-nav-header">
+                            <div className="logo">
+                                <div className="logo-icon">
+                                    <i className="fas fa-stethoscope"></i>
+                                </div>
+                                <span className="logo-text">MediVerse</span>
+                            </div>
+                            <button className="mobile-nav-close" onClick={closeMobileMenu}>
+                                <i className="fas fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <ul className="mobile-nav-links">
+                            <li>
+                                <a 
+                                    className={`nav-link ${activeSection === 'dashboard' ? 'active' : ''}`}
+                                    onClick={() => handleMobileNavClick('dashboard')}
+                                >
+                                    <i className="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a 
+                                    className={`nav-link ${activeSection === 'patients' ? 'active' : ''}`}
+                                    onClick={() => handleMobileNavClick('patients')}
+                                >
+                                    <i className="fas fa-users"></i> Patients
+                                </a>
+                            </li>
+                            <li>
+                                <a 
+                                    className={`nav-link ${activeSection === 'analytics' ? 'active' : ''}`}
+                                    onClick={() => handleMobileNavClick('analytics')}
+                                >
+                                    <i className="fas fa-chart-line"></i> Analytics
+                                </a>
+                            </li>
+                            <li>
+                                <a 
+                                    className={`nav-link ${activeSection === 'bed-management' ? 'active' : ''}`}
+                                    onClick={() => handleMobileNavClick('bed-management')}
+                                >
+                                    <i className="fas fa-bed"></i> Bed Management
+                                </a>
+                            </li>
+                            <li>
+                                <a 
+                                    className={`nav-link ${activeSection === 'medical-reports' ? 'active' : ''}`}
+                                    onClick={() => handleMobileNavClick('medical-reports')}
+                                >
+                                    <i className="fas fa-file-medical"></i> Medical Reports
+                                </a>
+                            </li>
+                        </ul>
+                        
+                        <div style={{marginTop: '30px', paddingTop: '20px', borderTop: '1px solid rgba(226, 232, 240, 0.3)'}}>
+                            <div className="search-box" style={{marginBottom: '20px'}}>
+                                <i className="fas fa-search"></i>
+                                <input 
+                                    type="text" 
+                                    placeholder="Search..." 
+                                    value={searchQuery}
+                                    onChange={(e) => handleSearch(e.target.value)}
+                                    style={{width: '100%'}}
+                                />
+                            </div>
+                            
+                            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                <button className="btn btn-primary" style={{width: '100%', justifyContent: 'center'}}>
+                                    <i className="fas fa-user"></i> Profile
+                                </button>
+                                <button className="btn" onClick={logout} style={{width: '100%', justifyContent: 'center', background: '#f1f5f9', color: '#64748b'}}>
+                                    <i className="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Main Content */}
                     <main className="main-content">
                         {/* Dashboard Section */}
@@ -919,10 +1234,10 @@
                             <div>
                                 <div className="page-header">
                                     <h1 className="page-title">
-                                        <i className="fas fa-stethoscope" style={{color: '#3b82f6'}}></i>
-                                        Doctor Dashboard
+                                        <i className="fas fa-hospital" style={{color: '#3b82f6'}}></i>
+                                        Hospital Management Dashboard
                                     </h1>
-                                    <p className="page-subtitle">Welcome back, Dr. Sarah Johnson - Your patient care hub</p>
+                                    <p className="page-subtitle">Comprehensive hospital operations and resource management</p>
                                 </div>
 
                                 <div className="dashboard-grid">
@@ -944,8 +1259,8 @@
                                                     <i className="fas fa-robot"></i>
                                                 </div>
                                                 <div className="ai-info">
-                                                    <h3>Dr. AI Diagnostics</h3>
-                                                    <p>AI Medical Diagnostic Assistant</p>
+                                                    <h3>Hospital AI Assistant</h3>
+                                                    <p>AI Hospital Management System</p>
                                                 </div>
                                             </div>
                                             
@@ -986,20 +1301,20 @@
                                             
                                             <div className="stats-widget">
                                                 <div className="stat-item">
-                                                    <span className="stat-label">Total Appointments</span>
-                                                    <span className="stat-value">{doctorStats.todayAppointments} <span className="stat-change positive">+2</span></span>
+                                                    <span className="stat-label">Total Patients</span>
+                                                    <span className="stat-value">{hospitalStats.totalPatients} <span className="stat-change positive">+12</span></span>
                                                 </div>
                                                 <div className="stat-item">
-                                                    <span className="stat-label">Pending Consultations</span>
-                                                    <span className="stat-value">{doctorStats.pendingConsultations} <span className="stat-change negative">-1</span></span>
+                                                    <span className="stat-label">Available Beds</span>
+                                                    <span className="stat-value">{hospitalStats.availableBeds} <span className="stat-change negative">-5</span></span>
                                                 </div>
                                                 <div className="stat-item">
-                                                    <span className="stat-label">Completed Today</span>
-                                                    <span className="stat-value">{doctorStats.completedToday} <span className="stat-change positive">+3</span></span>
+                                                    <span className="stat-label">Total Staff</span>
+                                                    <span className="stat-value">{hospitalStats.totalStaff} <span className="stat-change positive">+3</span></span>
                                                 </div>
                                                 <div className="stat-item">
-                                                    <span className="stat-label">Prescriptions Issued</span>
-                                                    <span className="stat-value">{doctorStats.prescriptionsIssued} <span className="stat-change positive">+5</span></span>
+                                                    <span className="stat-label">Emergency Cases</span>
+                                                    <span className="stat-value">{hospitalStats.emergencyCases} <span className="stat-change positive">+2</span></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1023,7 +1338,7 @@
                                                     <i className="fas fa-prescription-bottle"></i> Create Prescription
                                                 </button>
                                                 <button className="btn btn-primary" onClick={() => setActiveSection('patients')}>
-                                                    <i className="fas fa-user-plus"></i> View My Patients
+                                                    <i className="fas fa-user-plus"></i> View All Patients
                                                 </button>
                                             </div>
                                         </div>
@@ -1186,15 +1501,15 @@
                             </div>
                         )}
 
-                        {/* My Patients Section */}
+                        {/* Hospital Patients Section */}
                         {activeSection === 'patients' && (
                             <div>
                                 <div className="page-header">
                                     <h1 className="page-title">
                                         <i className="fas fa-users" style={{color: '#3b82f6'}}></i>
-                                        My Patients
+                                        Hospital Patients
                                     </h1>
-                                    <p className="page-subtitle">Manage your patient records and medical history</p>
+                                    <p className="page-subtitle">Manage all patient records and medical history</p>
                                 </div>
 
                                 <div className="widget">
@@ -1220,7 +1535,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {(searchQuery ? filteredPatients : myPatients).map((patient, index) => (
+                                            {(searchQuery ? filteredPatients : hospitalPatients).map((patient, index) => (
                                                 <tr key={index}>
                                                     <td>{patient.id}</td>
                                                     <td>{patient.name}</td>
@@ -1400,6 +1715,311 @@
                             </div>
                         )}
 
+                        {/* Analytics Section */}
+                        {activeSection === 'analytics' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-chart-line" style={{color: '#3b82f6'}}></i>
+                                        Analytics
+                                    </h1>
+                                    <p className="page-subtitle">Hospital performance metrics and insights</p>
+                                </div>
+
+                                <div className="dashboard-grid">
+                                    <div className="ai-assistant">
+                                        {/* Hospital Stats Widget */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                        <i className="fas fa-chart-bar"></i>
+                                                    </div>
+                                                    Hospital Stats
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="stats-widget">
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Total Beds</span>
+                                                    <span className="stat-value">250 <span className="stat-change positive">+15</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Available Beds</span>
+                                                    <span className="stat-value">45 <span className="stat-change positive">+5</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">ICU Beds</span>
+                                                    <span className="stat-value">8/20 <span className="stat-change negative">-2</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Emergency Cases</span>
+                                                    <span className="stat-value">12 <span className="stat-change positive">+3</span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Revenue Widget */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #3b82f6)'}}>
+                                                        <i className="fas fa-rupee-sign"></i>
+                                                    </div>
+                                                    Revenue
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="stats-widget">
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Monthly Revenue</span>
+                                                    <span className="stat-value">₹2,400,000</span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Total Income</span>
+                                                    <span className="stat-value">₹2,400,000 <span className="stat-change positive">+15%</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Total Expenses</span>
+                                                    <span className="stat-value">₹1,800,000 <span className="stat-change positive">+8%</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Net Profit</span>
+                                                    <span className="stat-value">₹600,000 <span className="stat-change positive">+25%</span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Performance Metrics */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #f59e0b, #ef4444)'}}>
+                                                        <i className="fas fa-tachometer-alt"></i>
+                                                    </div>
+                                                    Performance
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="stats-widget">
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Patient Satisfaction</span>
+                                                    <span className="stat-value">95% <span className="stat-change positive">+2%</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Average Wait Time</span>
+                                                    <span className="stat-value">15 min <span className="stat-change negative">-5 min</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Staff Efficiency</span>
+                                                    <span className="stat-value">88% <span className="stat-change positive">+3%</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Readmission Rate</span>
+                                                    <span className="stat-value">5.2% <span className="stat-change negative">-0.8%</span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Bed Management Section */}
+                        {activeSection === 'bed-management' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-bed" style={{color: '#3b82f6'}}></i>
+                                        Bed Management
+                                    </h1>
+                                    <p className="page-subtitle">Monitor and manage hospital bed availability</p>
+                                </div>
+
+                                <div className="widget">
+                                    <div className="widget-header">
+                                        <div className="widget-title">
+                                            <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                <i className="fas fa-bed"></i>
+                                            </div>
+                                            Bed Status Overview
+                                        </div>
+                                    </div>
+                                    
+                                    <table className="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Ward</th>
+                                                <th>Total Beds</th>
+                                                <th>Occupied</th>
+                                                <th>Available</th>
+                                                <th>Maintenance</th>
+                                                <th>Occupancy Rate</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>General Ward</td>
+                                                <td>100</td>
+                                                <td>85</td>
+                                                <td>12</td>
+                                                <td>3</td>
+                                                <td><span className="status-badge active">85%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>ICU</td>
+                                                <td>20</td>
+                                                <td>18</td>
+                                                <td>2</td>
+                                                <td>0</td>
+                                                <td><span className="status-badge urgent">90%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Emergency</td>
+                                                <td>30</td>
+                                                <td>22</td>
+                                                <td>8</td>
+                                                <td>0</td>
+                                                <td><span className="status-badge pending">73%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Pediatric</td>
+                                                <td>25</td>
+                                                <td>18</td>
+                                                <td>6</td>
+                                                <td>1</td>
+                                                <td><span className="status-badge active">72%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Maternity</td>
+                                                <td>40</td>
+                                                <td>28</td>
+                                                <td>11</td>
+                                                <td>1</td>
+                                                <td><span className="status-badge active">70%</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Surgery</td>
+                                                <td>35</td>
+                                                <td>25</td>
+                                                <td>8</td>
+                                                <td>2</td>
+                                                <td><span className="status-badge active">71%</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Medical Reports Section */}
+                        {activeSection === 'medical-reports' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-file-medical" style={{color: '#3b82f6'}}></i>
+                                        Medical Reports
+                                    </h1>
+                                    <p className="page-subtitle">Generate and manage medical reports and documentation</p>
+                                </div>
+
+                                <div className="widget">
+                                    <div className="widget-header">
+                                        <div className="widget-title">
+                                            <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                <i className="fas fa-file-medical-alt"></i>
+                                            </div>
+                                            Recent Medical Reports
+                                        </div>
+                                        <button className="btn btn-primary">
+                                            <i className="fas fa-plus"></i> Generate Report
+                                        </button>
+                                    </div>
+                                    
+                                    <table className="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Report ID</th>
+                                                <th>Patient</th>
+                                                <th>Report Type</th>
+                                                <th>Generated By</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>RPT001</td>
+                                                <td>John Doe</td>
+                                                <td>Discharge Summary</td>
+                                                <td>Hospital Staff</td>
+                                                <td>Sep 18, 2024</td>
+                                                <td><span className="status-badge completed">Completed</span></td>
+                                                <td>
+                                                    <button className="btn btn-primary" style={{fontSize: '0.75rem', padding: '4px 8px'}}>
+                                                        View
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>RPT002</td>
+                                                <td>Sarah Johnson</td>
+                                                <td>Lab Report</td>
+                                                <td>Dr. Michael Brown</td>
+                                                <td>Sep 17, 2024</td>
+                                                <td><span className="status-badge completed">Completed</span></td>
+                                                <td>
+                                                    <button className="btn btn-primary" style={{fontSize: '0.75rem', padding: '4px 8px'}}>
+                                                        View
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>RPT003</td>
+                                                <td>Emma Wilson</td>
+                                                <td>Radiology Report</td>
+                                                <td>Dr. David Lee</td>
+                                                <td>Sep 16, 2024</td>
+                                                <td><span className="status-badge pending">Pending</span></td>
+                                                <td>
+                                                    <button className="btn btn-primary" style={{fontSize: '0.75rem', padding: '4px 8px'}}>
+                                                        Edit
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>RPT004</td>
+                                                <td>Michael Brown</td>
+                                                <td>Surgery Report</td>
+                                                <td>Dr. Sarah Johnson</td>
+                                                <td>Sep 15, 2024</td>
+                                                <td><span className="status-badge completed">Completed</span></td>
+                                                <td>
+                                                    <button className="btn btn-primary" style={{fontSize: '0.75rem', padding: '4px 8px'}}>
+                                                        View
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>RPT005</td>
+                                                <td>David Lee</td>
+                                                <td>Consultation Report</td>
+                                                <td>Dr. Emma Wilson</td>
+                                                <td>Sep 14, 2024</td>
+                                                <td><span className="status-badge active">In Progress</span></td>
+                                                <td>
+                                                    <button className="btn btn-primary" style={{fontSize: '0.75rem', padding: '4px 8px'}}>
+                                                        Continue
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+        )}
+
                         {/* Add Appointment Modal */}
                         {showAddAppointment && (
                             <div style={{
@@ -1533,7 +2153,7 @@
             );
         }
 
-        ReactDOM.render(<DoctorDashboard />, document.getElementById('root'));
+        ReactDOM.render(<HospitalDashboard />, document.getElementById('root'));
     </script>
 </body>
 </html>
