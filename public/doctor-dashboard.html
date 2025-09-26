@@ -1,923 +1,1519 @@
 <!DOCTYPE html>
-<!--DHRUV SINGH-->
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>MediVerse AI – Doctor Dashboard</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediVerse AI - Doctor Dashboard</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(-45deg, #0f0f23, #1a1a2e, #16213e, #0f3460);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
-      color: white;
-      overflow-x: hidden;
-    }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .particle { position: absolute; width: 2px; height: 2px; background: rgba(255,255,255,0.3); border-radius: 50%; animation: float-particle 25s linear infinite; }
-    @keyframes float-particle { 0% { transform: translateY(100vh); opacity: 0; } 10%, 90% { opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
-    .app { display: flex; min-height: 100vh; position: relative; z-index: 10; }
-    .particle-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-    .sidebar { width: 280px; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.1); padding: 24px 20px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
-    .brand { display: flex; align-items: center; gap: 12px; color: white; text-decoration: none; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px; }
-    .brand-icon { width: 48px; height: 48px; background: linear-gradient(45deg, #ff6b9d, #4facfe); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 0 20px rgba(255,107,157,0.3); }
-    .page-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; background: linear-gradient(45deg, #ff6b9d, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .nav-link { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 600; transition: all 0.3s ease; margin-bottom: 8px; }
-    .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.1); color: white; transform: translateX(8px); box-shadow: 0 8px 25px rgba(255,107,157,0.3); }
-    .main { flex: 1; display: flex; flex-direction: column; }
-    .header { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
-    .search { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px 20px; flex: 1; max-width: 500px; }
-    .search input { border: none; outline: none; background: transparent; width: 100%; color: white; }
-    .search input::placeholder { color: rgba(255,255,255,0.5); }
-    .user-avatar { width: 48px; height: 48px; background: linear-gradient(45deg, #4facfe, #43e97b); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: white; }
-    .content { padding: 32px; flex: 1; }
-    .page-title { font-size: 1.4rem; font-weight: 900; background: linear-gradient(45deg, #ff6b9d, #4facfe, #43e97b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
-    .page-subtitle { color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-bottom: 32px; }
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 32px; }
-    .stat-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 24px; transition: all 0.4s ease; }
-    .stat-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); border-color: #ff6b9d; }
-    .stat-value { font-size: 1.6rem; font-weight: 900; color: white; margin-bottom: 6px; }
-    .stat-label { color: rgba(255,255,255,0.7); font-size: 0.85rem; font-weight: 600; }
-    .cyber-btn { background: linear-gradient(45deg, #ff6b9d, #4facfe); border: none; border-radius: 16px; padding: 16px 32px; color: white; font-weight: 700; cursor: pointer; transition: all 0.4s ease; text-transform: uppercase; }
-    .cyber-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 35px rgba(255,107,157,0.4); }
-    .content-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 28px; margin-bottom: 24px; transition: all 0.4s ease; }
-    .content-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); border-color: #ff6b9d; }
-    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 15px; color: white; }
-    .empty-state { text-align: center; padding: 48px 24px; color: rgba(255,255,255,0.7); }
-    .empty-icon { font-size: 4rem; margin-bottom: 16px; opacity: 0.5; }
-    .section { display: none; }
-    .section.active { display: block; }
-    .patient-card, .appointment-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 16px; transition: all 0.3s ease; }
-    .patient-card:hover, .appointment-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); border-color: #ff6b9d; }
-    .patient-info h3, .appointment-info h3 { color: white; font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
-    .patient-info p, .appointment-info p { color: rgba(255,255,255,0.7); margin-bottom: 4px; }
-    @media (max-width: 768px) {
-      .sidebar { position: fixed; left: -280px; z-index: 1000; transition: left 0.3s ease; }
-      .sidebar.open { left: 0; }
-      .mobile-btn { display: block; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; cursor: pointer; margin-right: 16px; }
-      .content { padding: 20px; }
-      .page-title { font-size: 2rem; }
-      .stats-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 64px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: rgba(248, 250, 252, 0.8);
+            color: #1e293b;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 300px;
+            padding: 8px 16px 8px 40px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 8px;
+            background: rgba(248, 250, 252, 0.8);
+            color: #1e293b;
+            font-size: 14px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: rgba(248, 250, 252, 0.8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .notification-btn:hover {
+            background: rgba(226, 232, 240, 0.8);
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 200px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            margin-bottom: 8px;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #64748b;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(248, 250, 252, 0.8);
+            color: #1e293b;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-subtitle {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .widget {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .widget:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .widget-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .widget-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        /* AI Assistant */
+        .ai-assistant {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .ai-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .ai-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .ai-info h3 {
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .ai-info p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .ai-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .ai-action-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(248, 250, 252, 0.8);
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .ai-action-btn:hover {
+            background: rgba(226, 232, 240, 0.8);
+            transform: translateY(-1px);
+        }
+
+        /* Stats Widget */
+        .stats-widget {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .stat-change.positive {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .stat-change.negative {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .data-table th {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .data-table td {
+            color: #1e293b;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .status-badge.completed {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .status-badge.urgent {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(226, 232, 240, 0.8);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 16px;
+            }
+
+            .search-box input {
+                width: 200px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .ai-assistant {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-widget {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="particle-bg" id="particleBg"></div>
-  
-  <div class="app">
-    <aside class="sidebar" id="sidebar">
-      <a href="#" class="brand">
-        <div class="brand-icon"><i class="fas fa-brain"></i></div>
-        <span class="brand-text">MediVerse AI</span>
-      </a>
-      
-      <nav>
-        <a href="#" class="nav-link active" onclick="showSection('dashboard')">
-          <i class="fas fa-home"></i> Dashboard
-        </a>
-        <a href="#" class="nav-link" onclick="showSection('patients')">
-          <i class="fas fa-users"></i> My Patients
-        </a>
-        <a href="#" class="nav-link" onclick="showSection('appointments')">
-          <i class="fas fa-calendar-check"></i> Appointments
-        </a>
-        <a href="#" class="nav-link" onclick="showSection('ai-analysis')">
-          <i class="fas fa-brain"></i> AI Analysis
-        </a>
-        <a href="#" class="nav-link" onclick="showSection('reports')">
-          <i class="fas fa-file-medical"></i> Medical Reports
-        </a>
-        <a href="#" class="nav-link" onclick="showSection('schedule')">
-          <i class="fas fa-clock"></i> Schedule
-        </a>
-        <a href="#" class="nav-link" onclick="logout()">
-          <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
-      </nav>
-    </aside>
+    <div id="root"></div>
 
-    <main class="main">
-      <header class="header">
-        <button class="mobile-btn" id="mobileBtn" style="display: none;" onclick="toggleSidebar()">
-          <i class="fas fa-bars"></i>
-        </button>
-        
-        <div class="search">
-          <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search patients, appointments, reports...">
-        </div>
-        
-        <div class="user-avatar" id="userAvatar">D</div>
-      </header>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-      <div class="content">
-        <!-- Dashboard Section -->
-        <div id="dashboard-section" class="section active">
-          <h1 class="page-title">Welcome, Dr. Rajesh</h1>
-          <p class="page-subtitle">Your intelligent medical practice companion powered by advanced AI</p>
-          
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-value">12</div>
-              <div class="stat-label">Today's Appointments</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">45</div>
-              <div class="stat-label">This Week's Patients</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">3</div>
-              <div class="stat-label">Pending Reports</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">₹28,500</div>
-              <div class="stat-label">This Month's Revenue</div>
-            </div>
-          </div>
-
-          <div class="content-card">
-            <h2 class="card-title">🤖 AI Medical Assistant</h2>
-            <p style="margin-bottom: 20px; color: rgba(255,255,255,0.7);">Analyze patient data, generate reports, and get AI-powered diagnostic insights</p>
-            <button class="cyber-btn" onclick="showSection('ai-analysis')">
-              <i class="fas fa-brain"></i> Start AI Analysis
-            </button>
-          </div>
-
-          <div class="content-card">
-            <h2 class="card-title">📅 Today's Schedule</h2>
-            <div style="display: grid; gap: 12px;">
-              <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border-left: 4px solid #43e97b;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div>
-                    <h4 style="color: white; margin-bottom: 4px;">Priya Sharma - Cardiology Checkup</h4>
-                    <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">10:00 AM - 10:30 AM</p>
-                  </div>
-                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewPatient('Priya Sharma')">View</button>
-                </div>
-              </div>
-              <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border-left: 4px solid #ff6b9d;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div>
-                    <h4 style="color: white; margin-bottom: 4px;">Amit Kumar - Follow-up</h4>
-                    <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">11:00 AM - 11:30 AM</p>
-                  </div>
-                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewPatient('Amit Kumar')">View</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Appointments Section -->
-        <div id="appointments-section" class="section">
-          <h1 class="page-title">Appointments</h1>
-          <p class="page-subtitle">Manage your appointment schedule</p>
-          
-          <div class="content-card">
-            <h2 class="card-title">📅 Today's Appointments</h2>
-            <div id="appointmentsList">
-              <div class="doctor-card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div>
-                    <h3 style="color: white; margin-bottom: 8px;">Priya Sharma</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-stethoscope"></i> Cardiology Checkup</p>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-clock"></i> 10:00 AM - 10:30 AM</p>
-                    <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-phone"></i> +91-98765-43210</p>
-                  </div>
-                  <div style="display: flex; gap: 8px; flex-direction: column;">
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="markComplete('Priya Sharma')">Complete</button>
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #ff6b9d, #fa709a);" onclick="rescheduleAppointment('Priya Sharma')">Reschedule</button>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="doctor-card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div>
-                    <h3 style="color: white; margin-bottom: 8px;">Amit Kumar</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-user-md"></i> Follow-up Consultation</p>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-clock"></i> 11:00 AM - 11:30 AM</p>
-                    <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-phone"></i> +91-87654-32109</p>
-                  </div>
-                  <div style="display: flex; gap: 8px; flex-direction: column;">
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="markComplete('Amit Kumar')">Complete</button>
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #ff6b9d, #fa709a);" onclick="rescheduleAppointment('Amit Kumar')">Reschedule</button>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="doctor-card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div>
-                    <h3 style="color: white; margin-bottom: 8px;">Sunita Gupta</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-heart"></i> Cardiac Assessment</p>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-clock"></i> 2:00 PM - 2:30 PM</p>
-                    <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-phone"></i> +91-76543-21098</p>
-                  </div>
-                  <div style="display: flex; gap: 8px; flex-direction: column;">
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="markComplete('Sunita Gupta')">Complete</button>
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #ff6b9d, #fa709a);" onclick="rescheduleAppointment('Sunita Gupta')">Reschedule</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="content-card">
-            <h2 class="card-title">📋 Add New Appointment</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-              <input type="text" id="patientName" placeholder="Patient Name" style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
-              <input type="text" id="patientPhone" placeholder="Phone Number" style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-              <input type="date" id="appointmentDate" style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
-              <input type="time" id="appointmentTime" style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white;">
-            </div>
-            <input type="text" id="appointmentType" placeholder="Appointment Type (e.g., Checkup, Follow-up)" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; margin-bottom: 16px;">
-            <button class="cyber-btn" onclick="addAppointment()">
-              <i class="fas fa-plus"></i> Add Appointment
-            </button>
-          </div>
-        </div>
-
-        <!-- Patients Section -->
-        <div id="patients-section" class="section">
-          <h1 class="page-title">My Patients</h1>
-          <p class="page-subtitle">Manage and monitor your patient cases</p>
-          
-          <div class="content-card">
-            <h2 class="card-title">Active Patients</h2>
-            <div id="patientsList">
-              <div class="doctor-card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div>
-                    <h3 style="color: white; margin-bottom: 8px;">Priya Sharma</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-calendar"></i> Last Visit: Dec 15, 2024</p>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-heartbeat"></i> Condition: Hypertension</p>
-                    <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-pills"></i> Medication: Ongoing</p>
-                  </div>
-                  <div style="display: flex; gap: 8px; flex-direction: column;">
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewPatientHistory('Priya Sharma')">View History</button>
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="addPrescription('Priya Sharma')">Prescribe</button>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="doctor-card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div>
-                    <h3 style="color: white; margin-bottom: 8px;">Amit Kumar</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-calendar"></i> Last Visit: Dec 12, 2024</p>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-heartbeat"></i> Condition: Diabetes</p>
-                    <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-pills"></i> Medication: Metformin</p>
-                  </div>
-                  <div style="display: flex; gap: 8px; flex-direction: column;">
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewPatientHistory('Amit Kumar')">View History</button>
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="addPrescription('Amit Kumar')">Prescribe</button>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="doctor-card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <div>
-                    <h3 style="color: white; margin-bottom: 8px;">Sunita Gupta</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-calendar"></i> Last Visit: Dec 10, 2024</p>
-                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-heartbeat"></i> Condition: Cardiac Arrhythmia</p>
-                    <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-pills"></i> Medication: Beta Blockers</p>
-                  </div>
-                  <div style="display: flex; gap: 8px; flex-direction: column;">
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewPatientHistory('Sunita Gupta')">View History</button>
-                    <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="addPrescription('Sunita Gupta')">Prescribe</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Appointments Section -->
-        <div id="appointments-section" class="section">
-          <h1 class="page-title">Appointments</h1>
-          <p class="page-subtitle">Manage your daily schedule and patient appointments</p>
-          
-          <div class="content-card">
-            <h2 class="card-title">Today's Schedule</h2>
-            <div id="appointmentsList">
-              <div class="appointment-card">
-                <div class="appointment-info">
-                  <h3>9:00 AM - Sarah Wilson</h3>
-                  <p><i class="fas fa-clock"></i> Duration: 30 minutes</p>
-                  <p><i class="fas fa-stethoscope"></i> Type: Regular Checkup</p>
-                  <p><i class="fas fa-notes-medical"></i> Notes: Annual physical examination</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">Start Consultation</button>
-                </div>
-              </div>
-              
-              <div class="appointment-card">
-                <div class="appointment-info">
-                  <h3>10:30 AM - Michael Brown</h3>
-                  <p><i class="fas fa-clock"></i> Duration: 45 minutes</p>
-                  <p><i class="fas fa-heart"></i> Type: Cardiology Follow-up</p>
-                  <p><i class="fas fa-notes-medical"></i> Notes: Blood pressure monitoring</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">Start Consultation</button>
-                </div>
-              </div>
-              
-              <div class="appointment-card">
-                <div class="appointment-info">
-                  <h3>2:00 PM - Lisa Davis</h3>
-                  <p><i class="fas fa-clock"></i> Duration: 60 minutes</p>
-                  <p><i class="fas fa-brain"></i> Type: Neurological Assessment</p>
-                  <p><i class="fas fa-notes-medical"></i> Notes: Headache evaluation</p>
-                  <button class="cyber-btn" style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">Start Consultation</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- AI Analysis Section -->
-        <div id="ai-analysis-section" class="section">
-          <h1 class="page-title">🤖 AI Medical Analysis</h1>
-          <p class="page-subtitle">Advanced AI-powered diagnostic insights and patient analysis</p>
-          
-          <!-- AI Analysis Stats -->
-          <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
-            <div class="stat-card">
-              <div class="stat-icon">🧠</div>
-              <div class="stat-value">156</div>
-              <div class="stat-label">AI Reports Generated</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">⚡</div>
-              <div class="stat-value">98.5%</div>
-              <div class="stat-label">Accuracy Rate</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">📊</div>
-              <div class="stat-value">24</div>
-              <div class="stat-label">Active Analysis</div>
-            </div>
-          </div>
-
-          <!-- Symptom Analysis -->
-          <div class="content-card">
-            <h2 class="card-title">🩺 Patient Symptom Analysis</h2>
-            <div style="margin-bottom: 20px;">
-              <label style="color: white; margin-bottom: 8px; display: block;">Patient Symptoms & Medical History:</label>
-              <textarea id="symptomText" style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; resize: vertical; min-height: 120px;" placeholder="Enter patient symptoms, medical history, or clinical observations...
-Example: Patient complains of chest pain, shortness of breath, fatigue. History of hypertension. Age: 45, Male."></textarea>
-            </div>
-            <button class="cyber-btn" id="analyzeBtn" style="margin-right: 10px;">
-              <i class="fas fa-brain"></i> Generate AI Analysis
-            </button>
-            <button class="cyber-btn" onclick="clearAnalysis()" style="background: linear-gradient(45deg, #ff6b9d, #fa709a);">
-              <i class="fas fa-eraser"></i> Clear
-            </button>
-          </div>
-
-          <!-- Analysis Results -->
-          <div id="analysisResults" style="margin-top: 30px; display: none;">
-            <div class="content-card">
-              <h2 class="card-title">📋 AI Analysis Results</h2>
-              <div id="resultContent">
-                <!-- Results will be populated here -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Recent Reports -->
-          <div id="recentReports" style="margin-top: 30px;">
-            <div class="content-card">
-              <h2 class="card-title">📊 Recent AI Reports</h2>
-              <div id="reportsList">
-                <!-- Reports will be populated here -->
-              </div>
-            </div>
-          </div>
-
-          <!-- Analysis Results -->
-          <div class="content-card" id="analysisResults" style="display: none;">
-            <h2 class="card-title">📋 AI Analysis Results</h2>
-            <div id="analysisContent"></div>
-          </div>
-
-          <!-- Recent Analysis -->
-          <div class="content-card">
-            <h2 class="card-title">📈 Recent AI Analysis</h2>
-            <div class="doctor-card">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                  <h3 style="color: white; margin-bottom: 8px;">Priya Sharma - Cardiac Assessment</h3>
-                  <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-calendar"></i> Today, 2:30 PM</p>
-                  <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-heartbeat"></i> Risk Level: <span style="color: #fa709a;">Medium</span></p>
-                  <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-brain"></i> AI Confidence: 94.2%</p>
-                </div>
-                <div style="display: flex; gap: 8px; flex-direction: column;">
-                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewAnalysis('Priya Sharma')">View Report</button>
-                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="shareAnalysis('Priya Sharma')">Share</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="doctor-card">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                  <h3 style="color: white; margin-bottom: 8px;">Amit Kumar - Diabetes Screening</h3>
-                  <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-calendar"></i> Yesterday, 4:15 PM</p>
-                  <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-heartbeat"></i> Risk Level: <span style="color: #43e97b;">Low</span></p>
-                  <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-brain"></i> AI Confidence: 97.8%</p>
-                </div>
-                <div style="display: flex; gap: 8px; flex-direction: column;">
-                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewAnalysis('Amit Kumar')">View Report</button>
-                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="shareAnalysis('Amit Kumar')">Share</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Reports Section -->
-        <div id="reports-section" class="section">
-          <h1 class="page-title">📋 Medical Reports</h1>
-          <p class="page-subtitle">Comprehensive patient reports and AI-generated medical insights</p>
-          
-          <!-- Reports Stats -->
-          <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
-            <div class="stat-card">
-              <div class="stat-icon">📄</div>
-              <div class="stat-value">89</div>
-              <div class="stat-label">Total Reports</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">🔄</div>
-              <div class="stat-value">12</div>
-              <div class="stat-label">Pending Review</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">✅</div>
-              <div class="stat-value">77</div>
-              <div class="stat-label">Completed</div>
-            </div>
-          </div>
-
-          <!-- Generate New Report -->
-          <div class="content-card">
-            <h2 class="card-title">🆕 Generate New Report</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0;">
-              <button class="cyber-btn" onclick="generateReport('diagnostic')" style="padding: 20px; text-align: center;">
-                <i class="fas fa-stethoscope" style="font-size: 2rem; margin-bottom: 8px; display: block;"></i>
-                Diagnostic Report
-              </button>
-              <button class="cyber-btn" onclick="generateReport('lab')" style="padding: 20px; text-align: center;">
-                <i class="fas fa-flask" style="font-size: 2rem; margin-bottom: 8px; display: block;"></i>
-                Lab Analysis
-              </button>
-              <button class="cyber-btn" onclick="generateReport('prescription')" style="padding: 20px; text-align: center;">
-                <i class="fas fa-prescription-bottle-alt" style="font-size: 2rem; margin-bottom: 8px; display: block;"></i>
-                Prescription
-              </button>
-              <button class="cyber-btn" onclick="generateReport('followup')" style="padding: 20px; text-align: center;">
-                <i class="fas fa-calendar-check" style="font-size: 2rem; margin-bottom: 8px; display: block;"></i>
-                Follow-up
-              </button>
-            </div>
-          </div>
-
-          <!-- Recent Reports -->
-          <div class="content-card">
-            <h2 class="card-title">📈 Recent Reports</h2>
+        function DoctorDashboard() {
+            console.log('DoctorDashboard component loaded');
+            const [activeSection, setActiveSection] = useState('dashboard');
+            const [dropdownOpen, setDropdownOpen] = useState(false);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [showAddAppointment, setShowAddAppointment] = useState(false);
+            const [showCreatePrescription, setShowCreatePrescription] = useState(false);
+            const [notifications, setNotifications] = useState([
+                { id: 1, message: 'Urgent: Patient John Doe needs immediate attention', time: '2 min ago', type: 'urgent' },
+                { id: 2, message: 'Lab results ready for Sarah Johnson', time: '15 min ago', type: 'info' },
+                { id: 3, message: 'Appointment scheduled with Michael Brown', time: '1 hour ago', type: 'success' }
+            ]);
             
-            <!-- Report 1 -->
-            <div class="doctor-card" style="margin-bottom: 16px;">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="flex: 1;">
-                  <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                    <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #4facfe, #43e97b); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
-                      <i class="fas fa-heartbeat" style="color: white;"></i>
-                    </div>
-                    <div>
-                      <h3 style="color: white; margin: 0;">Cardiac Assessment - Priya Sharma</h3>
-                      <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">Patient ID: PS-2025-001</p>
-                    </div>
-                  </div>
-                  <div style="display: flex; gap: 20px; margin-bottom: 8px;">
-                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-calendar"></i> Sep 20, 2025</p>
-                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-clock"></i> 2:30 PM</p>
-                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-user-md"></i> Dr. Smith</p>
-                  </div>
-                  <div style="display: flex; gap: 12px; align-items: center;">
-                    <span style="background: rgba(250, 112, 154, 0.2); color: #fa709a; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">Medium Risk</span>
-                    <span style="background: rgba(67, 233, 123, 0.2); color: #43e97b; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">AI Verified</span>
-                  </div>
-                </div>
-                <div style="display: flex; gap: 8px; flex-direction: column;">
-                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewReport('PS-2025-001')">
-                    <i class="fas fa-eye"></i> View
-                  </button>
-                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="downloadReport('PS-2025-001')">
-                    <i class="fas fa-download"></i> Download
-                  </button>
-                </div>
-              </div>
-            </div>
+            // Doctor Data States
+            const [doctorStats, setDoctorStats] = useState({
+                todayAppointments: 12,
+                pendingConsultations: 5,
+                completedToday: 7,
+                prescriptionsIssued: 15
+            });
 
-            <!-- Report 2 -->
-            <div class="doctor-card" style="margin-bottom: 16px;">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="flex: 1;">
-                  <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                    <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #ff6b9d, #fa709a); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
-                      <i class="fas fa-flask" style="color: white;"></i>
-                    </div>
-                    <div>
-                      <h3 style="color: white; margin: 0;">Lab Analysis - Amit Kumar</h3>
-                      <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">Patient ID: AK-2025-002</p>
-                    </div>
-                  </div>
-                  <div style="display: flex; gap: 20px; margin-bottom: 8px;">
-                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-calendar"></i> Sep 19, 2025</p>
-                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-clock"></i> 4:15 PM</p>
-                    <p style="color: rgba(255,255,255,0.7); margin: 0;"><i class="fas fa-user-md"></i> Dr. Smith</p>
-                  </div>
-                  <div style="display: flex; gap: 12px; align-items: center;">
-                    <span style="background: rgba(67, 233, 123, 0.2); color: #43e97b; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">Low Risk</span>
-                    <span style="background: rgba(79, 172, 254, 0.2); color: #4facfe; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">Complete</span>
-                  </div>
-                </div>
-                <div style="display: flex; gap: 8px; flex-direction: column;">
-                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="viewReport('AK-2025-002')">
-                    <i class="fas fa-eye"></i> View
-                  </button>
-                  <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #43e97b, #4facfe);" onclick="downloadReport('AK-2025-002')">
-                    <i class="fas fa-download"></i> Download
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+            const [myPatients, setMyPatients] = useState([
+                { id: 'P001', name: 'John Doe', condition: 'Hypertension', lastVisit: 'Sep 18, 2024', status: 'active', urgency: 'high' },
+                { id: 'P002', name: 'Sarah Johnson', condition: 'Diabetes', lastVisit: 'Sep 17, 2024', status: 'stable', urgency: 'medium' },
+                { id: 'P003', name: 'Michael Brown', condition: 'Arthritis', lastVisit: 'Sep 16, 2024', status: 'improving', urgency: 'low' },
+                { id: 'P004', name: 'Emma Wilson', condition: 'Asthma', lastVisit: 'Sep 15, 2024', status: 'active', urgency: 'medium' },
+                { id: 'P005', name: 'David Lee', condition: 'Back Pain', lastVisit: 'Sep 14, 2024', status: 'stable', urgency: 'low' }
+            ]);
 
-        <!-- Schedule Section -->
-        <div id="schedule-section" class="section">
-          <h1 class="page-title">📅 Schedule Management</h1>
-          <p class="page-subtitle">Manage your availability and appointment slots</p>
-          
-          <!-- Schedule Stats -->
-          <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
-            <div class="stat-card">
-              <div class="stat-icon">📅</div>
-              <div class="stat-value">8</div>
-              <div class="stat-label">Today's Appointments</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">⏰</div>
-              <div class="stat-value">45</div>
-              <div class="stat-label">This Week</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">✅</div>
-              <div class="stat-value">6</div>
-              <div class="stat-label">Completed Today</div>
-            </div>
-          </div>
+            const [appointments, setAppointments] = useState([
+                { id: 'A001', patientName: 'John Doe', time: '9:00 AM', date: 'Today', type: 'Consultation', status: 'pending' },
+                { id: 'A002', patientName: 'Sarah Johnson', time: '10:30 AM', date: 'Today', type: 'Follow-up', status: 'completed' },
+                { id: 'A003', patientName: 'Michael Brown', time: '2:00 PM', date: 'Today', type: 'Check-up', status: 'pending' },
+                { id: 'A004', patientName: 'Emma Wilson', time: '3:30 PM', date: 'Today', type: 'Consultation', status: 'pending' },
+                { id: 'A005', patientName: 'David Lee', time: '4:00 PM', date: 'Today', type: 'Follow-up', status: 'pending' }
+            ]);
 
-          <!-- Today's Schedule -->
-          <div class="content-card">
-            <h2 class="card-title">🕐 Today's Schedule - September 20, 2025</h2>
-            
-            <div class="doctor-card" style="margin-bottom: 15px;">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center;">
-                  <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #4facfe, #43e97b); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem;">👤</div>
-                  <div>
-                    <h3 style="color: white; margin: 0;">Amit Kumar - Consultation</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin: 4px 0;">⏰ 9:00 AM - 9:30 AM</p>
-                    <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">📋 Diabetes Follow-up</p>
-                  </div>
+            const [prescriptions, setPrescriptions] = useState([
+                { id: 'RX001', patientName: 'John Doe', medication: 'Lisinopril 10mg', instructions: 'Once daily', date: 'Sep 18, 2024' },
+                { id: 'RX002', patientName: 'Sarah Johnson', medication: 'Metformin 500mg', instructions: 'Twice daily with meals', date: 'Sep 17, 2024' },
+                { id: 'RX003', patientName: 'Emma Wilson', medication: 'Albuterol Inhaler', instructions: 'As needed for breathing', date: 'Sep 16, 2024' }
+            ]);
+
+            const [labResults, setLabResults] = useState([
+                { id: 'LAB001', patientName: 'John Doe', test: 'Blood Pressure', result: '140/90 mmHg', status: 'abnormal', date: 'Sep 18, 2024' },
+                { id: 'LAB002', patientName: 'Sarah Johnson', test: 'Blood Sugar', result: '120 mg/dL', status: 'normal', date: 'Sep 17, 2024' },
+                { id: 'LAB003', patientName: 'Michael Brown', test: 'X-Ray Knee', result: 'Mild arthritis', status: 'abnormal', date: 'Sep 16, 2024' }
+            ]);
+
+            // New appointment form state
+            const [newAppointment, setNewAppointment] = useState({
+                patientName: '',
+                date: '',
+                time: '',
+                type: ''
+            });
+
+            // New prescription form state
+            const [newPrescription, setNewPrescription] = useState({
+                patientName: '',
+                medication: '',
+                dosage: '',
+                instructions: ''
+            });
+
+            // Load data from localStorage on component mount
+            useEffect(() => {
+                const savedAppointments = localStorage.getItem('doctorAppointments');
+                const savedPrescriptions = localStorage.getItem('doctorPrescriptions');
+                const savedNotifications = localStorage.getItem('doctorNotifications');
+                
+                if (savedAppointments) {
+                    setAppointments(JSON.parse(savedAppointments));
+                }
+                if (savedPrescriptions) {
+                    setPrescriptions(JSON.parse(savedPrescriptions));
+                }
+                if (savedNotifications) {
+                    setNotifications(JSON.parse(savedNotifications));
+                }
+            }, []);
+
+            // Save data to localStorage whenever it changes
+            useEffect(() => {
+                localStorage.setItem('doctorAppointments', JSON.stringify(appointments));
+            }, [appointments]);
+
+            useEffect(() => {
+                localStorage.setItem('doctorPrescriptions', JSON.stringify(prescriptions));
+            }, [prescriptions]);
+
+            useEffect(() => {
+                localStorage.setItem('doctorNotifications', JSON.stringify(notifications));
+            }, [notifications]);
+
+            const getStatusBadge = (status) => {
+                switch (status.toLowerCase()) {
+                    case 'active': return 'active';
+                    case 'completed': return 'completed';
+                    case 'pending': return 'pending';
+                    case 'urgent': return 'urgent';
+                    case 'stable': return 'completed';
+                    case 'improving': return 'active';
+                    default: return 'pending';
+                }
+            };
+
+            const toggleDropdown = () => {
+                setDropdownOpen(!dropdownOpen);
+            };
+
+            const logout = () => {
+                alert('Logging out...');
+                window.location.href = 'login.html';
+            };
+
+            // Search functionality
+            const handleSearch = (query) => {
+                setSearchQuery(query);
+            };
+
+            const filteredPatients = myPatients.filter(patient => 
+                patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                patient.condition.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                patient.id.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+
+            // Add new appointment
+            const handleAddAppointment = () => {
+                if (newAppointment.patientName && newAppointment.date && newAppointment.time && newAppointment.type) {
+                    const newId = 'A' + String(appointments.length + 1).padStart(3, '0');
+                    const appointmentData = {
+                        id: newId,
+                        patientName: newAppointment.patientName,
+                        time: newAppointment.time,
+                        date: newAppointment.date,
+                        type: newAppointment.type,
+                        status: 'pending'
+                    };
+                    
+                    setAppointments([appointmentData, ...appointments]);
+                    setNewAppointment({ patientName: '', date: '', time: '', type: '' });
+                    setShowAddAppointment(false);
+                    
+                    // Add notification
+                    const newNotification = {
+                        id: notifications.length + 1,
+                        message: `New appointment scheduled with ${newAppointment.patientName}`,
+                        time: 'Just now',
+                        type: 'success'
+                    };
+                    setNotifications([newNotification, ...notifications]);
+                    
+                    alert(`Appointment scheduled successfully for ${newAppointment.patientName}`);
+                } else {
+                    alert('Please fill in all fields');
+                }
+            };
+
+            // Create prescription
+            const handleCreatePrescription = () => {
+                if (newPrescription.patientName && newPrescription.medication && newPrescription.dosage && newPrescription.instructions) {
+                    const newId = 'RX' + String(prescriptions.length + 1).padStart(3, '0');
+                    const prescriptionData = {
+                        id: newId,
+                        patientName: newPrescription.patientName,
+                        medication: `${newPrescription.medication} ${newPrescription.dosage}`,
+                        instructions: newPrescription.instructions,
+                        date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+                    };
+                    
+                    setPrescriptions([prescriptionData, ...prescriptions]);
+                    setNewPrescription({ patientName: '', medication: '', dosage: '', instructions: '' });
+                    setShowCreatePrescription(false);
+                    
+                    // Add notification
+                    const newNotification = {
+                        id: notifications.length + 1,
+                        message: `Prescription created for ${newPrescription.patientName}`,
+                        time: 'Just now',
+                        type: 'success'
+                    };
+                    setNotifications([newNotification, ...notifications]);
+                    
+                    alert(`Prescription created successfully for ${newPrescription.patientName}`);
+                } else {
+                    alert('Please fill in all fields');
+                }
+            };
+
+            // View patient details
+            const viewPatientDetails = (patient) => {
+                alert(`Patient Details:\n\nName: ${patient.name}\nCondition: ${patient.condition}\nLast Visit: ${patient.lastVisit}\nStatus: ${patient.status}\nUrgency: ${patient.urgency}`);
+            };
+
+            // Complete appointment
+            const completeAppointment = (appointmentId) => {
+                setAppointments(prev => prev.map(appointment => 
+                    appointment.id === appointmentId ? { ...appointment, status: 'completed' } : appointment
+                ));
+                
+                const appointment = appointments.find(a => a.id === appointmentId);
+                const newNotification = {
+                    id: notifications.length + 1,
+                    message: `Appointment with ${appointment.patientName} completed`,
+                    time: 'Just now',
+                    type: 'success'
+                };
+                setNotifications([newNotification, ...notifications]);
+            };
+
+            // AI Assistant actions
+            const callAI = () => {
+                console.log('AI Call button clicked');
+                alert('🤖 Connecting to AI Diagnostic Assistant...\n\nDr. AI: Hello Doctor! I\'m ready to assist with diagnosis, treatment recommendations, and medical insights. How can I help you today?\n\n✅ AI Assistant is now active and ready to help!');
+            };
+
+            const chatWithAI = () => {
+                console.log('AI Chat button clicked');
+                const message = prompt('💬 Enter your medical query for the AI Assistant:');
+                if (message) {
+                    alert(`🤖 AI Diagnostic Assistant Response:\n\n"Thank you for your query: "${message}"\n\n📋 Based on current medical knowledge, I recommend:\n• Review patient symptoms and lab results\n• Consider differential diagnosis\n• Consult latest medical guidelines\n• Check drug interactions\n\n✅ AI analysis complete!`);
+                }
+            };
+
+            const configureAI = () => {
+                console.log('AI Configure button clicked');
+                alert('⚙️ AI Diagnostic Assistant Configuration:\n\n📊 Medical Database: Latest 2024\n🏥 Specializations: All departments\n💊 Drug Interaction Checker: Enabled\n📚 Evidence-Based Recommendations: Active\n🔄 Real-time Updates: Enabled\n\n✅ Settings updated successfully!');
+            };
+
+            // Notification management
+            const clearNotifications = () => {
+                setNotifications([]);
+            };
+
+            const markNotificationRead = (notificationId) => {
+                setNotifications(prev => prev.filter(n => n.id !== notificationId));
+            };
+
+            return (
+                <div>
+                    {/* Top Navigation */}
+                    <nav className="top-nav">
+                        <div className="nav-container">
+                            <div className="nav-left">
+                                <a href="#" className="logo">
+                                    <div className="logo-icon">
+                                        <i className="fas fa-stethoscope"></i>
+                                    </div>
+                                    <span className="logo-text">MediVerse</span>
+                                </a>
+                                
+                                <ul className="nav-links">
+                                    <li>
+                                        <a 
+                                            className={`nav-link ${activeSection === 'dashboard' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('dashboard')}
+                                        >
+                                            <i className="fas fa-home"></i> Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a 
+                                            className={`nav-link ${activeSection === 'patients' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('patients')}
+                                        >
+                                            <i className="fas fa-users"></i> My Patients
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a 
+                                            className={`nav-link ${activeSection === 'appointments' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('appointments')}
+                                        >
+                                            <i className="fas fa-calendar"></i> Appointments
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a 
+                                            className={`nav-link ${activeSection === 'prescriptions' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('prescriptions')}
+                                        >
+                                            <i className="fas fa-prescription"></i> Prescriptions
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a 
+                                            className={`nav-link ${activeSection === 'lab-results' ? 'active' : ''}`}
+                                            onClick={() => setActiveSection('lab-results')}
+                                        >
+                                            <i className="fas fa-flask"></i> Lab Results
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div className="nav-right">
+                                <div className="search-box">
+                                    <i className="fas fa-search"></i>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Search patients, conditions, medications..." 
+                                        value={searchQuery}
+                                        onChange={(e) => handleSearch(e.target.value)}
+                                    />
+                                </div>
+                                
+                                <div className="user-dropdown">
+                                    <button className="notification-btn" onClick={() => setDropdownOpen(!dropdownOpen)}>
+                                        <i className="fas fa-bell"></i>
+                                        {notifications.length > 0 && <div className="notification-dot"></div>}
+                                    </button>
+                                    {dropdownOpen && (
+                                        <div className="dropdown-menu show" style={{right: '0', left: 'auto', minWidth: '350px'}}>
+                                            <div className="dropdown-header">
+                                                <strong>Notifications ({notifications.length})</strong>
+                                                <button onClick={clearNotifications} style={{background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer'}}>
+                                                    Clear All
+                                                </button>
+                                            </div>
+                                            {notifications.length === 0 ? (
+                                                <div style={{padding: '16px', textAlign: 'center', color: '#64748b'}}>
+                                                    No notifications
+                                                </div>
+                                            ) : (
+                                                notifications.map(notification => (
+                                                    <div key={notification.id} className="dropdown-item" onClick={() => markNotificationRead(notification.id)}>
+                                                        <i className={`fas fa-${notification.type === 'urgent' ? 'exclamation-triangle' : notification.type === 'success' ? 'check-circle' : 'info-circle'}`} 
+                                                           style={{color: notification.type === 'urgent' ? '#ef4444' : notification.type === 'success' ? '#10b981' : '#3b82f6'}}></i>
+                                                        <div>
+                                                            <div style={{fontSize: '0.875rem'}}>{notification.message}</div>
+                                                            <div style={{fontSize: '0.75rem', color: '#64748b'}}>{notification.time}</div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                                
+                                <div className="user-dropdown">
+                                    <div className="user-avatar" onClick={toggleDropdown}>
+                                        Dr
+                                    </div>
+                                    <div className={`dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
+                                        <div className="dropdown-header">
+                                            <strong>Dr. Sarah Johnson</strong>
+                                            <div style={{color: '#64748b', fontSize: '14px'}}>Cardiologist</div>
+                                        </div>
+                                        <a href="#" className="dropdown-item">
+                                            <i className="fas fa-user"></i> Profile
+                                        </a>
+                                        <a href="#" className="dropdown-item">
+                                            <i className="fas fa-cog"></i> Settings
+                                        </a>
+                                        <a href="#" className="dropdown-item">
+                                            <i className="fas fa-calendar"></i> Schedule
+                                        </a>
+                                        <a href="#" className="dropdown-item" onClick={logout}>
+                                            <i className="fas fa-sign-out-alt"></i> Logout
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Main Content */}
+                    <main className="main-content">
+                        {/* Dashboard Section */}
+                        {activeSection === 'dashboard' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-stethoscope" style={{color: '#3b82f6'}}></i>
+                                        Doctor Dashboard
+                                    </h1>
+                                    <p className="page-subtitle">Welcome back, Dr. Sarah Johnson - Your patient care hub</p>
+                                </div>
+
+                                <div className="dashboard-grid">
+                                    {/* Top Widgets Row */}
+                                    <div className="ai-assistant">
+                                        {/* AI Diagnostic Assistant Widget */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #3b82f6)'}}>
+                                                        <i className="fas fa-brain"></i>
+                                                    </div>
+                                                    AI Diagnostic Assistant
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="ai-profile">
+                                                <div className="ai-avatar">
+                                                    <i className="fas fa-robot"></i>
+                                                </div>
+                                                <div className="ai-info">
+                                                    <h3>Dr. AI Diagnostics</h3>
+                                                    <p>AI Medical Diagnostic Assistant</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="ai-actions">
+                                                <button className="ai-action-btn" onClick={callAI} title="Call AI Assistant">
+                                                    <i className="fas fa-phone"></i>
+                                                </button>
+                                                <button className="ai-action-btn" onClick={chatWithAI} title="Chat with AI">
+                                                    <i className="fas fa-comment"></i>
+                                                </button>
+                                                <button className="ai-action-btn" onClick={configureAI} title="Configure AI">
+                                                    <i className="fas fa-cog"></i>
+                                                </button>
+                                            </div>
+                                            
+                                            {/* Test Button */}
+                                            <div style={{marginTop: '12px', textAlign: 'center'}}>
+                                                <button 
+                                                    className="btn btn-primary" 
+                                                    onClick={() => alert('✅ React is working! AI Assistant is functional.')}
+                                                    style={{fontSize: '0.75rem', padding: '6px 12px'}}
+                                                >
+                                                    Test AI Connection
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Today's Stats Widget */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                        <i className="fas fa-chart-bar"></i>
+                                                    </div>
+                                                    Today's Stats
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="stats-widget">
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Total Appointments</span>
+                                                    <span className="stat-value">{doctorStats.todayAppointments} <span className="stat-change positive">+2</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Pending Consultations</span>
+                                                    <span className="stat-value">{doctorStats.pendingConsultations} <span className="stat-change negative">-1</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Completed Today</span>
+                                                    <span className="stat-value">{doctorStats.completedToday} <span className="stat-change positive">+3</span></span>
+                                                </div>
+                                                <div className="stat-item">
+                                                    <span className="stat-label">Prescriptions Issued</span>
+                                                    <span className="stat-value">{doctorStats.prescriptionsIssued} <span className="stat-change positive">+5</span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Quick Actions Widget */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #3b82f6)'}}>
+                                                        <i className="fas fa-plus-circle"></i>
+                                                    </div>
+                                                    Quick Actions
+                                                </div>
+                                            </div>
+                                            
+                                            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                                <button className="btn btn-primary" onClick={() => setShowAddAppointment(true)}>
+                                                    <i className="fas fa-calendar-plus"></i> Schedule Appointment
+                                                </button>
+                                                <button className="btn btn-success" onClick={() => setShowCreatePrescription(true)}>
+                                                    <i className="fas fa-prescription-bottle"></i> Create Prescription
+                                                </button>
+                                                <button className="btn btn-primary" onClick={() => setActiveSection('patients')}>
+                                                    <i className="fas fa-user-plus"></i> View My Patients
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Data Tables Section */}
+                                    <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '32px'}}>
+                                        {/* Today's Appointments */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                        <i className="fas fa-calendar-check"></i>
+                                                    </div>
+                                                    Today's Appointments
+                                                </div>
+                                                <button className="btn btn-primary" onClick={() => setShowAddAppointment(true)} style={{fontSize: '0.75rem', padding: '6px 12px'}}>
+                                                    <i className="fas fa-plus"></i> Add
+                                                </button>
+                                            </div>
+                                            
+                                            <table className="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Patient</th>
+                                                        <th>Time</th>
+                                                        <th>Type</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {appointments.slice(0, 5).map((appointment, index) => (
+                                                        <tr key={index}>
+                                                            <td>{appointment.patientName}</td>
+                                                            <td>{appointment.time}</td>
+                                                            <td>{appointment.type}</td>
+                                                            <td><span className={`status-badge ${getStatusBadge(appointment.status)}`}>{appointment.status}</span></td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        {/* Recent Lab Results */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #8b5cf6)'}}>
+                                                        <i className="fas fa-flask"></i>
+                                                    </div>
+                                                    Recent Lab Results
+                                                </div>
+                                            </div>
+                                            
+                                            <table className="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Patient</th>
+                                                        <th>Test</th>
+                                                        <th>Result</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {labResults.map((result, index) => (
+                                                        <tr key={index}>
+                                                            <td>{result.patientName}</td>
+                                                            <td>{result.test}</td>
+                                                            <td>{result.result}</td>
+                                                            <td><span className={`status-badge ${result.status === 'normal' ? 'active' : 'urgent'}`}>{result.status}</span></td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    {/* Additional Sections */}
+                                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px'}}>
+                                        {/* Critical Patients */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #ef4444, #f59e0b)'}}>
+                                                        <i className="fas fa-exclamation-triangle"></i>
+                                                    </div>
+                                                    Critical Patients
+                                                </div>
+                                            </div>
+                                            
+                                            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                                {myPatients.filter(p => p.urgency === 'high').map((patient, index) => (
+                                                    <div key={index} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px'}}>
+                                                        <div>
+                                                            <div style={{color: '#1e293b', fontWeight: '600', fontSize: '0.875rem'}}>{patient.name}</div>
+                                                            <div style={{color: '#64748b', fontSize: '0.75rem'}}>{patient.condition}</div>
+                                                        </div>
+                                                        <span className="status-badge urgent">High Priority</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Recent Prescriptions */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)'}}>
+                                                        <i className="fas fa-prescription-bottle"></i>
+                                                    </div>
+                                                    Recent Prescriptions
+                                                </div>
+                                            </div>
+                                            
+                                            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                                                {prescriptions.slice(0, 3).map((prescription, index) => (
+                                                    <div key={index} style={{padding: '12px', background: 'rgba(248, 250, 252, 0.8)', borderRadius: '8px'}}>
+                                                        <div style={{color: '#1e293b', fontWeight: '600', fontSize: '0.875rem'}}>{prescription.patientName}</div>
+                                                        <div style={{color: '#64748b', fontSize: '0.75rem'}}>{prescription.medication}</div>
+                                                        <div style={{color: '#64748b', fontSize: '0.75rem'}}>{prescription.instructions}</div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Performance Metrics */}
+                                        <div className="widget">
+                                            <div className="widget-header">
+                                                <div className="widget-title">
+                                                    <div className="widget-icon" style={{background: 'linear-gradient(45deg, #10b981, #3b82f6)'}}>
+                                                        <i className="fas fa-chart-line"></i>
+                                                    </div>
+                                                    Performance Metrics
+                                                </div>
+                                            </div>
+                                            
+                                            <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                                                <div>
+                                                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '8px'}}>
+                                                        <span style={{color: '#64748b'}}>Patient Satisfaction</span>
+                                                        <span style={{color: '#1e293b', fontWeight: '600'}}>96%</span>
+                                                    </div>
+                                                    <div className="progress-bar">
+                                                        <div className="progress-fill" style={{width: '96%'}}></div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '8px'}}>
+                                                        <span style={{color: '#64748b'}}>Treatment Success Rate</span>
+                                                        <span style={{color: '#1e293b', fontWeight: '600'}}>94%</span>
+                                                    </div>
+                                                    <div className="progress-bar">
+                                                        <div className="progress-fill" style={{width: '94%'}}></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* My Patients Section */}
+                        {activeSection === 'patients' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-users" style={{color: '#3b82f6'}}></i>
+                                        My Patients
+                                    </h1>
+                                    <p className="page-subtitle">Manage your patient records and medical history</p>
+                                </div>
+
+                                <div className="widget">
+                                    <div className="widget-header">
+                                        <div className="widget-title">
+                                            <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                <i className="fas fa-users"></i>
+                                            </div>
+                                            Patient List
+                                        </div>
+                                    </div>
+                                    
+                                    <table className="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Condition</th>
+                                                <th>Last Visit</th>
+                                                <th>Status</th>
+                                                <th>Urgency</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {(searchQuery ? filteredPatients : myPatients).map((patient, index) => (
+                                                <tr key={index}>
+                                                    <td>{patient.id}</td>
+                                                    <td>{patient.name}</td>
+                                                    <td>{patient.condition}</td>
+                                                    <td>{patient.lastVisit}</td>
+                                                    <td><span className={`status-badge ${getStatusBadge(patient.status)}`}>{patient.status}</span></td>
+                                                    <td><span className={`status-badge ${patient.urgency === 'high' ? 'urgent' : patient.urgency === 'medium' ? 'pending' : 'active'}`}>{patient.urgency}</span></td>
+                                                    <td>
+                                                        <button className="btn btn-primary" style={{fontSize: '0.75rem', padding: '4px 8px'}} onClick={() => viewPatientDetails(patient)}>
+                                                            View Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Appointments Section */}
+                        {activeSection === 'appointments' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-calendar" style={{color: '#3b82f6'}}></i>
+                                        Appointments
+                                    </h1>
+                                    <p className="page-subtitle">Manage your appointment schedule</p>
+                                </div>
+
+                                <div className="widget">
+                                    <div className="widget-header">
+                                        <div className="widget-title">
+                                            <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                <i className="fas fa-calendar-check"></i>
+                                            </div>
+                                            All Appointments
+                                        </div>
+                                        <button className="btn btn-primary" onClick={() => setShowAddAppointment(true)}>
+                                            <i className="fas fa-plus"></i> Schedule Appointment
+                                        </button>
+                                    </div>
+                                    
+                                    <table className="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Patient</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th>Type</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {appointments.map((appointment, index) => (
+                                                <tr key={index}>
+                                                    <td>{appointment.id}</td>
+                                                    <td>{appointment.patientName}</td>
+                                                    <td>{appointment.date}</td>
+                                                    <td>{appointment.time}</td>
+                                                    <td>{appointment.type}</td>
+                                                    <td><span className={`status-badge ${getStatusBadge(appointment.status)}`}>{appointment.status}</span></td>
+                                                    <td>
+                                                        {appointment.status === 'pending' && (
+                                                            <button className="btn btn-success" style={{fontSize: '0.75rem', padding: '4px 8px'}} onClick={() => completeAppointment(appointment.id)}>
+                                                                Complete
+                                                            </button>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Prescriptions Section */}
+                        {activeSection === 'prescriptions' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-prescription" style={{color: '#3b82f6'}}></i>
+                                        Prescriptions
+                                    </h1>
+                                    <p className="page-subtitle">Manage patient prescriptions and medications</p>
+                                </div>
+
+                                <div className="widget">
+                                    <div className="widget-header">
+                                        <div className="widget-title">
+                                            <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                <i className="fas fa-prescription-bottle"></i>
+                                            </div>
+                                            All Prescriptions
+                                        </div>
+                                        <button className="btn btn-primary" onClick={() => setShowCreatePrescription(true)}>
+                                            <i className="fas fa-plus"></i> Create Prescription
+                                        </button>
+                                    </div>
+                                    
+                                    <table className="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Patient</th>
+                                                <th>Medication</th>
+                                                <th>Instructions</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {prescriptions.map((prescription, index) => (
+                                                <tr key={index}>
+                                                    <td>{prescription.id}</td>
+                                                    <td>{prescription.patientName}</td>
+                                                    <td>{prescription.medication}</td>
+                                                    <td>{prescription.instructions}</td>
+                                                    <td>{prescription.date}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Lab Results Section */}
+                        {activeSection === 'lab-results' && (
+                            <div>
+                                <div className="page-header">
+                                    <h1 className="page-title">
+                                        <i className="fas fa-flask" style={{color: '#3b82f6'}}></i>
+                                        Lab Results
+                                    </h1>
+                                    <p className="page-subtitle">Review patient laboratory test results</p>
+                                </div>
+
+                                <div className="widget">
+                                    <div className="widget-header">
+                                        <div className="widget-title">
+                                            <div className="widget-icon" style={{background: 'linear-gradient(45deg, #8b5cf6, #3b82f6)'}}>
+                                                <i className="fas fa-flask"></i>
+                                            </div>
+                                            Recent Lab Results
+                                        </div>
+                                    </div>
+                                    
+                                    <table className="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Patient</th>
+                                                <th>Test</th>
+                                                <th>Result</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {labResults.map((result, index) => (
+                                                <tr key={index}>
+                                                    <td>{result.id}</td>
+                                                    <td>{result.patientName}</td>
+                                                    <td>{result.test}</td>
+                                                    <td>{result.result}</td>
+                                                    <td><span className={`status-badge ${result.status === 'normal' ? 'active' : 'urgent'}`}>{result.status}</span></td>
+                                                    <td>{result.date}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Add Appointment Modal */}
+                        {showAddAppointment && (
+                            <div style={{
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                background: 'rgba(0, 0, 0, 0.5)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                zIndex: 1000
+                            }}>
+                                <div style={{
+                                    background: 'white',
+                                    padding: '32px',
+                                    borderRadius: '16px',
+                                    width: '500px',
+                                    maxWidth: '90vw'
+                                }}>
+                                    <h3 style={{marginBottom: '24px', color: '#1e293b'}}>Schedule New Appointment</h3>
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                                        <input
+                                            type="text"
+                                            placeholder="Patient Name"
+                                            value={newAppointment.patientName}
+                                            onChange={(e) => setNewAppointment({...newAppointment, patientName: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        />
+                                        <input
+                                            type="date"
+                                            value={newAppointment.date}
+                                            onChange={(e) => setNewAppointment({...newAppointment, date: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        />
+                                        <input
+                                            type="time"
+                                            value={newAppointment.time}
+                                            onChange={(e) => setNewAppointment({...newAppointment, time: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        />
+                                        <select
+                                            value={newAppointment.type}
+                                            onChange={(e) => setNewAppointment({...newAppointment, type: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        >
+                                            <option value="">Select Appointment Type</option>
+                                            <option value="Consultation">Consultation</option>
+                                            <option value="Follow-up">Follow-up</option>
+                                            <option value="Check-up">Check-up</option>
+                                            <option value="Emergency">Emergency</option>
+                                        </select>
+                                    </div>
+                                    <div style={{display: 'flex', gap: '12px', marginTop: '24px'}}>
+                                        <button className="btn btn-primary" onClick={handleAddAppointment}>
+                                            Schedule Appointment
+                                        </button>
+                                        <button className="btn" onClick={() => setShowAddAppointment(false)} style={{background: '#f1f5f9', color: '#64748b'}}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Create Prescription Modal */}
+                        {showCreatePrescription && (
+                            <div style={{
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                background: 'rgba(0, 0, 0, 0.5)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                zIndex: 1000
+                            }}>
+                                <div style={{
+                                    background: 'white',
+                                    padding: '32px',
+                                    borderRadius: '16px',
+                                    width: '500px',
+                                    maxWidth: '90vw'
+                                }}>
+                                    <h3 style={{marginBottom: '24px', color: '#1e293b'}}>Create New Prescription</h3>
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                                        <input
+                                            type="text"
+                                            placeholder="Patient Name"
+                                            value={newPrescription.patientName}
+                                            onChange={(e) => setNewPrescription({...newPrescription, patientName: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder="Medication Name"
+                                            value={newPrescription.medication}
+                                            onChange={(e) => setNewPrescription({...newPrescription, medication: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder="Dosage (e.g., 10mg, 500mg)"
+                                            value={newPrescription.dosage}
+                                            onChange={(e) => setNewPrescription({...newPrescription, dosage: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px'}}
+                                        />
+                                        <textarea
+                                            placeholder="Instructions (e.g., Take twice daily with meals)"
+                                            value={newPrescription.instructions}
+                                            onChange={(e) => setNewPrescription({...newPrescription, instructions: e.target.value})}
+                                            style={{padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', minHeight: '80px'}}
+                                        />
+                                    </div>
+                                    <div style={{display: 'flex', gap: '12px', marginTop: '24px'}}>
+                                        <button className="btn btn-primary" onClick={handleCreatePrescription}>
+                                            Create Prescription
+                                        </button>
+                                        <button className="btn" onClick={() => setShowCreatePrescription(false)} style={{background: '#f1f5f9', color: '#64748b'}}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </main>
                 </div>
-                <div style="display: flex; gap: 8px; flex-direction: column;">
-                  <span style="background: rgba(67, 233, 123, 0.2); color: #43e97b; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem;">Confirmed</span>
-                  <button class="cyber-btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="startConsultation('Amit Kumar')">Start</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="doctor-card" style="margin-bottom: 15px;">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center;">
-                  <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #ff6b9d, #fa709a); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem;">👤</div>
-                  <div>
-                    <h3 style="color: white; margin: 0;">Priya Sharma - Check-up</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin: 4px 0;">⏰ 10:00 AM - 10:30 AM</p>
-                    <p style="color: rgba(255,255,255,0.7); margin: 0; font-size: 0.9rem;">📋 Cardiac Assessment</p>
-                  </div>
-                </div>
-                <div style="display: flex; gap: 8px; flex-direction: column;">
-                  <span style="background: rgba(250, 112, 154, 0.2); color: #fa709a; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem;">In Progress</span>
-                  <button class="cyber-btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="continueConsultation('Priya Sharma')">Continue</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Weekly Overview -->
-          <div class="content-card">
-            <h2 class="card-title">📊 Weekly Overview</h2>
-            <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; margin: 20px 0;">
-              <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
-                <h4 style="color: white; margin-bottom: 8px;">Mon</h4>
-                <div style="color: #43e97b; font-size: 1.2rem; font-weight: bold;">8</div>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin: 0;">appointments</p>
-              </div>
-              <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
-                <h4 style="color: white; margin-bottom: 8px;">Tue</h4>
-                <div style="color: #4facfe; font-size: 1.2rem; font-weight: bold;">6</div>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin: 0;">appointments</p>
-              </div>
-              <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
-                <h4 style="color: white; margin-bottom: 8px;">Wed</h4>
-                <div style="color: #fa709a; font-size: 1.2rem; font-weight: bold;">9</div>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin: 0;">appointments</p>
-              </div>
-              <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
-                <h4 style="color: white; margin-bottom: 8px;">Thu</h4>
-                <div style="color: #43e97b; font-size: 1.2rem; font-weight: bold;">7</div>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin: 0;">appointments</p>
-              </div>
-              <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
-                <h4 style="color: white; margin-bottom: 8px;">Fri</h4>
-                <div style="color: #4facfe; font-size: 1.2rem; font-weight: bold;">5</div>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin: 0;">appointments</p>
-              </div>
-              <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
-                <h4 style="color: white; margin-bottom: 8px;">Sat</h4>
-                <div style="color: #fa709a; font-size: 1.2rem; font-weight: bold;">4</div>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin: 0;">appointments</p>
-              </div>
-              <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
-                <h4 style="color: white; margin-bottom: 8px;">Sun</h4>
-                <div style="color: #43e97b; font-size: 1.2rem; font-weight: bold;">3</div>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin: 0;">appointments</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/config.js"></script>
-  <script src="js/auth-simple.js"></script>
-  <script src="js/toast.js"></script>
-  <script src="js/gemini-medical-ai.js"></script>
-  <script src="js/ai-diagnostics-working.js"></script>
-  
-  <script>
-    // Create particles
-    function createParticles() {
-      const bg = document.getElementById('particleBg');
-      for (let i = 0; i < 30; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 25 + 's';
-        particle.style.animationDuration = (Math.random() * 10 + 20) + 's';
-        bg.appendChild(particle);
-      }
-    }
-
-    // Section navigation
-    function showSection(sectionName) {
-      // Remove active class from all sections and nav links
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-      
-      // Show the selected section
-      const targetSection = document.getElementById(sectionName + '-section');
-      if (targetSection) {
-        targetSection.classList.add('active');
-      }
-      
-      // Add active class to clicked nav link
-      if (event && event.target) {
-        event.target.classList.add('active');
-      } else {
-        // Fallback: find nav link by section name
-        const navLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
-        if (navLink) {
-          navLink.classList.add('active');
+            );
         }
-      }
-    }
 
-    // Mobile sidebar toggle
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
-    }
-
-    // Appointment management functions
-    function markComplete(patientName) {
-      const button = event.target;
-      button.innerHTML = '<i class="fas fa-check"></i> Completed';
-      button.style.background = 'linear-gradient(45deg, #43e97b, #4facfe)';
-      button.disabled = true;
-      
-      // Update today's appointments count
-      const appointmentsStat = document.querySelector('.stat-card:nth-child(1) .stat-value');
-      if (appointmentsStat) {
-        const currentCount = parseInt(appointmentsStat.textContent) || 0;
-        appointmentsStat.textContent = Math.max(0, currentCount - 1);
-      }
-      
-      alert(`Appointment with ${patientName} marked as completed!`);
-    }
-    
-    function rescheduleAppointment(patientName) {
-      const newDate = prompt(`Enter new date for ${patientName}'s appointment (DD/MM/YYYY):`);
-      const newTime = prompt(`Enter new time (HH:MM AM/PM):`);
-      
-      if (newDate && newTime) {
-        alert(`Appointment with ${patientName} rescheduled to ${newDate} at ${newTime}`);
-      }
-    }
-    
-    function addAppointment() {
-      const patientName = document.getElementById('patientName').value;
-      const patientPhone = document.getElementById('patientPhone').value;
-      const appointmentDate = document.getElementById('appointmentDate').value;
-      const appointmentTime = document.getElementById('appointmentTime').value;
-      const appointmentType = document.getElementById('appointmentType').value;
-      
-      if (!patientName || !patientPhone || !appointmentDate || !appointmentTime || !appointmentType) {
-        alert('Please fill in all fields');
-        return;
-      }
-      
-      // Add new appointment to the list
-      const appointmentsList = document.getElementById('appointmentsList');
-      const newAppointment = document.createElement('div');
-      newAppointment.className = 'doctor-card';
-      newAppointment.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <h3 style="color: white; margin-bottom: 8px;">${patientName}</h3>
-            <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-stethoscope"></i> ${appointmentType}</p>
-            <p style="color: rgba(255,255,255,0.7); margin-bottom: 4px;"><i class="fas fa-clock"></i> ${appointmentTime} - ${appointmentDate}</p>
-            <p style="color: rgba(255,255,255,0.7);"><i class="fas fa-phone"></i> ${patientPhone}</p>
-          </div>
-          <div style="display: flex; gap: 8px; flex-direction: column;">
-            <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem;" onclick="markComplete('${patientName}')">Complete</button>
-            <button class="cyber-btn" style="padding: 8px 16px; font-size: 0.8rem; background: linear-gradient(45deg, #ff6b9d, #fa709a);" onclick="rescheduleAppointment('${patientName}')">Reschedule</button>
-          </div>
-        </div>
-      `;
-      
-      appointmentsList.appendChild(newAppointment);
-      
-      // Clear form
-      document.getElementById('patientName').value = '';
-      document.getElementById('patientPhone').value = '';
-      document.getElementById('appointmentDate').value = '';
-      document.getElementById('appointmentTime').value = '';
-      document.getElementById('appointmentType').value = '';
-      
-      // Update appointments count
-      const appointmentsStat = document.querySelector('.stat-card:nth-child(1) .stat-value');
-      if (appointmentsStat) {
-        const currentCount = parseInt(appointmentsStat.textContent) || 0;
-        appointmentsStat.textContent = currentCount + 1;
-      }
-      
-      alert(`Appointment scheduled for ${patientName} on ${appointmentDate} at ${appointmentTime}`);
-    }
-    
-    // Patient management functions
-    function viewPatientHistory(patientName) {
-      alert(`Viewing medical history for ${patientName}:\n\n• Previous visits: 5\n• Last diagnosis: Hypertension\n• Current medications: Lisinopril 10mg\n• Allergies: None known\n• Blood type: O+`);
-    }
-    
-    function addPrescription(patientName) {
-      const medication = prompt(`Enter prescription for ${patientName}:`);
-      if (medication) {
-        alert(`Prescription added for ${patientName}: ${medication}`);
-      }
-    }
-    
-    function viewPatient(patientName) {
-      alert(`Patient Details: ${patientName}\n\n• Age: 35\n• Gender: Female\n• Contact: +91-98765-43210\n• Last visit: Today\n• Condition: Stable`);
-    }
-
-    // AI Analysis Functions
-    function uploadFile() {
-      alert('📁 File upload initiated!\n\nSupported formats: JPG, PNG, PDF, DICOM\nMax size: 10MB\n\nAI analysis will begin after upload.');
-    }
-
-    function analyzeSymptoms() {
-      const symptoms = document.getElementById('symptomInput').value.trim();
-      if (!symptoms) {
-        alert('Please enter patient symptoms first.');
-        return;
-      }
-      
-      const resultsDiv = document.getElementById('analysisResults');
-      const contentDiv = document.getElementById('analysisContent');
-      
-      resultsDiv.style.display = 'block';
-      contentDiv.innerHTML = `
-        <div style="background: rgba(67, 233, 123, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #43e97b;">
-          <h3 style="color: #43e97b; margin-bottom: 16px;"><i class="fas fa-brain"></i> AI Analysis Complete</h3>
-          <p style="color: white; margin-bottom: 12px;"><strong>Primary Diagnosis:</strong> Hypertensive Heart Disease (87% confidence)</p>
-          <p style="color: white; margin-bottom: 12px;"><strong>Risk Level:</strong> <span style="color: #fa709a;">Medium</span></p>
-          <p style="color: white; margin-bottom: 12px;"><strong>Recommended Tests:</strong> ECG, Echocardiogram, Lipid Profile</p>
-          <p style="color: rgba(255,255,255,0.8);"><strong>AI Confidence:</strong> 94.2%</p>
-        </div>
-      `;
-    }
-
-    function clearAnalysis() {
-      document.getElementById('symptomInput').value = '';
-      document.getElementById('analysisResults').style.display = 'none';
-    }
-
-    function viewAnalysis(patientName) {
-      alert(`📋 AI Analysis Report - ${patientName}\n\n• Diagnosis: Cardiac Assessment\n• Risk Level: Medium\n• AI Confidence: 94.2%\n• Date: Today\n• Status: Completed`);
-    }
-
-    function shareAnalysis(patientName) {
-      alert(`📤 Sharing analysis for ${patientName}\n\nReport shared with:\n• Patient Portal\n• Insurance Provider\n• Referring Physician`);
-    }
-
-    // Reports Functions
-    function generateReport(type) {
-      const reportTypes = {
-        diagnostic: 'Diagnostic Report',
-        lab: 'Lab Analysis Report',
-        prescription: 'Prescription Report',
-        followup: 'Follow-up Report'
-      };
-      alert(`📄 Generating ${reportTypes[type]}...\n\nReport will be ready in 2-3 minutes.\nYou'll receive a notification when complete.`);
-    }
-
-    function viewReport(patientId) {
-      alert(`📋 Viewing Report - ${patientId}\n\nReport Details:\n• Type: Medical Analysis\n• Date: Today\n• Status: Complete\n• Pages: 5`);
-    }
-
-    function downloadReport(patientId) {
-      alert(`📥 Downloading Report - ${patientId}\n\nFile: medical_report_${patientId}.pdf\nSize: 2.3 MB\n\nDownload started...`);
-    }
-
-    // Schedule Functions
-    function startConsultation(patientName) {
-      alert(`🩺 Starting Consultation - ${patientName}\n\nConsultation Details:\n• Patient: ${patientName}\n• Time: 9:00 AM - 9:30 AM\n• Type: Diabetes Follow-up\n• Status: Ready to begin`);
-    }
-
-    function continueConsultation(patientName) {
-      alert(`⏰ Continuing Consultation - ${patientName}\n\nCurrent Status:\n• Patient: ${patientName}\n• Time: 10:00 AM - 10:30 AM\n• Type: Cardiac Assessment\n• Progress: 50% Complete`);
-    }
-
-    // Logout function
-    function logout() {
-      if (window.SimpleAuth) {
-        window.SimpleAuth.signOut();
-      } else {
-        window.location.href = 'login.html';
-      }
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      createParticles();
-      
-      // Initialize AI Diagnostics for Doctor Dashboard
-      if (window.AIDiagnosticsWorking) {
-        window.aiDiagnostics = new AIDiagnosticsWorking();
-        console.log('✅ AI Diagnostics initialized for Doctor Dashboard');
-      }
-      
-      // Check authentication
-      if (window.SimpleAuth) {
-        // Auth check will be handled by existing scripts
-      }
-      
-      // Mobile responsive
-      if (window.innerWidth <= 768) {
-        document.getElementById('mobileBtn').style.display = 'block';
-      }
-    });
-  </script>
+        ReactDOM.render(<DoctorDashboard />, document.getElementById('root'));
+    </script>
 </body>
 </html>
