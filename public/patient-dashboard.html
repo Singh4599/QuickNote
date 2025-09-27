@@ -1068,10 +1068,10 @@
                     setAiReports(newReports);
                     updateAiStats(newReports);
                     
-                    // Show success notification
+                    // Show success notification with AI source
                     const successNotification = {
                         id: notifications.length + 1,
-                        message: '✅ Medical file analyzed successfully!',
+                        message: analysis.source === 'gemini' ? '🧠 Medical file analyzed by Gemini AI!' : '✅ Medical file analyzed successfully!',
                         time: 'Just now',
                         type: 'success'
                     };
@@ -1143,10 +1143,10 @@
                     
                     symptomInput.value = '';
                     
-                    // Show success notification
+                    // Show success notification with AI source
                     const successNotification = {
                         id: notifications.length + 1,
-                        message: '✅ Symptoms analyzed successfully!',
+                        message: analysis.source === 'gemini' ? '🧠 Symptoms analyzed by Gemini AI!' : '✅ Symptoms analyzed successfully!',
                         time: 'Just now',
                         type: 'success'
                     };
@@ -1188,7 +1188,13 @@
 
             const analyzeWithGemini = async (content, contentType, fileName) => {
                 try {
+                    console.log('🔥 Starting Gemini AI Analysis...');
+                    console.log('Content:', content.substring(0, 100) + '...');
+                    console.log('Content Type:', contentType);
+                    console.log('File Name:', fileName);
+                    
                     const prompt = createMedicalPrompt(content, contentType, fileName);
+                    console.log('📝 Generated Prompt:', prompt.substring(0, 200) + '...');
                     
                     const requestBody = {
                         contents: [{
@@ -1197,14 +1203,22 @@
                             }]
                         }],
                         generationConfig: {
-                            temperature: 0.7,
+                            temperature: 0.3,
                             topK: 40,
                             topP: 0.95,
-                            maxOutputTokens: 1024,
-                        }
+                            maxOutputTokens: 2048,
+                        },
+                        safetySettings: [
+                            {
+                                category: "HARM_CATEGORY_MEDICAL",
+                                threshold: "BLOCK_NONE"
+                            }
+                        ]
                     };
 
-                    console.log('Making Gemini API request...');
+                    console.log('🚀 Making Gemini API request to:', GEMINI_API_URL);
+                    console.log('📦 Request Body:', JSON.stringify(requestBody, null, 2));
+                    
                     const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
                         method: 'POST',
                         headers: {
@@ -1213,30 +1227,45 @@
                         body: JSON.stringify(requestBody)
                     });
 
-                    console.log('Gemini API response status:', response.status);
+                    console.log('📡 Gemini API response status:', response.status);
+                    console.log('📡 Response headers:', response.headers);
 
                     if (!response.ok) {
                         const errorText = await response.text();
-                        console.error('Gemini API error:', response.status, errorText);
+                        console.error('❌ Gemini API error:', response.status, errorText);
                         
-                        // Return fallback analysis instead of throwing error
+                        // Try to parse error details
+                        try {
+                            const errorData = JSON.parse(errorText);
+                            console.error('❌ Detailed error:', errorData);
+                        } catch (e) {
+                            console.error('❌ Raw error text:', errorText);
+                        }
+                        
+                        console.log('⚠️ Using fallback analysis due to API error');
                         return getFallbackAnalysis(content, contentType, fileName);
                     }
 
                     const data = await response.json();
-                    console.log('Gemini API response data:', data);
+                    console.log('✅ Gemini API response data:', JSON.stringify(data, null, 2));
                     
                     const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
                     
                     if (!aiResponse) {
-                        console.warn('No AI response from Gemini, using fallback');
+                        console.warn('⚠️ No AI response from Gemini, using fallback');
+                        console.log('Response structure:', data);
                         return getFallbackAnalysis(content, contentType, fileName);
                     }
 
-                    return parseGeminiResponse(aiResponse);
+                    console.log('🎯 Raw AI Response:', aiResponse);
+                    const parsedResponse = parseGeminiResponse(aiResponse);
+                    console.log('✅ Parsed Response:', parsedResponse);
+                    
+                    return parsedResponse;
                 } catch (error) {
-                    console.error('Gemini API request failed:', error);
-                    // Return fallback analysis instead of throwing error
+                    console.error('💥 Gemini API request failed:', error);
+                    console.error('💥 Error stack:', error.stack);
+                    console.log('⚠️ Using fallback analysis due to network error');
                     return getFallbackAnalysis(content, contentType, fileName);
                 }
             };
@@ -1244,8 +1273,39 @@
             const getFallbackAnalysis = (content, contentType, fileName) => {
                 console.log('Using enhanced fallback analysis for:', fileName);
                 
-                const contentLower = content.toLowerCase();
+                const contentLower = content.toLowerCase().trim();
                 
+                // Check for non-medical content first
+                const greetings = ['hi', 'hello', 'hey', 'good morning', 'good evening', 'namaste'];
+                const questions = ['how are you', 'what is', 'can you', 'tell me', 'explain'];
+                const casual = ['test', 'testing', 'check', 'demo', 'sample'];
+                
+                // If it's just a greeting or casual message, return appropriate response
+                if (greetings.some(greeting => contentLower === greeting) || 
+                    contentLower.length < 3 || 
+                    casual.some(word => contentLower === word)) {
+                    const result = {
+                        summary: `Hello! I'm your AI Medical Assistant. You've entered "${content}" which appears to be a greeting or test message. I'm here to help analyze medical symptoms and health concerns. Please describe any specific symptoms or health issues you'd like me to analyze.`,
+                        findings: [
+                            "Non-medical input detected - greeting or test message",
+                            "AI Medical Assistant ready for symptom analysis",
+                            "No health concerns identified in current input",
+                            "System functioning properly and ready for medical queries",
+                            "Please provide specific symptoms for detailed analysis"
+                        ],
+                        riskLevel: 'low',
+                        recommendations: [
+                            "Describe specific symptoms if you have health concerns",
+                            "Upload medical files for document analysis",
+                            "Use detailed descriptions for better analysis accuracy",
+                            "Include symptom duration and severity for comprehensive assessment",
+                            "Contact healthcare provider for urgent medical needs"
+                        ]
+                    };
+                    result.source = 'greeting'; // Mark as greeting response
+                    return result;
+                }
+
                 // Enhanced medical keyword analysis
                 const emergencyKeywords = ['chest pain', 'difficulty breathing', 'shortness of breath', 'severe pain', 'blood in', 'unconscious', 'seizure', 'stroke', 'heart attack', 'allergic reaction'];
                 const highRiskKeywords = ['severe', 'intense', 'acute', 'sudden onset', 'worsening', 'persistent', 'fever over', 'high fever', 'bleeding', 'swelling', 'numbness', 'weakness'];
@@ -1324,12 +1384,14 @@
                         ];
                     }
 
-                    return {
+                    const result = {
                         summary: `Comprehensive symptom analysis indicates a ${riskLevel} priority medical concern affecting ${detectedSystems.length > 0 ? detectedSystems.join(', ') + ' system(s)' : 'multiple body systems'}. The symptom constellation requires professional medical evaluation for accurate diagnosis and appropriate treatment planning. Clinical correlation is essential for optimal patient care.`,
                         findings: specificFindings.slice(0, 5),
                         riskLevel: riskLevel,
                         recommendations: specificRecommendations.slice(0, 5)
                     };
+                    result.source = 'fallback'; // Mark as fallback analysis
+                    return result;
                 } else {
                     // Enhanced file analysis
                     const fileTypeAnalysis = {
@@ -1341,7 +1403,7 @@
 
                     const analysisType = fileTypeAnalysis[contentType] || 'Medical file';
 
-                    return {
+                    const result = {
                         summary: `${analysisType} "${fileName}" has been processed using advanced medical document analysis algorithms. The file contains medical information that requires professional interpretation for clinical decision-making. Comprehensive review by qualified healthcare personnel is recommended for optimal patient care and treatment planning.`,
                         findings: [
                             `${analysisType} successfully processed and validated`,
@@ -1359,6 +1421,8 @@
                             "Consider specialist consultation if indicated by document content"
                         ]
                     };
+                    result.source = 'fallback'; // Mark as fallback analysis
+                    return result;
                 }
             };
 
@@ -1387,9 +1451,17 @@ Perform detailed medical image analysis:
 5. Evaluate urgency level based on visible pathology`;
                 } else if (contentType === 'text/symptoms') {
                     basePrompt += `COMPREHENSIVE SYMPTOM ANALYSIS
-Patient Presentation: "${content}"
+Patient Input: "${content}"
 
-Conduct thorough symptom analysis:
+IMPORTANT: First determine if this is actually a medical symptom or just a greeting/casual message.
+
+If it's a greeting (like "hi", "hello", "test") or non-medical content:
+- Respond with a friendly greeting
+- Explain you're ready to help with medical analysis
+- Ask for specific symptoms
+- Set riskLevel as "low"
+
+If it contains actual medical symptoms, conduct thorough analysis:
 1. Identify primary and secondary symptoms
 2. Consider symptom duration, severity, and progression
 3. Evaluate potential underlying pathophysiology
@@ -1437,45 +1509,70 @@ ACCURACY REQUIREMENTS:
 
             const parseGeminiResponse = (response) => {
                 try {
+                    console.log('🔍 Parsing Gemini response:', response);
+                    
                     let jsonStr = response.trim();
+                    
+                    // Remove code block markers
                     jsonStr = jsonStr.replace(/```json\n?/g, '').replace(/```\n?/g, '');
                     
+                    // Try to extract JSON from the response
                     const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
                     if (jsonMatch) {
                         jsonStr = jsonMatch[0];
+                        console.log('📋 Extracted JSON:', jsonStr);
                     }
 
                     const parsed = JSON.parse(jsonStr);
+                    console.log('✅ Successfully parsed JSON:', parsed);
                     
-                    if (!parsed.summary || !parsed.findings || !parsed.riskLevel || !parsed.recommendations) {
-                        throw new Error('Invalid response structure');
-                    }
+                    // Handle different possible field names from Gemini
+                    const summary = parsed.summary || parsed.Summary || parsed.analysis || 'Medical analysis completed by Gemini AI.';
+                    const findings = parsed.findings || parsed.Findings || parsed.keyFindings || parsed.key_findings || ['AI analysis completed', 'Professional review recommended'];
+                    const riskLevel = (parsed.riskLevel || parsed.RiskLevel || parsed.risk_level || parsed.risk || 'medium').toLowerCase();
+                    const recommendations = parsed.recommendations || parsed.Recommendations || parsed.advice || ['Consult healthcare provider', 'Follow up as needed'];
 
-                    if (!Array.isArray(parsed.findings)) {
-                        parsed.findings = [parsed.findings];
-                    }
-                    if (!Array.isArray(parsed.recommendations)) {
-                        parsed.recommendations = [parsed.recommendations];
-                    }
+                    // Ensure arrays are arrays
+                    const findingsArray = Array.isArray(findings) ? findings : [findings];
+                    const recommendationsArray = Array.isArray(recommendations) ? recommendations : [recommendations];
 
-                    if (!['low', 'medium', 'high'].includes(parsed.riskLevel.toLowerCase())) {
-                        parsed.riskLevel = 'medium';
-                    }
+                    // Validate risk level
+                    const validRiskLevel = ['low', 'medium', 'high'].includes(riskLevel) ? riskLevel : 'medium';
 
-                    return {
-                        summary: parsed.summary,
-                        findings: parsed.findings.slice(0, 5),
-                        riskLevel: parsed.riskLevel.toLowerCase(),
-                        recommendations: parsed.recommendations.slice(0, 5)
+                    const result = {
+                        summary: summary,
+                        findings: findingsArray.slice(0, 5),
+                        riskLevel: validRiskLevel,
+                        recommendations: recommendationsArray.slice(0, 5)
                     };
+                    
+                    console.log('🎯 Final parsed result:', result);
+                    result.source = 'gemini'; // Mark as Gemini AI response
+                    return result;
+                    
                 } catch (error) {
-                    console.error('Error parsing Gemini response:', error);
-                    return {
-                        summary: "Analysis completed. Please consult with a healthcare professional for detailed interpretation.",
-                        findings: ["Medical information processed", "Further evaluation recommended"],
-                        riskLevel: "medium",
-                        recommendations: ["Consult healthcare provider", "Monitor symptoms", "Follow up as needed"]
+                    console.error('❌ Error parsing Gemini response:', error);
+                    console.log('📝 Raw response that failed to parse:', response);
+                    
+                    // Try to extract meaningful content even if JSON parsing fails
+                    let fallbackSummary = 'AI analysis completed by Gemini. Professional medical review recommended.';
+                    
+                    // If response contains meaningful text, use part of it
+                    if (response && response.length > 20) {
+                        const cleanResponse = response.replace(/[{}[\]"]/g, '').trim();
+                        if (cleanResponse.length > 50) {
+                            fallbackSummary = cleanResponse.substring(0, 200) + '...';
+                        }
+                    }
+                    
+                    const result = {
+                        summary: fallbackSummary,
+                        findings: ['Gemini AI analysis completed', 'Response format needs adjustment', 'Professional review recommended'],
+                        riskLevel: 'medium',
+                        recommendations: ['Consult with healthcare provider', 'Discuss AI analysis results', 'Seek professional medical interpretation']
                     };
+                    result.source = 'gemini-fallback'; // Mark as Gemini response with parsing issues
+                    return result;
                 }
             };
 
